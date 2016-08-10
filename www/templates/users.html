@@ -1,0 +1,22 @@
+<ion-view>
+	<ion-content has-header="true" >
+	
+		<div class="user">
+			<img src="img/user1.jpg">
+			<h2>JohnDoe</h2>
+			<p>6 books</p>
+			<button class="button button-calm" ui-sref="login">Follow</button>
+		</div>
+		<div class="books">
+			<div class="book" ng-repeat="book in books" ui-sref="main.book">
+
+				<img src="img/user1.jpg" >
+				<div class="info">
+				<div class="title">The Farmer</div>
+				<div class="author">O McDonald</div>
+				<div class="rating">3 stars</div>
+				</div>
+			</div>
+		</div>
+	</ion-content>
+</ion-view>

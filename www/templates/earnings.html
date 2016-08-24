@@ -1,15 +1,29 @@
 
 	<ion-view view-title="Earnings">
 	<ion-content>
-		<div class="list">
-			<div class="item" ui-sref="earnings_details">
-				THis Month
-				<span>$20</span>
+	<div style="display:inline-block"> 
+	<div class="stats">
+		<h1>${{balance.balance}}</h1>
+		<h3 >EARNED</h3>
+	</div>
+	<div class="stats">
+		<h1>${{balance.payouts}}</h1>
+		<h3 >PAID OUT</h3>
+	</div>
+</div>
+		<div class="list card">
+			<div class="item item-divider item-icon-right">
+				2016
+				<i class="icon ion-arrow-down-b"></i>
 			</div>
-			<div class="item">
-				Total
-				<span>$30</span>
+			<div class="item item-icon-right" ng-click="goToDetails(transaction)" ng-repeat="transaction in transactions">
+				{{transaction.MONTH|monthName}}
+				<span class="item-note">{{transaction.AMOUNT}}</span>
+				<i class="icon ion-chevron-right" ></i>
 			</div>
+			
 		</div>
+
+	
 	</ion-content>
 </ion-view>

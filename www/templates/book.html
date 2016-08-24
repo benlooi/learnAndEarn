@@ -1,20 +1,28 @@
 
-
-<ion-view >
+<ion-view view-title="Browsing">
 	<ion-content >
+	
 	<div class="selected-book">
-		<img src="img/user1.jpg">
-		<div class="price">$25</div>
+		<img ng-src="http://www.learnandearn123.com/assets/images/{{thisEbook.image}}">
+		<div class="price">${{thisEbook.price}}</div>
 
 		<div class="info">
-			<div class="title">The Farmer</div>
-			<div class="author">O MacDonald</div>
-			<div class="addtocart" ng-click="buy()"><i class="ion-android-cart"></i></div>
+			<div class="title">{{thisEbook.name}}</div>
+			<div class="author">{{thisEbook.author}}</div>
+			<div class="addtocart" ng-click="buy(thisEbook.buyer.user_id,thisEbook.ebook_id)"><i class="ion-android-cart"></i></div>
 			<div class="rate" ng-click="rate()"><i class="ion-ios-star"></i></div>
 			
 		</div>
-		<h3>Synopsis</h3>
-<p>Synopsis of book lslslslslslslslslslsl slslsll slslslsls sllslfd fdfdsfdfdsfdsfdfdfdfdsfdsfsdfdsfdfdsfdsfdsfdsfdsfdsfdfdfdsfdfdfdfdsfdf fdsfdsfdsfdsfdsfds</p>
+		<div class="recommends">
+		<img ng-src="http://www.learnandearn123.com/apis/assets/images/avatars/{{thisEbook.buyer.avatar}}" >
+		<div class="user">{{thisEbook.buyer.username}} recommends this.</div> 
+		
+	</div>
+	<div>
+	<h3>Synopsis</h3>
+	
+	<p>{{thisEbook.synopsis}}</p>
+	</div>
 <div class="item item-avatar">
 		<img src="img/user1.jpg" >
 		<h2>Boaty McBoatFace</h2>

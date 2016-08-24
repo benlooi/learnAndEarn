@@ -3,7 +3,7 @@
 // angular.module is a global place for creating, registering and retrieving Angular modules
 // 'starter' is the name of this angular module example (also set in a <body> attribute in index.html)
 // the 2nd parameter is an array of 'requires'
-angular.module('starter', ['ionic','controllers','services','ngCordova','starter.payPalService'])
+angular.module('starter', ['ionic','controllers','services','ngCordova','starter.payPalService','ionic-ratings'])
 
 .run(function($ionicPlatform) {
   $ionicPlatform.ready(function() {
@@ -40,7 +40,10 @@ payPalMerchantUserAgreementURL : 'url to user agreement '
 
 })
 
-.config(function ($stateProvider,$urlRouterProvider){
+.config(function ($stateProvider,$urlRouterProvider,$ionicConfigProvider){
+  $ionicConfigProvider.tabs.position('bottom');
+  
+  $ionicConfigProvider.backButton.icon('ion-chevron-left');
   $stateProvider
   .state('login',{
     url:'/login',
@@ -62,33 +65,55 @@ payPalMerchantUserAgreementURL : 'url to user agreement '
     url:'/main',
     abstract:true,
    
-        templateUrl:'templates/main.html'
+        templateUrl:'templates/main.html',
+        controller: 'mainCtrl'
       
   })
-  .state('main.user',{
-    url:'/user',
-     views: {
-      'main-users':{
-    templateUrl:'templates/users.html',
-    controller: 'mainCtrl'
-    }
-    }
-  })
+  
   .state('main.home',{
     url:'/home',
      views: {
-      'main-users':{
+      'main-home':{
     templateUrl:'templates/home.html',
-    controller: 'mainCtrl'
+    controller: 'homeCtrl'
     }
     }
+    
+  })
+  .state('main.user',{
+    url:'/user',
+    views: {
+      'main-users':{
+    templateUrl:'templates/users.html',
+    controller: 'userCtrl'
+    }
+    }
+    ,
+    params: {
+      user:null
+    }
+
   })
   .state('main.book',{
     url:'/book',
      views :{
-      'main-users':{
+      'main-home':{
     templateUrl:'templates/book.html',
-    controller: 'mainCtrl'
+    controller: 'bookCtrl'
+   }
+ },
+ params: {
+  book:null
+ }
+ 
+
+  })
+  .state('main.shelf',{
+    url:'/shelf',
+     views :{
+      'main-shelf':{
+    templateUrl:'templates/shelf.html',
+    controller: 'shelfCtrl'
    }
  }
   })
@@ -104,7 +129,7 @@ payPalMerchantUserAgreementURL : 'url to user agreement '
   .state('main.users',{
     url:'/users',
     views: {
-      'main-profile':{
+      'main-users':{
     templateUrl:'templates/profile.html',
     controller: 'usersCtrl'
      }
@@ -112,24 +137,20 @@ payPalMerchantUserAgreementURL : 'url to user agreement '
   })
   .state('cart',{
     url:'/cart',
-     views: {
-      'main-users@main':{
+    
     templateUrl:'templates/cart.html',
     controller: 'mainCtrl'
-     }
-   }
+     
   })
   .state('purchase',{
     url:'/purchase',
-    views: {
-      'main-purchase@main':{
+    
     templateUrl:'templates/payment_success.html',
     controller: 'purchaseCtrl'
-      }
-    }
+      
      
   })
-  .state('earnings',{
+  .state('main.earnings',{
     url:'/earnings',
    views: {
       'main-earnings@main':{
@@ -144,8 +165,11 @@ payPalMerchantUserAgreementURL : 'url to user agreement '
    views: {
       'main-earnings@main':{
     templateUrl:'templates/earnings_details.html',
-    controller: 'earningsCtrl'
+    controller: 'earningsDetailsCtrl'
       }
+      },
+      params: {
+        tx:null
       }
      
   })

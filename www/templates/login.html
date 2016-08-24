@@ -7,8 +7,8 @@
 			<input type="text" ng-model="user.username" placeholder="Your username">
 			<div class="label">Password</div>
 			<input type="password" ng-model="user.password" placeholder="Your password">
-			<button class="button button-positive button-block">Login </button>
-			<button class="button button-positive button-block">Login with Facebook</button>
+			<button class="button button-positive button-block" ng-click="goDownload()">Login </button>
+			<button class="button button-positive button-block" ng-click="facebookSignIn()">Login with Facebook</button>
 			<p>Don't have an account? <span ng-click="showSignUp()">Sign Up.</span></p>
 
 		</div>

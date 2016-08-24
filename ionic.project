@@ -1,4 +1,10 @@
 {
   "name": "learnAndEarn",
-  "app_id": ""
+  "app_id": "",
+  "proxies":[
+  	{
+  		"path":"/v1",
+  		"proxyUrl":"http://www.pompipi.co/apis/index.php/"
+  	}
+  ]
 }

@@ -1,6 +1,11 @@
-<ion-view>
+<ion-view view-title="Home">
 	<ion-content>
 	<div class="banner_ad">
+		<div class="user_image">
+			<img src="img/user1.jpg">
+			<p>User name</p>
+		</div>
+
 	</div>
 	<h3>Latest</h3>
 	
@@ -9,28 +14,14 @@
 		
 			
 			<div class="mainhilight">
-					<span class="cardz">
-			<img src="img/user1.jpg" class="thumbnail">
-					<p>Titile</p>
+					<span class="cardz" ng-click="showBook()" ng-repeat="ebook in latestEbooks" >
+			<img ng-src="http://www.learnandearn123.com/assets/images/{{ebook.image}}" class="thumbnail" ng-click="goToBook(ebook)">
+					<p>{{ebook.title}}</p>
+					<p>{{ebook.author}}</p>
 				</span>
 		
 	
-			<span class="cardz">
-			<img src="img/user1.jpg" class="thumbnail">
-					<p>Titile</p>
-				</span>
-				<span class="cardz">
-			<img src="img/user1.jpg" class="thumbnail">
-					<p>Titile</p>
-				</span>
-				<span class="cardz">
-			<img src="img/user1.jpg" class="thumbnail">
-					<p>Titile</p>
-				</span>
-				<span class="cardz">
-			<img src="img/user1.jpg" class="thumbnail">
-					<p>Titile</p>
-				</span>
+			
 	
 		
 	</div>
@@ -39,23 +30,33 @@
 	<h3>Trending</h3>
 	
 	
-		<ion-scroll direction="x" class="wide-as-needed">
+		<ion-scroll direction="x" class="wide-as-needed" scrollbar-x="false" >
 		
-			
+			<div class="mainhilight">
 					<div class="cardz">
 			<img src="img/user1.jpg" class="thumbnail">
-					<p>Titile</p>
+					<p>Title</p>
 				</div>
 		
 	
+					<div class="cardz">
+			<img src="img/user1.jpg" class="thumbnail">
+					<p>Title</p>
+				</div>
+		
+					<div class="cardz">
+			<img src="img/user1.jpg" class="thumbnail">
+					<p>Title</p>
+				</div>
+		
 					
 			<div class="cardz">
 			<img src="img/user1.jpg" class="thumbnail">
-				<p>Titile</p>
+				<p>Title</p>
 				</div>
 			
 				
-		
+		</div>
 		
 	
 		</ion-scroll>
@@ -67,14 +68,14 @@
 			
 					<div class="cardz">
 			<img src="img/user1.jpg" class="thumbnail">
-					<p>Titile</p>
+					<p>Title</p>
 				</div>
 		
 	
 					
 			<div class="cardz">
 			<img src="img/user1.jpg" class="thumbnail">
-				<p>Titile</p>
+				<p>Title</p>
 				</div>
 			
 				
@@ -83,28 +84,24 @@
 	
 		</ion-scroll>
 
-	<h3>WHo's reading</h3>
+	<h3>Who's reading</h3>
 	
 	
-		<ion-scroll direction="x" class="wide-as-needed">
+		<ion-scroll direction="x" class="wide-as-needed" scrollbar-x="false" has-bouncing="true">
 		
 			
-					<div class="cardz">
-			<img src="img/user1.jpg" class="thumbnail">
-					<p>Titile</p>
-				</div>
+			<div class="mainhilight">
+					<span class="cardz" ng-click="goToUser(user)" ng-repeat="user in whosReading" >
+			<img ng-src="http://www.learnandearn123.com/apis/assets/images/avatars/{{user.avatar}}" class="thumbnail" >
+					<p>{{user.username}}</p>
+					<p>{{user.ebooks.length}} books</p>
+				</span>
 		
 	
-					
-			<div class="cardz">
-			<img src="img/user1.jpg" class="thumbnail">
-				<p>Titile</p>
-				</div>
 			
-				
-		
-		
 	
+		
+	</div>
 		</ion-scroll>
 
 

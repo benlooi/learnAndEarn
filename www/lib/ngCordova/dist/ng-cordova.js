@@ -2169,7 +2169,7 @@ angular.module('ngCordova.plugins.emailComposer', [])
 /* globals facebookConnectPlugin: true */
 angular.module('ngCordova.plugins.facebook', [])
 
-  .provider('$cordovaFacebook', [function () {
+  .provider('$cordovaFacebook',[ function () {
 
     /**
       * Init browser settings for Facebook plugin

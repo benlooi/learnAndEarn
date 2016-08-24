@@ -1,20 +1,22 @@
-<ion-view>
-	<ion-content has-header="true" >
+<ion-view view-title="User">
+
+	<ion-content >
 	
 		<div class="user">
-			<img src="img/user1.jpg">
-			<h2>JohnDoe</h2>
-			<p>6 books</p>
+			<img ng-src="http://www.learnandearn123.com/apis/assets/images/avatars/{{user.avatar}}">
+			<h2>{{user.firstname}} {{user.lastname}}</h2>
+			<p>{{user.ebooks.length}} books</p>
 			<button class="button button-calm" ui-sref="login">Follow</button>
 		</div>
 		<div class="books">
-			<div class="book" ng-repeat="book in books" ui-sref="main.book">
+			<div class="book" ng-repeat="book in user.ebooks" ng-click="goToBook(book)">
 
-				<img src="img/user1.jpg" >
+				<img ng-src="http://www.learnandearn123.com/assets/images/{{book.image}}" class="thumbnail" ng-click="goToBook(book)">
 				<div class="info">
-				<div class="title">The Farmer</div>
-				<div class="author">O McDonald</div>
-				<div class="rating">3 stars</div>
+				<div class="title">{{book.name}}</div>
+					<div class="author">{{book.author}}
+					<span class="rating">3 stars</span>
+					</div>
 				</div>
 			</div>
 		</div>

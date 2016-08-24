@@ -27,6 +27,13 @@
 .banner_ad {
 	height:150px;
 	background-color: teal;
+	margin-bottom: 100px;
+}
+
+.vcenter {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
 }
 .wide-as-needed {
 
@@ -54,11 +61,26 @@
 	font-size:1.2rem;
 	text-align:center;
 }
+.user_image {
+	width:100px;
+
+	margin:0 auto;
+	text-align: center;
+}
+.user_image img {
+	margin-top:100px;
+	width:100%;
+	border-radius: 50%;
+}
+
 .mainhilight {
 	width: -webkit-max-content;
   width: max-content;
   border-top:1px solid lightgray;
    border-bottom:1px solid lightgray;
+   overflow-x:hidden;
+   padding-bottom:-20px;
+
 }
 .cardz {
 
@@ -75,7 +97,9 @@
 float:left;
 height:30vw;
 width: 30vw;
+margin-bottom:20px;
 border-radius: 50%;
+text-align: center
 }
 .users.ng-enter {
 
@@ -91,11 +115,18 @@ border-radius: 50%;
   animation-duration:0;
 }
 .users img {
-	margin-top:10vw;
-	margin-left:10vw;
+	
 	border-radius: 50%;
 	height:20vw;
 	width:20vw;
+}
+.users .username {
+	text-align: center;
+	font-weight: 700;
+	color:#192A95;
+}
+.users .details {
+	text-align: center;
 }
 
 .books {
@@ -128,9 +159,13 @@ border-radius: 50%;
 	opacity: 0.8;
 	z-index:3;
 	position:relative;
+	top:-40px;
+	padding-left:5px;
+	padding-right:5px;
+
 	
-	top:-15vw;
-	height:15vw;
+	
+	height:auto;
 }
 .books .book .info .title {
 
@@ -147,6 +182,7 @@ z-index: 3;
 color:white;
 position:relative;
 
+
 z-index: 3;
 	
 }
@@ -156,6 +192,7 @@ color:white;
 position:relative;
 
 z-index: 3;
+
 	
 }
 .selected-book {
@@ -176,7 +213,7 @@ position:absolute;
 top:10vh;
 left:5vw;
 font-family:Roboto,sans-serif;
-font-size:2.5rem;
+font-size:1.5rem;
 text-align: center;
 line-height: 5.5rem;
 color:orange;
@@ -198,26 +235,44 @@ text-shadow:2px 2px 2px black;
 	opacity: 0.8;
 
 }
+.selected-book .recommends {
+	margin-top:-100px;
+	display: block;
+	margin-bottom: 10px;
+
+
+}
+.selected-book .recommends img{
+width:60px;
+border-radius: 50%;
+float: left;
+margin-right: 20px;
+}
+.selected-book .recommends .user {
+	
+	vertical-align: middle;
+}
 .selected-book .title {
 	color:white;
-	font-size:2rem;
+	font-size:1.8rem;
 	text-shadow:2px 2px 2px black;
 }
 .selected-book .author {
 	color:white;
-	font-size:1.2rem;
+	font-size:1rem;
 	text-shadow:2px 2px 2px black;
 }
 .selected-book h3 {
+
 	position:relative;
-	top:-80px;
+	
 	color:orange;
 }
 .selected-book p {
 	color:gray;
 	font-size:1rem;
 	position:relative;
-	top:-80px;
+	
 	
 	width:100%;
 
@@ -268,4 +323,18 @@ text-shadow:1px 1px 5px white;
 	font-size: 1.5rem;
 	color:orange;
 	text-shadow:1px 1px 3px gray;
+}
+.ionic_ratings .icon {
+    font-size: 50px;
+  }
+.stats {
+	width:50vw;padding: 1.5rem;
+	float:left;
+	text-align:center;
+}
+.stats h1 {
+	color:#48537F;
+}
+.stats h3 {
+	color:#329B1E;
 }

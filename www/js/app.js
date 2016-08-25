@@ -139,7 +139,10 @@ payPalMerchantUserAgreementURL : 'url to user agreement '
     url:'/cart',
     
     templateUrl:'templates/cart.html',
-    controller: 'mainCtrl'
+    controller: 'cartCtrl',
+    params: {
+      book:null
+    }
      
   })
   .state('purchase',{

@@ -1,5 +1,5 @@
 angular.module('controllers',[])
-.controller('loginCtrl', function ($scope,$cordovaImagePicker,$state,$q,$ionicLoading,UserService){
+.controller('loginCtrl', function ($scope,$rootScope,$cordovaImagePicker,$state,$q,$ionicLoading,UserService){
   
   var fbLoginSuccess = function(response) {
     if (!response.authResponse){
@@ -26,6 +26,7 @@ angular.module('controllers',[])
       $ionicLoading.hide();
       UserService.getUser().then(function (resp){
         console.log("fb-user ="+resp);
+        $rootScope.loggedinUser=resp;
       })
       $state.go('main.home');
     }, function(fail){
@@ -59,18 +60,19 @@ angular.module('controllers',[])
 
   //This method is executed when the user press the "Login with facebook" button
   $scope.facebookSignIn = function() {
-    console.log("try to log in");
+   
     facebookConnectPlugin.getLoginStatus(function(success){
-      console.log(success);
+      console.log(JSON.stringify(success));
       if(success.status === 'connected'){
         // The user is logged in and has authenticated your app, and response.authResponse supplies
         // the user's ID, a valid access token, a signed request, and the time the access token
         // and signed request each expire
-        console.log("in liao");
+      
 
         // Check if we have our user saved
         var user = UserService.getUser('facebook');
- 
+        console.log(JSON.stringify(user));
+       
         if(!user.userID){
           getFacebookProfileInfo(success.authResponse)
           .then(function(profileInfo) {
@@ -82,14 +84,23 @@ angular.module('controllers',[])
               email: profileInfo.email,
               picture : "http://graph.facebook.com/" + success.authResponse.userID + "/picture?type=large"
             });
+            $rootScope.loggedinUser={
+              authResponse: success.authResponse,
+              userID: profileInfo.id,
+              name: profileInfo.name,
+              email: profileInfo.email,
+              picture : "http://graph.facebook.com/" + success.authResponse.userID + "/picture?type=large"
 
+
+            }
             $state.go('main.home');
           }, function(fail){
             // Fail get profile info
             console.log('profile info fail', fail);
           });
         }else{
-          alert("login problem");
+          $rootScope.loggedinUser=user;
+          $state.go('main.home');
         }
       } else {
         // If (success.status === 'not_authorized') the user is logged in to Facebook,
@@ -144,7 +155,7 @@ angular.module('controllers',[])
 
 
 })
-.controller('mainCtrl',function ($scope,$ionicPopup,$state,$cordovaInAppBrowser,PaypalService,$ionicSideMenuDelegate){
+.controller('mainCtrl',function ($scope,$ionicPopup,$state,UserService,$cordovaInAppBrowser,PaypalService,$ionicSideMenuDelegate){
 
   $scope.toggleMenu = function () {
     $ionicSideMenuDelegate.toggleLeft();
@@ -156,7 +167,9 @@ angular.module('controllers',[])
 
 
 })
-.controller('homeCtrl', function ($rootScope,$scope,$state,bookServices,$stateParams){
+.controller('homeCtrl', function ($rootScope,$scope,$state,bookServices,$stateParams,UserService){
+console.log($rootScope.loggedinUser);
+
   bookServices.getLatest().then(function(resp){
     console.log(resp);
     $scope.latestEbooks=resp;
@@ -206,7 +219,7 @@ angular.module('controllers',[])
   }).then(function(modal) {
     $scope.modal = modal;
   });
-  $scope.buy=function () {
+  $scope.buy=function (book) {
     var confirmBuy= $ionicPopup.alert({
       title:"Add to Cart",
       template:'Confirm add to cart?'
@@ -214,7 +227,7 @@ angular.module('controllers',[])
       );
     confirmBuy.then(function (res){
       console.log('buy it');
-      $state.go('cart');
+      $state.go('cart',{book:book});
     })
   }
 
@@ -433,6 +446,12 @@ $scope.readEbook = function (number) {
 
 }
   
+})
+.controller('cartCtrl', function (PaypalService,$rootScope,$scope,$cordovaInAppBrowser,$state){
+  $scope.book=$state.params.book;
+  $scope.total=10.0;
+  $scope.buyNow = function () { PaypalService.initPaymentUI().then(function () { 
+    PaypalService.makePayment($scope.total, "Total").then(); }); }
 })
 .filter('monthName', [function() {
     return function (monthNumber) { //1 = January

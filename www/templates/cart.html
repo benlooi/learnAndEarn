@@ -4,20 +4,20 @@
 		<h3>Shopping cart</h3>
 		<div class="list">
 			<div class="item item-icon-left">
-				The Farmer
+				{{book.name}}
 				<span class="item-note">
-					$25
+					{{book.price}}
 				</span>
-				<p>O MacDonald</p>
+				<p>{{book.author}}</p>
 				<p>Qty : 1</p>
 				
 			</div>
 			<div class="item item-icon-left">
 				TOTAL
-				<span class="item-note">$25<span>
+				<span class="item-note">{{total}}<span>
 			</div>
 		</div>
-		<button class="button button-block button-energized" ng-click="paypalPay()">Check out</button>
+		<button class="button button-block button-energized" ng-click="buyNow()">Check out</button>
 		<div ng-controller="purchaseCtrl">
 		<button class="button button-block button-energized" ng-click="download()">Download</button>
 	</div>

@@ -7,7 +7,7 @@ angular.module('controllers',[])
       return;
     } else if(response.authResponse){
       console.log("logged in to facebook");
-      $state.go('main.home');
+      //$state.go('main.home');
     }
 
     var authResponse = response.authResponse;
@@ -16,6 +16,7 @@ angular.module('controllers',[])
     .then(function(profileInfo) {
       // For the purpose of this example I will store user data on local storage
       console.log(profileInfo);
+
       UserService.setUser({
         authResponse: authResponse,
         userID: profileInfo.id,
@@ -71,7 +72,7 @@ angular.module('controllers',[])
 
         // Check if we have our user saved
         var user = UserService.getUser('facebook');
-        console.log(JSON.stringify(user));
+        //console.log(JSON.stringify(user));
        
         if(!user.userID){
           getFacebookProfileInfo(success.authResponse)
@@ -93,7 +94,10 @@ angular.module('controllers',[])
 
 
             }
-            $state.go('main.home');
+            UserService.facebookSignIn($rootscope.LoggedinUser).then(function (resp){
+              $state.go('main.home');
+            })
+            
           }, function(fail){
             // Fail get profile info
             console.log('profile info fail', fail);
@@ -126,7 +130,7 @@ angular.module('controllers',[])
 
   $scope.user={};
   $scope.showSignUp = function () {
-    $scope.signup=true;
+    $scope.signup=!$scope.signup;
   }
 
   $scope.setAvatar = function () {
@@ -148,7 +152,21 @@ angular.module('controllers',[])
       }
     })
   }
+  $scope.normalLogin = function () {
+    UserService.normalLogin($scope.user),then(function (resp){
 
+      console.log(resp);
+    })
+
+  }
+
+  $scope.normalSignUp = function () {
+    UserService.normalSignUp($scope.user),then(function (resp){
+
+      console.log(resp);
+    })
+
+  }
   $scope.goDownload = function () {
     $state.go('purchase');
   }
@@ -396,7 +414,7 @@ if (platform=="iOS") {
 
 })
 
-.controller('shelfCtrl',function ($scope,$cordovaInAppBrowser,$cordovaDevice,$cordovaFile,$cordovaFileOpener2){
+.controller('shelfCtrl',function ($scope,$rootScope,$cordovaInAppBrowser,UserService,$cordovaDevice,$cordovaFile,$cordovaFileOpener2){
  /* ebook=localStorage.getItem('ebook');
   ebooktype=ebook.split('.').pop();
   var platform= $cordovaDevice.getPlatform();
@@ -407,6 +425,11 @@ if (platform=="iOS") {
    console.log(ebook);
   }
 */
+
+UserService.getEbooks($rootScope.user).then (function (resp){
+
+  console.log(resp);
+})
 $scope.readEbook = function (number) {
   
    ebook=localStorage.getItem('ebook');

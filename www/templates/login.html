@@ -7,7 +7,7 @@
 			<input type="text" ng-model="user.username" placeholder="Your username">
 			<div class="label">Password</div>
 			<input type="password" ng-model="user.password" placeholder="Your password">
-			<button class="button button-positive button-block" ng-click="goDownload()">Login </button>
+			<button class="button button-positive button-block" ng-click="normalLogin()">Login </button>
 			<button class="button button-positive button-block" ng-click="facebookSignIn()">Login with Facebook</button>
 			<p>Don't have an account? <span ng-click="showSignUp()">Sign Up.</span></p>
 
@@ -30,8 +30,9 @@
 			<div class="label">Password</div>
 			<input type="password" ng-model="user.password" placeholder="Your password">
 			
-			<button class="button button-block">Sign Up </button>
-			<button class="button button-positive button-block">Sign Up with Facebook</button>
+			<button class="button button-block" ng-click="normalSignUp()">Sign Up </button>
+			<p>Already have an account? <span ng-click="showSignUp()">Log in.</span></p>
+			
 	</div>
 	<pre>{{user.avatar}}</pre>
 	</ion-content>

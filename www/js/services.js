@@ -1,22 +1,55 @@
 ApiEndPoint = {
 	eBooks:"http://www.pompipi.co/apis/index.php/Appaccess/",
-	Accounts:"http://www.pompipi.co/apis/index.php/Accounts/"
+	Accounts:"http://www.pompipi.co/apis/index.php/Accounts/",
+	Users:"http://www.pompipi.co/apis/index.php/Appaccess/"
 }
 angular.module('services',[])
 .service('UserService', function($http,$q) {
+	return {
+
+		setuser: function(user_data) {
+    				window.localStorage.starter_facebook_user = JSON.stringify(user_data);
+	},
+		getuser:function(){
+    			return JSON.parse(window.localStorage.starter_facebook_user || '{}');
+  	},
+  		signUp: function (user){
+  			var deferred=$q.defer();
+			$http.post(ApiEndPoint.Users+"normalSignUp",{user:user})
+			.success(function (data){
+				deferred.resolve(data);
+			})
+			.error(function(error){
+				deferred.reject(error);
+			})
+			return deferred.promise;
+  		},
+  		signIn: function (user){
+  			var deferred=$q.defer();
+			$http.post(ApiEndPoint.Users+"normalLogin",{user:user})
+			.success(function (data){
+				deferred.resolve(data);
+			})
+			.error(function(error){
+				deferred.reject(error);
+			})
+			return deferred.promise;
+  		},
+  		facebookSignIn: function (user){
+  			var deferred=$q.defer();
+			$http.post(ApiEndPoint.Users+"facebookSignIn",{user:user})
+			.success(function (data){
+				deferred.resolve(data);
+			})
+			.error(function(error){
+				deferred.reject(error);
+			})
+			return deferred.promise;
+  		}
   // For the purpose of this example I will store user data on ionic local storage but you should save it on a database
-  var setUser = function(user_data) {
-    window.localStorage.starter_facebook_user = JSON.stringify(user_data);
-  };
+  
 
-  var getUser = function(){
-    return JSON.parse(window.localStorage.starter_facebook_user || '{}');
-  };
-
-  return {
-    getUser: getUser,
-    setUser: setUser
-  };
+  
 })
 .factory('accountsServices',function ($http,$q){
 	return {

@@ -2,6 +2,9 @@ ApiEndPoint = {
 	eBooks:"http://www.pompipi.co/apis/index.php/Appaccess/",
 	Accounts:"http://www.pompipi.co/apis/index.php/Accounts/",
 	Users:"http://www.pompipi.co/apis/index.php/Appaccess/"
+	//eBooks:"v1/Appaccess/",
+	//Accounts:"v1/Accounts/",
+	//Users:"v1/Appaccess/"
 }
 angular.module('services',[])
 .service('UserService', function($http,$q) {
@@ -48,7 +51,7 @@ angular.module('services',[])
   		}
   // For the purpose of this example I will store user data on ionic local storage but you should save it on a database
   
-
+}
   
 })
 .factory('accountsServices',function ($http,$q){
@@ -90,6 +93,18 @@ angular.module('services',[])
 			return deferred.promise;
 
 		},
+		logSale: function (sale){
+			var deferred=$q.defer();
+			$http.post(ApiEndPoint.Accounts+"logSale",{sale:sale})
+			.success(function (data){
+				deferred.resolve(data);
+			})
+			.error(function(error){
+				deferred.reject(error);
+			})
+			return deferred.promise;
+
+		}
 
 
 	}

@@ -17,7 +17,7 @@ angular.module('controllers',[])
       // For the purpose of this example I will store user data on local storage
       console.log(profileInfo);
 
-      UserService.setUser({
+      UserService.setuser({
         authResponse: authResponse,
         userID: profileInfo.id,
         name: profileInfo.name,
@@ -25,7 +25,7 @@ angular.module('controllers',[])
         picture : "http://graph.facebook.com/" + authResponse.userID + "/picture?type=large"
       });
       $ionicLoading.hide();
-      UserService.getUser().then(function (resp){
+      UserService.getuser().then(function (resp){
         console.log("fb-user ="+resp);
         $rootScope.loggedinUser=resp;
       })
@@ -71,14 +71,14 @@ angular.module('controllers',[])
       
 
         // Check if we have our user saved
-        var user = UserService.getUser('facebook');
+        var user = UserService.getuser('facebook');
         //console.log(JSON.stringify(user));
        
         if(!user.userID){
           getFacebookProfileInfo(success.authResponse)
           .then(function(profileInfo) {
             // For the purpose of this example I will store user data on local storage
-            UserService.setUser({
+            UserService.setuser({
               authResponse: success.authResponse,
               userID: profileInfo.id,
               name: profileInfo.name,
@@ -94,7 +94,7 @@ angular.module('controllers',[])
 
 
             }
-            UserService.facebookSignIn($rootscope.LoggedinUser).then(function (resp){
+            UserService.facebookSignIn($rootScope.LoggedinUser).then(function (resp){
               $state.go('main.home');
             })
             
@@ -153,10 +153,11 @@ angular.module('controllers',[])
     })
   }
   $scope.normalLogin = function () {
-    UserService.normalLogin($scope.user),then(function (resp){
+    $state.go('main.home');
+    //UserService.normalLogin($scope.user),then(function (resp){
 
-      console.log(resp);
-    })
+      //console.log(resp);
+   // })
 
   }
 
@@ -291,10 +292,12 @@ console.log($rootScope.loggedinUser);
       .then(function(event) {
         // success
         console.log('success');
+        console.log(event);
       })
       .catch(function(event) {
         // error
          console.log('error');
+         console.log(event);
       });
   }
 
@@ -309,6 +312,7 @@ $scope.paypalPay = function () {
 PaypalService.makePayment(90, 'Total Amount').then(function (response) {
 
 alert('success'+JSON.stringify(response));
+console.log(response);
 $state.go('main.home');
 
 }, function (error) {
@@ -470,12 +474,39 @@ $scope.readEbook = function (number) {
 }
   
 })
-.controller('cartCtrl', function (PaypalService,$rootScope,$scope,$cordovaInAppBrowser,$state){
+.controller('cartCtrl', function (PaypalService,$rootScope,$scope,$cordovaInAppBrowser,$state,accountsServices){
   $scope.book=$state.params.book;
   $scope.total=10.0;
-  $scope.buyNow = function () { PaypalService.initPaymentUI().then(function () { 
-    PaypalService.makePayment($scope.total, "Total").then(); }); }
-})
+  $scope.buyNow = function () { 
+      PaypalService.initPaymentUI().then(function () { 
+        PaypalService.makePayment($scope.total, "Total").then(function (resp){
+          if(resp.response.state=="approved") {
+            
+            var sale = {
+              ref:resp.response.id,
+              datetime:resp.response.create_time,
+              product_id:$scope.book.ebook_id,
+              buyer:$rootScope.loggedinUser.user_id
+            } 
+            accountsServices.logSale(sale).then(function (resp){
+              console.log(resp);
+              //$state.go('main.bookshelf');
+            })
+            //send user to bookshelf
+          }else if (resp.response.state!="approved"){
+                //direct user to a failed payment page
+            }
+           /*
+            accountsServices.logSale().then (function () {
+              $state.go('main.bookshelf');
+            })
+          */
+          
+      console.log(JSON.stringify(resp));
+     }); 
+      })
+    }
+  })
 .filter('monthName', [function() {
     return function (monthNumber) { //1 = January
         var monthNames = [ 'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',

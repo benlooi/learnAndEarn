@@ -1,5 +1,5 @@
 
-	<ion-side-menus>
+	<ion-side-menus enable-menu-with-back-views="true">
   <ion-side-menu side="left">
 <ion-header-bar class="bar-positive">
   <h1 class="title">Pompipi</h1>
@@ -10,7 +10,7 @@
     <a class="item" ui-sref="profile_settings">Profile settings</a>
     <a class="item" ui-sref="main.earnings">My Account</a>
     <a class="item" ui-sref="main.shelf">Bookshelf</a>
-    <a class="item" ng-click="logout()">Logout</a>
+    <a class="item" ui-sref="login">Logout</a>
   </div>
 </ion-content>
 </ion-side-menu>
@@ -25,24 +25,23 @@
     <div style="color: white;" class="button button-icon icon ion-navicon" ng-click="toggleMenu()" ></div> 
 </ion-nav-buttons>
 <ion-nav-buttons side="right">
-    <a style="color: white;" class="button button-icon icon ion-ios-cart"></a> 
+    <i style="color: white;" class="button button-icon icon ion-ios-cart" ng-click="openCart()"><span class="badge badge-assertive">{{cart.length}}</span></i> 
    
 </ion-nav-buttons>
     </ion-nav-bar> 
-<ion-nav-view name="main-user">
-    </ion-nav-view>
+
 <ion-tabs class="tabs-icon-top tabs-positive slide-left-right">
 		
 	
 		<ion-tab title="Home" icon-off="ion-ios-home" icon-on="ion-ios-home" href="#/main/home" >
-    <ion-nav-view name="main-home" cache-view="false">
+    <ion-nav-view name="main-home" >
     </ion-nav-view>
 
   </ion-tab>
 
   <!-- Chats Tab -->
   <ion-tab title="People" icon-off="ion-ios-people-outline" icon-on="ion-ios-people" href="#/main/users" >
-    <ion-nav-view name="main-users" cache-view="false">
+    <ion-nav-view name="main-users" >
 		</ion-nav-view>
   </ion-tab>
 

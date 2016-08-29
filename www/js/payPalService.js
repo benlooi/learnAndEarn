@@ -47,11 +47,11 @@ var app=angular.module('starter.payPalService', [])
 	*
 	* @returns {object} PayPalPaymentObject
 	*/
-	function createPayment(total, name) {
+	function createPayment(total, name,details) {
 	// "Sale == > immediate payment
 	// "Auth" for payment authorization only, to be captured separately at a later time.
 	// "Order" for taking an order, with authorization and capture to be done separately at a later time.
-	var payment = new PayPalPayment("" + total, "SGD", "" + name, "Sale");
+	var payment = new PayPalPayment("" + total, "SGD", "" + name, "Sale",details);
 	return payment;
 	}
 	/**
@@ -92,11 +92,11 @@ var app=angular.module('starter.payPalService', [])
 	*
 	* @returns {object} Promise gets resolved on successful payment, rejected on error
 	*/
-	function makePayment(total, name) {
+	function makePayment(total, name,items) {
 	var defer = $q.defer();
 	total = $filter('number')(total, 2);
 	$ionicPlatform.ready().then(function () {
-	PayPalMobile.renderSinglePaymentUI(createPayment(total, name), function (result) {
+	PayPalMobile.renderSinglePaymentUI(createPayment(total, name,items), function (result) {
 	$timeout(function () {
 	defer.resolve(result);
 	});

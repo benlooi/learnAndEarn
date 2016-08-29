@@ -1,39 +1,44 @@
 <ion-view>
 	<ion-content >
 	<div class="login-container" ng-show="signup==false">
-		<div class="logo">
-			<img ng-src="{{user_image}}"/>
+		
+			<img src="img/pompipi.png" />
 			<div class="label">Username</div>
 			<input type="text" ng-model="user.username" placeholder="Your username">
 			<div class="label">Password</div>
 			<input type="password" ng-model="user.password" placeholder="Your password">
 			<button class="button button-positive button-block" ng-click="normalLogin()">Login </button>
 			<button class="button button-positive button-block" ng-click="facebookSignIn()">Login with Facebook</button>
+			<button class="button button-positive button-block" ng-click="facebookSignOut()">SignOut of Facebook</button>
 			<p>Don't have an account? <span ng-click="showSignUp()">Sign Up.</span></p>
 
-		</div>
+		
 	</div>
 	<div class="login-container" ng-show="signup==true" >
 		<h3>Sign Up</h3>
-				<img class="avatar" src="img/user1.jpg" ng-show="!user.avatar">
+		<form name="signUpForm">
+				<img class="avatar" src="img/image_placeholder_400x400.png" ng-show="!user.avatar" ng-click="setAvatar()">
 				<img class="avatar" ng-src="{{user.avatar}}" ng-show="user.avatar">
 				<div class="label" ng-click="setAvatar()">Avatar</div>
 		<div class="label">Email</div>
-			<input type="text" ng-model="user.email" placeholder="Your email">
+			<input type="text" ng-model="user.email" placeholder="Your email" name="email" ng-pattern="^([a-zA-Z0-9_\-\.]+)@([a-zA-Z0-9_\-\.]+)\.([a-zA-Z]{2,5})$" required>
+			<p ng-show="signUpForm.email.$invalid">Email is invalid</p>
 		<div class="label">First name</div>
-			<input type="text" ng-model="user.firstname" placeholder="Your first name">
+			<input type="text" ng-model="user.firstname" placeholder="Your first name" name="firstname" ng-pattern="^[a-zA-Z0-9]{2,15}$" required>
 			<div class="label">Last name</div>
-			<input type="text" ng-model="user.lastname" placeholder="Your last name">
+			<input type="text" ng-model="user.lastname" placeholder="Your last name" name="lastname" ng-pattern="^[a-zA-Z0-9_-]{2,15}$" required>
 			<div class="label">Username</div>
 			
-			<input type="text" ng-model="user.username" placeholder="Your username">
+			<input type="text" ng-model="user.username" placeholder="Your username" name="username" ng-pattern="^[a-zA-Z0-9_-]{4,15}$"required>
 			<div class="label">Password</div>
-			<input type="password" ng-model="user.password" placeholder="Your password">
+			<input type="password" ng-model="user.password" placeholder="Your password" name="password1" ng-pattern="^.*(?=.{8,})(?=.*[a-zA-Z])(?=.*\d)(?=.*[!#$%@]).*$" required> 
+			<div class="label">Confirm Password</div>
+			<input type="password" ng-model="user.password" placeholder="Confirm password" name="password2" ng-pattern="^.*(?=.{8,})(?=.*[a-zA-Z])(?=.*\d)(?=.*[!#$%@]).*$" required>
 			
-			<button class="button button-block" ng-click="normalSignUp()">Sign Up </button>
+			<button class="button button-block" ng-click="normalSignUp()" ng-disabled="signUpForm.$invalid">Sign Up </button>
 			<p>Already have an account? <span ng-click="showSignUp()">Log in.</span></p>
-			
+			</form>
 	</div>
-	<pre>{{user.avatar}}</pre>
+	
 	</ion-content>
 </ion-view>

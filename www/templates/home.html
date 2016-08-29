@@ -1,8 +1,13 @@
 <ion-view view-title="Home">
 	<ion-content>
+	<ion-refresher
+    pulling-text="Pull to refresh..."
+    on-refresh="doRefresh()">
+  </ion-refresher>
 	<div class="banner_ad">
 		<div class="user_image">
-			<img ng-src="{{loggedinUser.picture}}">
+			<img ng-src="http://www.learnandearn123.com/assets/images/avatars/{{loggedinUser.avatar}}" ng-show="loggedinUser.facebookID.length<5">
+			<img ng-src="http://graph.facebook.com/{{loggedinUser.facebookID}}/picture?type=large" ng-show="loggedinUser.facebookID.length>5"/>
 			<p>{{loggedinUser.name}}</p>
 		</div>
 
@@ -15,7 +20,7 @@
 			
 			<div class="mainhilight">
 					<span class="cardz" ng-click="showBook()" ng-repeat="ebook in latestEbooks" >
-			<img ng-src="http://www.learnandearn123.com/assets/images/{{ebook.image}}" class="thumbnail" ng-click="goToBook(ebook)">
+			<img ng-src="http://www.learnandearn123.com/assets/images/{{ebook.image}}" class="thumbnail" ng-click="goToBook(ebook,'main.home')">
 					<p>{{ebook.title}}</p>
 					<p>{{ebook.author}}</p>
 				</span>
@@ -28,62 +33,7 @@
 	</div>
 		</ion-scroll>
 		
-	<h3>Trending</h3>
 	
-	
-		<ion-scroll direction="x" class="wide-as-needed" scrollbar-x="false" >
-		
-			<div class="mainhilight">
-					<div class="cardz">
-			<img src="img/user1.jpg" class="thumbnail">
-					<p>Title</p>
-				</div>
-		
-	
-					<div class="cardz">
-			<img src="img/user1.jpg" class="thumbnail">
-					<p>Title</p>
-				</div>
-		
-					<div class="cardz">
-			<img src="img/user1.jpg" class="thumbnail">
-					<p>Title</p>
-				</div>
-		
-					
-			<div class="cardz">
-			<img src="img/user1.jpg" class="thumbnail">
-				<p>Title</p>
-				</div>
-			
-				
-		</div>
-		
-	
-		</ion-scroll>
-	<h3>BEst sellers</h3>
-	
-	
-		<ion-scroll direction="x" class="wide-as-needed">
-		
-			
-					<div class="cardz">
-			<img src="img/user1.jpg" class="thumbnail">
-					<p>Title</p>
-				</div>
-		
-	
-					
-			<div class="cardz">
-			<img src="img/user1.jpg" class="thumbnail">
-				<p>Title</p>
-				</div>
-			
-				
-		
-		
-	
-		</ion-scroll>
 
 	<h3>Who's reading</h3>
 	

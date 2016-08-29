@@ -40,7 +40,29 @@ angular.module('services',[])
   		},
   		facebookSignIn: function (user){
   			var deferred=$q.defer();
-			$http.post(ApiEndPoint.Users+"facebookSignIn",{user:user})
+			$http.post(ApiEndPoint.Users+"facebookLogin",{user:user})
+			.success(function (data){
+				deferred.resolve(data);
+			})
+			.error(function(error){
+				deferred.reject(error);
+			})
+			return deferred.promise;
+  		},
+  		normalLogin: function (user){
+  			var deferred=$q.defer();
+			$http.post(ApiEndPoint.Users+"normalLogin",{user:user})
+			.success(function (data){
+				deferred.resolve(data);
+			})
+			.error(function(error){
+				deferred.reject(error);
+			})
+			return deferred.promise;
+  		},
+  		getEbooks: function (user){
+  			var deferred=$q.defer();
+			$http.post(ApiEndPoint.Users+"getEbooks",{user:user})
 			.success(function (data){
 				deferred.resolve(data);
 			})

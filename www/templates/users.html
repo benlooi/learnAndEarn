@@ -9,9 +9,9 @@
 			<button class="button button-calm" ui-sref="login">Follow</button>
 		</div>
 		<div class="books">
-			<div class="book" ng-repeat="book in user.ebooks" ng-click="goToBook(book)">
+			<div class="book" ng-repeat="book in user.ebooks" ng-click="goToBook(book,'main.users')">
 
-				<img ng-src="http://www.learnandearn123.com/assets/images/{{book.image}}" class="thumbnail" ng-click="goToBook(book)">
+				<img ng-src="http://www.learnandearn123.com/assets/images/{{book.image}}" class="thumbnail" >
 				<div class="info">
 				<div class="title">{{book.name}}</div>
 					<div class="author">{{book.author}}

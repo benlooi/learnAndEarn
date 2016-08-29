@@ -1,43 +1,30 @@
 <ion-view view-title="My Books">
 	<ion-content>
+   <ion-refresher
+    pulling-text="Pull to refresh..."
+    on-refresh="doRefresh()">
+  </ion-refresher>
 
-		<div class="list card">
+		<div class="list card" ng-repeat="book in eBooks">
 
   <div class="item">
     
-    <h2>Learn and Earn 123</h2>
-    <p>Ben Looi</p>
+    <h2>{{book.name}}</h2>
+    <p>{{book.author}}</p>
   </div>
 
   <div class="item item-image">
-    <img src="img/learnandearn.png">
+    <img ng-src="http://www.learnandearn123.com/assets/images/{{book.image}}">
   </div>
 
-  <a class="item item-icon-left assertive" ng-click="readEbook('1')" >
+  <a class="item item-icon-left assertive" ng-click="readEbook(book.file,book.filetype)" >
     <i class="icon ion-ios-book"></i>
    Read eBook
   </a>
 
 </div>
 
-<div class="list card">
 
-  <div class="item">
-    
-    <h2>The Dog's Book of Verse</h2>
-    <p>J Earl Clauson</p>
-  </div>
-
-  <div class="item item-image">
-    <img src="img/dogbov.jpg">
-  </div>
-
-  <a class="item item-icon-left assertive" ng-click="readEbook('2')" >
-    <i class="icon ion-ios-book"></i>
-   Read eBook
-  </a>
-
-</div>
 
 	</ion-content>
 </ion-view>

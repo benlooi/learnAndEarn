@@ -5,12 +5,12 @@
 	padding-right: 10vw;
 
 	height:100vh;
-	background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#efad62), color-stop(100%,#f7d47c));
-    background: -webkit-linear-gradient(top, #efad62 0%,#f7d47c 100%);
+	background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#5A827F), color-stop(100%,#94D7D3));
+    background: -webkit-linear-gradient(top, #5A827F 0%,#94D7D3 100%);
 
 }
 .login-container img {
-	margin-left:15vw;
+	margin:0 auto;
 	width:40vw;
 	height:40vw;
 
@@ -20,7 +20,7 @@
 
 }
 .login-container input {
-	border-bottom: 1px solid gray;
+	border-bottom: 1px solid white;
 	background-color: transparent;
 	width:80vw;
 }

@@ -94,16 +94,16 @@ payPalMerchantUserAgreementURL : 'url to user agreement '
     }
 
   })
-  .state('main.book',{
+  .state('book',{
+    cache: false,
     url:'/book',
-     views :{
-      'main-home':{
+     
     templateUrl:'templates/book.html',
     controller: 'bookCtrl'
-   }
- },
+   ,
  params: {
-  book:null
+  book:null,
+  fromState:null
  }
  
 
@@ -141,7 +141,7 @@ payPalMerchantUserAgreementURL : 'url to user agreement '
     templateUrl:'templates/cart.html',
     controller: 'cartCtrl',
     params: {
-      book:null
+      cart:null
     }
      
   })

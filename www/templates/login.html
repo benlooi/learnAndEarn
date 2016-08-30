@@ -21,19 +21,19 @@
 				<img class="avatar" ng-src="{{user.avatar}}" ng-show="user.avatar">
 				<div class="label" ng-click="setAvatar()">Avatar</div>
 		<div class="label">Email</div>
-			<input type="text" ng-model="user.email" placeholder="Your email" name="email" ng-pattern="^([a-zA-Z0-9_\-\.]+)@([a-zA-Z0-9_\-\.]+)\.([a-zA-Z]{2,5})$" required>
+			<input type="text" ng-model="user.email" placeholder="Your email" name="email" required>
 			<p ng-show="signUpForm.email.$invalid">Email is invalid</p>
 		<div class="label">First name</div>
-			<input type="text" ng-model="user.firstname" placeholder="Your first name" name="firstname" ng-pattern="^[a-zA-Z0-9]{2,15}$" required>
+			<input type="text" ng-model="user.firstname" placeholder="Your first name" name="firstname"  required>
 			<div class="label">Last name</div>
-			<input type="text" ng-model="user.lastname" placeholder="Your last name" name="lastname" ng-pattern="^[a-zA-Z0-9_-]{2,15}$" required>
+			<input type="text" ng-model="user.lastname" placeholder="Your last name" name="lastname"  required>
 			<div class="label">Username</div>
 			
-			<input type="text" ng-model="user.username" placeholder="Your username" name="username" ng-pattern="^[a-zA-Z0-9_-]{4,15}$"required>
+			<input type="text" ng-model="user.username" placeholder="Your username" name="username" required>
 			<div class="label">Password</div>
-			<input type="password" ng-model="user.password" placeholder="Your password" name="password1" ng-pattern="^.*(?=.{8,})(?=.*[a-zA-Z])(?=.*\d)(?=.*[!#$%@]).*$" required> 
+			<input type="password" ng-model="user.password" placeholder="Your password" name="password1"  required> 
 			<div class="label">Confirm Password</div>
-			<input type="password" ng-model="user.password" placeholder="Confirm password" name="password2" ng-pattern="^.*(?=.{8,})(?=.*[a-zA-Z])(?=.*\d)(?=.*[!#$%@]).*$" required>
+			<input type="password" ng-model="user.password" placeholder="Confirm password" name="password2"  required>
 			
 			<button class="button button-block" ng-click="normalSignUp()" ng-disabled="signUpForm.$invalid">Sign Up </button>
 			<p>Already have an account? <span ng-click="showSignUp()">Log in.</span></p>

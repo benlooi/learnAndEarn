@@ -4,7 +4,52 @@
 // 'starter' is the name of this angular module example (also set in a <body> attribute in index.html)
 // the 2nd parameter is an array of 'requires'
 angular.module('starter', ['ionic','controllers','services','ngCordova','starter.payPalService','ionic-ratings'])
+.run(function($http, $cordovaPushV5,$rootScope,UserService) {
 
+  var options = {
+    android: {
+      senderID: "295998469081"
+    },
+    ios: {
+      alert: "true",
+      badge: "true",
+      sound: "true"
+    },
+    windows: {}
+  };
+  
+  // initialize
+  $cordovaPushV5.initialize(options).then(function() {
+    // start listening for new notifications
+    $cordovaPushV5.onNotification();
+    // start listening for errors
+    $cordovaPushV5.onError();
+    
+    // register to get registrationId
+    $cordovaPushV5.register().then(function(registrationId) {
+      // save `registrationId` somewhere;
+      localStorage.setItem("gcmRegID",registrationId);
+
+      console.log(registrationId);
+    })
+  });
+  
+  // triggered every time notification received
+  $rootScope.$on('$cordovaPushV5:notificationReceived', function(event, data){
+    // data.message,
+    // data.title,
+    // data.count,
+    // data.sound,
+    // data.image,
+    // data.additionalData
+  });
+
+  // triggered every time error occurs
+  $rootScope.$on('$cordovaPushV5:errorOcurred', function(event, e){
+    // e.message
+  });
+
+})
 .run(function($ionicPlatform) {
   $ionicPlatform.ready(function() {
     if(window.cordova && window.cordova.plugins.Keyboard) {

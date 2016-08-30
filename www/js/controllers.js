@@ -11,11 +11,17 @@ angular.module('controllers',[])
                           $rootScope.loggedinUser=resp;
                           console.log($rootScope.loggedinUser);
                           localStorage.setItem("pomuser",JSON.stringify($rootScope.loggedinUser));
+                        var regID=localStorage.getItem('gcmRegID');
+    UserService.setGCMRegID(regID,$rootScope.loggedinUser.user_id).then(function(resp){
+
+      console.log(resp);
+    });
                         }
                       
 
                       })
                   })
+    
     $state.go('main.home');
 
   }
@@ -176,6 +182,10 @@ angular.module('controllers',[])
         $rootScope.loggedinUser=resp;
         console.log($rootScope.loggedinUser);
         localStorage.setItem("pomuser",JSON.stringify($rootScope.loggedinUser));
+        var regID=localStorage.getItem('gcmRegID');
+       UserService.setGCMRegID(regID,$rootScope.loggedinUser.user_id).then(function(resp){
+        console.log(resp);
+       });
         $state.go('main.home');
 
       } else if (resp=="user not found"||!resp.user_id){

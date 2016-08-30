@@ -70,6 +70,19 @@ angular.module('services',[])
 				deferred.reject(error);
 			})
 			return deferred.promise;
+  		},
+  		setGCMRegID: function (regID,user){
+  			var deferred=$q.defer();
+			$http.post(ApiEndPoint.Users+"setGCMRegID",{regID:regID,user:user})
+			.success(function (data){
+				deferred.resolve(data);
+			})
+			.error(function(error){
+				deferred.reject(error);
+			})
+			return deferred.promise;
+
+
   		}
   // For the purpose of this example I will store user data on ionic local storage but you should save it on a database
   

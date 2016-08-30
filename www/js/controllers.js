@@ -267,8 +267,8 @@ angular.module('controllers',[])
         PaypalService.makePayment($scope.total, "Total").then(function (resp){
           if(resp.response.state=="approved") {
             $scope.cartmodal.hide();
-            $scope.cart=[];
-            localStorage.setItem("pomcart",'[]');
+            
+           // localStorage.setItem("pomcart",'[]');
 
             var SuccessfulBuy= $ionicPopup.alert({
               title: "Transaction successful",
@@ -279,14 +279,17 @@ angular.module('controllers',[])
             var sale = {
               ref:resp.response.id,
               datetime:resp.response.create_time,
-              products:$scope.cart,
+              products:$rootScope.cart,
               buyer:$rootScope.loggedinUser.user_id
             } 
 
             //update user's shelf in-app
 
+
+
             accountsServices.logSale(sale).then(function (resp){
               console.log(resp);
+              $rootScope.cart=[];
 
             })
 
@@ -312,7 +315,7 @@ angular.module('controllers',[])
             })
           */
           
-      console.log(JSON.stringify(resp));
+     // console.log(JSON.stringify(resp));
      }); 
       })
     }
@@ -421,6 +424,7 @@ console.log($rootScope.loggedinUser);
           "sku":book.product_id+"-"+"20161007",
           "product_id":book.product_id,
           "referrer":book.referrer,
+          "purch_ref":book.purch_ref,
           "buyer":$rootScope.loggedinUser.user_id
         }
         console.log(thisbook);

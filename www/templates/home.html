@@ -6,7 +6,7 @@
   </ion-refresher>
 	<div class="banner_ad">
 		<div class="user_image">
-			<img ng-src="http://www.learnandearn123.com/assets/images/avatars/{{loggedinUser.avatar}}" ng-show="loggedinUser.facebookID.length<5">
+			<img ng-src="http://www.learnandearn123.com/apis/assets/images/avatars/{{loggedinUser.avatar}}" ng-show="loggedinUser.facebookID.length<5">
 			<img ng-src="http://graph.facebook.com/{{loggedinUser.facebookID}}/picture?type=large" ng-show="loggedinUser.facebookID.length>5"/>
 			<p>{{loggedinUser.name}}</p>
 		</div>

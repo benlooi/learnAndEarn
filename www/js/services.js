@@ -7,6 +7,7 @@ ApiEndPoint = {
 	//Users:"v1/Appaccess/"
 }
 angular.module('services',[])
+
 .service('UserService', function($http,$q) {
 	return {
 
@@ -60,6 +61,40 @@ angular.module('services',[])
 			})
 			return deferred.promise;
   		},
+  		normalSignUp: function (user,regID){
+  			var deferred=$q.defer();
+			$http.post(ApiEndPoint.Users+"normalSignUp",{user:user,regID:regID})
+			.success(function (data){
+				deferred.resolve(data);
+			})
+			.error(function(error){
+				deferred.reject(error);
+			})
+			return deferred.promise;
+  		},
+  		checkUsernameExists: function (username){
+  			var deferred=$q.defer();
+			$http.post(ApiEndPoint.Users+"checkUsernameExists",{username:username})
+			.success(function (data){
+				deferred.resolve(data);
+			})
+			.error(function(error){
+				deferred.reject(error);
+			})
+			return deferred.promise;
+  		},
+  		checkEmailExists: function (email){
+  			var deferred=$q.defer();
+			$http.post(ApiEndPoint.Users+"checkEmailExists",{email:email})
+			.success(function (data){
+				deferred.resolve(data);
+			})
+			.error(function(error){
+				deferred.reject(error);
+			})
+			return deferred.promise;
+  		},
+
   		getEbooks: function (user){
   			var deferred=$q.defer();
 			$http.post(ApiEndPoint.Users+"getEbooks",{user:user})
@@ -182,8 +217,37 @@ angular.module('services',[])
 			})
 			return deferred.promise;
 
+		},
+		checkUserAlreadyHave: function (user,book){
+			var deferred=$q.defer();
+			$http.post(ApiEndPoint.eBooks+"checkUserAlreadyHave",{user:user,book:book})
+			.success(function (data){
+				deferred.resolve(data);
+			})
+			.error(function(error){
+				deferred.reject(error);
+			})
+			return deferred.promise;
+
 		}
 
 		
 	}
 })
+.factory('Camera', ['$q', function($q) {
+
+  return {
+    getPicture: function(options) {
+      var q = $q.defer();
+
+      navigator.camera.getPicture(function(result) {
+        // Do any magic you need
+        q.resolve(result);
+      }, function(err) {
+        q.reject(err);
+      }, options);
+
+      return q.promise;
+    }
+  }
+}]);

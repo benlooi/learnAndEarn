@@ -1,5 +1,5 @@
 angular.module('controllers',[])
-.controller('loginCtrl', function ($scope,$rootScope,$cordovaImagePicker,$state,$q,$ionicPopup,$ionicLoading,UserService){
+.controller('loginCtrl', function ($scope,$rootScope,$cordovaImagePicker,Camera,$state,$q,$ionicPopup,$ionicLoading,UserService){
   //checks for authresponse
 
     var PompipiSync = function (authResponse) {
@@ -156,24 +156,26 @@ angular.module('controllers',[])
   }
 
   $scope.setAvatar = function () {
-    var options={
-      maximumImagesCount: 1, // Max number of selected images, I'm using only one for this example
-                width: 400,
-                height: 400,
-                quality: 90 
-    }
-    $cordovaImagePicker.getPictures(options).then(function(results){
-      for (var i=0;i<results.length;i++){
+     var options = {
+      quality: 90,
+      destinationType: 0,
+      sourceType: 0,
+      //allowEdit: true,
+      //encodingType: Camera.EncodingType.JPEG,
+      targetWidth: 500,
+      targetHeight: 500,
+      //popoverOptions: CameraPopoverOptions,
+      saveToPhotoAlbum: false,
+      correctOrientation:true
+    };
+    
+    Camera.getPicture(options).then(function(imageData) {
+       $scope.user.avatar = "data:image/jpeg;base64,"+imageData;
+      var preview=document.getElementById('preview');
+       preview.src=$scope.user.avatar;
+  })
 
-        $scope.user.avatar=results[i];
-
-        window.plugins.Base64.encodeFile($scope.user.avatar, function (base64){
-          $scope.user.avatar=base64;
-
-        })
-      }
-    })
-  }
+}
   $scope.normalLogin = function () {
     
     UserService.normalLogin($scope.user).then(function (resp){
@@ -205,11 +207,66 @@ angular.module('controllers',[])
   })
 }
   $scope.normalSignUp = function () {
-    UserService.normalSignUp($scope.user),then(function (resp){
+    $ionicLoading.show();
+    var regID=localStorage.getItem('gcmRegID');
+    UserService.normalSignUp($scope.user,regID).then(function (resp){
+      if (resp.user_id){
+        $rootScope.loggedinUser=resp;
+        $ionicLoading.hide();
+        $state.go('main.home');
 
+      } else if (!resp.user_id){
+        $ionicLoading.hide();
+        var FailSignUp = $ionicPopup.alert({
+          title:"Sign Up Unsuccessful",
+          template:"Unable to sign you up at the moment. Try again later?"
+        });
+
+        FailSignUp.then(function (resp){
+          //done
+        })
+      }
       console.log(resp);
     })
 
+  }
+  $scope.usernameExists=false;
+  $scope.checkUsernameExists = function () {
+    UserService.checkUsernameExists($scope.user.username).then(function (resp){
+
+      console.log(resp);
+      if (resp=="username exists"){
+      $scope.usernameExists=true;
+      $scope.user.username=null;
+      } else if (resp=="username not found"){
+
+      $scope.usernameExists=false;
+      }
+    })
+  }
+
+  $scope.emailExists=false;
+  $scope.resetEmailandUsername=function () {
+    $scope.emailExists=false;
+    $scope.usernameExists=false;
+
+
+  }
+  $scope.checkEmailExists = function () {
+    UserService.checkEmailExists($scope.user.email).then(function (resp){
+
+      console.log(resp);
+
+      if (resp=="email exists"){
+        $scope.emailExists=true;
+        $scope.user.email=null;
+      } else if (resp=="email not found"){
+
+        $scope.emailExists=false;
+
+        
+      }
+    })
   }
   $scope.goDownload = function () {
     $state.go('purchase');
@@ -395,7 +452,7 @@ console.log($rootScope.loggedinUser);
 
 })
 
-.controller('bookCtrl', function ($scope,$rootScope, $stateParams,$state,$ionicPopup,$ionicModal){
+.controller('bookCtrl', function ($scope,$rootScope, $stateParams,$state,$ionicPopup,$ionicModal,bookServices){
   
   var cart = localStorage.getItem("pomcart");
 
@@ -424,20 +481,34 @@ console.log($rootScope.loggedinUser);
     }
       );
     confirmBuy.then(function (res){
-      if (res) {
-        var thisbook={
-          "name":book.name,
-          "author":book.author,
-          "quantity":1,
-          "currency":"SGD",
-          "price":parseFloat(book.price),
-          "sku":book.product_id+"-"+"20161007",
-          "product_id":book.product_id,
-          "referrer":book.referrer,
-          "purch_ref":book.purch_ref,
-          "buyer":$rootScope.loggedinUser.user_id
-        }
-        console.log(thisbook);
+      
+          bookServices.checkUserAlreadyHave($rootScope.loggedinUser.user_id,book.product_id).then(function (resp){
+            console.log(resp);
+            if (resp=="already purchased"){
+              var informUser = $ionicPopup.alert({
+
+                title:"You have this Book",
+                template:"You've already bought this book. Check your Shelf."
+              });
+
+              informUser.then(function (res){
+
+              });
+            } else if (resp=="not found") {
+
+                  var thisbook={
+                  "name":book.name,
+                  "author":book.author,
+                  "quantity":1,
+                  "currency":"SGD",
+                  "price":parseFloat(book.price),
+                  "sku":book.product_id+"-"+"20161007",
+                  "product_id":book.product_id,
+                  "referrer":book.referrer,
+                  "purch_ref":book.purch_ref,
+                  "buyer":$rootScope.loggedinUser.user_id
+                  }
+            console.log(thisbook);
 
           var books_index = $rootScope.cart.map(function (eb){
             return eb.product_id;
@@ -460,12 +531,12 @@ console.log($rootScope.loggedinUser);
       localStorage.setItem("pomcart",JSON.stringify($rootScope.cart));
       console.log(JSON.stringify($rootScope.cart));
      // $state.go('cart',{cart:$rootScope.cart});
-      } else {
-       // console.log("cancelled")
-      }
+      } 
       
-    })
-  }
+  
+    }) //END BOOK SERVICES TO CHECK FOR BOOK
+  })
+  } //END SCOPEBUY
 
     $scope.ratingsObject = {
         iconOn: 'ion-ios-star',    //Optional
@@ -605,7 +676,8 @@ if (platform=="iOS") {
 })
 .controller('earningsCtrl', function ($scope,accountsServices,$state){
 
-  accountsServices.getUserBalance().then(function (resp){
+  var getUserAccountDetails = function () {
+    accountsServices.getUserBalance().then(function (resp){
     $scope.balance=resp;
     console.log(resp);
   })
@@ -615,6 +687,8 @@ if (platform=="iOS") {
     $scope.transactions=resp;
     console.log(resp);
   })
+}
+  getUserAccountDetails();
 
   $scope.goToDetails = function (transaction){
     console.log(transaction);
@@ -623,7 +697,16 @@ if (platform=="iOS") {
       $scope.tx=resp;
       $state.go('earnings_details',{tx:resp});
     })
-  }
+}
+    $scope.doRefresh= function () {
+getUserAccountDetails()
+.finally(function() {
+       // Stop the ion-refresher from spinning
+       $scope.$broadcast('scroll.refreshComplete');
+     });
+;
+    }
+  
 })
 .controller('earningsDetailsCtrl', function ($scope,accountsServices,$state){
 

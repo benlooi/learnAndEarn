@@ -9,6 +9,9 @@ angular.module('controllers',[])
                       console.log(JSON.stringify(resp));
                         if(resp.user_id!=null){
                           $rootScope.loggedinUser=resp;
+                          $rootScope.loggedinUser.following=JSON.parse($rootScope.loggedinUser.following);
+                          $rootScope.loggedinUser.followers=JSON.parse($rootScope.loggedinUser.followers);
+
                           console.log($rootScope.loggedinUser);
                           localStorage.setItem("pomuser",JSON.stringify($rootScope.loggedinUser));
                         var regID=localStorage.getItem('gcmRegID');
@@ -88,11 +91,14 @@ angular.module('controllers',[])
 
   //This method is executed when the user press the "Login with facebook" button
   $scope.facebookSignIn = function() {
-   
+   $ionicLoading.show({
+    template:"<ion-spinner></ion-spinner><p>just a moment...</p>"
+   });
     facebookConnectPlugin.getLoginStatus(function(success){
       console.log(JSON.stringify(success));
       //console.log(success.authResponse.userID);
         if(success.status == 'connected'){
+          $ionicLoading.hide();
          console.log("we are here");
         // The user is logged in and has authenticated your app, and response.authResponse supplies
         // the user's ID, a valid access token, a signed request, and the time the access token
@@ -100,21 +106,10 @@ angular.module('controllers',[])
         PompipiSync(success.authResponse);
                 
             } else if (success.status != 'connected'){
+              $ionicLoading.hide();
               console.log('login with Facebook');
               facebookConnectPlugin.login(['email', 'public_profile'], fbLoginSuccess, fbLoginError);
-            /* facebookConnectPlugin.login(['email','accessToken','name'], function (success){
-                 getFacebookProfileInfo(success.authResponse).then(function (resp){
-                  console.log(JSON.stringify(resp));
-                     UserService.facebookSignIn(resp).then(function (resp){
-                        if(resp.user_id!=null){
-                          $rootScope.loggedinUser=resp;
-                          localStorage.setItem("pomuser",JSON.stringify($rootScope.loggedinUser));
-                        }
-                      
-
-                      })
-                  })
-*/
+            
               }
             },
 
@@ -357,7 +352,15 @@ angular.module('controllers',[])
             accountsServices.logSale(sale).then(function (resp){
               console.log(resp);
               $rootScope.cart=[];
+              if (resp=="transactions updated"){
+                 UserService.updateUserEBooks($rootScope.loggedinUser.user_id).then(function(res){
+                $scope.loggedinUser.ebooks=resp;
+              })
+              }
+             
 
+            }, function (err){
+              console.log(err);
             })
 
               SuccessfulBuy.then(function (resp){
@@ -399,6 +402,10 @@ console.log($rootScope.loggedinUser);
 
   bookServices.getWhosReading().then(function(resp){
     console.log(resp);
+    for (i=0;i<resp.length;i++){
+      resp[i].following=JSON.parse(resp[i].following);
+      resp[i].followers=JSON.parse(resp[i].followers);
+    }
     $scope.whosReading=resp;
   })
   $scope.goToBook = function (ebook,fromState) {
@@ -431,10 +438,24 @@ console.log($rootScope.loggedinUser);
     
   }
 })
-.controller('userCtrl',function ($scope,$state,$stateParams){
-  
+.controller('userCtrl',function ($scope,$rootScope,$state,$stateParams,$ionicLoading,UserService,$ionicPopup){
+ 
  // $scope.user=$state.params.user;
  // console.log($scope.user);
+  $scope.following=false;
+  
+  var checkIfFollowing = function (){
+
+    var following=$rootScope.loggedinUser.following;
+    var in_list=following.indexOf($state.params.user.user_id);
+    if (in_list==-1){
+      $scope.following=false;
+    } else if (in_list>0) {
+      $scope.following=true;
+    }
+  }
+
+  checkIfFollowing();
 
   $scope.goToBook=function (book,fromState){
     book.referrer=$state.params.user.user_id;
@@ -448,6 +469,79 @@ console.log($rootScope.loggedinUser);
     
 
   }
+
+  
+
+  $scope.follow = function (user) {
+    $ionicLoading.show();
+    UserService.followUser($rootScope.loggedinUser.user_id,user).then(function(resp){
+      console.log(resp);
+        $ionicLoading.hide();
+      if (resp=="following"){
+        $rootScope.loggedinUser.following.push(user);
+
+
+        var users=$rootScope.users.map(function (us){
+          return us.user_id;
+        });
+        var thisuser=users.indexOf(user);
+        $rootScope.users[thisuser].followers.push($rootScope.loggedinUser.user_id);
+        
+
+        var followMsg= $ionicPopup.alert(
+            {
+              title:"Follow",
+              template:"You are now following "+$state.params.user.username
+            }
+          );
+
+        followMsg.then(function(resp){
+          //done
+        })
+
+      }
+      $scope.following=true;
+    })
+  }
+
+  $scope.unfollow = function (user){
+    $ionicLoading.show();
+    UserService.unfollowUser($rootScope.loggedinUser.user_id,user).then(function(resp){
+      console.log(resp);
+      var following=$rootScope.loggedinUser.following;
+      var a=following.indexOf(user);
+      following.splice(a,1);
+      $rootScope.loggedinUser.following=following;
+
+      var users=$rootScope.users.map(function (us){
+        return us.user_id;
+      });
+      var thisuser=users.indexOf(user);
+      var user_followers=$rootScope.users[thisuser].followers;
+      var me=user_followers.indexOf($rootScope.loggedinUser.user_id);
+      $rootScope.users[thisuser].followers.splice(me,1);
+
+
+        $ionicLoading.hide();
+      if (resp=="unfollowed"){
+
+        var followMsg= $ionicPopup.alert(
+            {
+              title:"Unfollow",
+              template:"You have unfollowed "+$state.params.user.username
+            }
+          );
+
+        followMsg.then(function(resp){
+          //done
+        })
+
+      }
+    $scope.following=false;
+
+  })
+
+}
 
 
 })
@@ -616,7 +710,16 @@ $state.go('main.home');
 })
 .controller('usersCtrl', function ($rootScope,$scope,bookServices,$state,$stateParams){
   bookServices.getUsers().then(function (resp){
-    $scope.users=resp;
+   
+    for (i=0;i<resp.length;i++){
+      var bookCount=resp[i].ebooks.length;
+      resp[i].bookCount=bookCount;
+      resp[i].followers=JSON.parse(resp[i].followers);
+      resp[i].following=JSON.parse(resp[i].following);
+    }
+    
+    $rootScope.users=resp;
+     
   })
 
   $scope.goToUser= function (user){
@@ -674,32 +777,32 @@ if (platform=="iOS") {
    }
 
 })
-.controller('earningsCtrl', function ($scope,accountsServices,$state){
+.controller('earningsCtrl', function ($scope,$rootScope,accountsServices,$state){
 
-  var getUserAccountDetails = function () {
-    accountsServices.getUserBalance().then(function (resp){
+  var getUserAccountDetails = function (user) {
+    accountsServices.getUserBalance(user).then(function (resp){
     $scope.balance=resp;
     console.log(resp);
   })
 
-  accountsServices.getUserTransactions().then(function (resp){
+  accountsServices.getUserTransactions(user).then(function (resp){
 
     $scope.transactions=resp;
     console.log(resp);
   })
 }
-  getUserAccountDetails();
+  getUserAccountDetails($rootScope.loggedinUser.user_id);
 
   $scope.goToDetails = function (transaction){
     console.log(transaction);
-    accountsServices.getTransactionDetails(transaction).then(function (resp){
+    accountsServices.getTransactionDetails($rootScope.loggedinUser.user_id,transaction).then(function (resp){
       console.log(resp);
       $scope.tx=resp;
       $state.go('earnings_details',{tx:resp});
     })
 }
     $scope.doRefresh= function () {
-getUserAccountDetails()
+getUserAccountDetails($rootScope.loggedinUser.user_id)
 .finally(function() {
        // Stop the ion-refresher from spinning
        $scope.$broadcast('scroll.refreshComplete');
@@ -747,6 +850,16 @@ var openEBook = function (ebook,filetype) {
           // file opened successfully
       }, function(err) {
           // An error occurred. Show a message to the user
+          var Advisory = $ionicPopup.alert(
+          {
+            title:"Reader Required",
+            template: "Download any EBook reader to read your eBook."
+
+          });
+
+          Advisory.then(function (resp){
+            console.log("user informed");
+          })
       });
       } else if (filetype=="pdf"){
         $cordovaFileOpener2.open(
@@ -756,12 +869,22 @@ var openEBook = function (ebook,filetype) {
           // file opened successfully
       }, function(err) {
           // An error occurred. Show a message to the user
+          var Advisory = $ionicPopup.alert(
+          {
+            title:"Reader Required",
+            template: "Download any PDF reader to read your eBook."
+
+          });
+
+          Advisory.then(function (resp){
+            console.log("user informed");
+          })
       });
       }
 
     }
 
-    var downloadEBook = function (ebook,filename) {
+    var downloadEBook = function (ebook,filename,filetype) {
       var url = "http://learnandearn123.com/apis/assets/pdfs/"+filename;
       var trustHosts = true;
       var options = {};
@@ -781,7 +904,7 @@ var openEBook = function (ebook,filetype) {
         });
 
         dlPopup.then(function(res){
-          $state.go('main.shelf');
+          openEBook(ebook,filetype)
 
         });
     }, function(err) {
@@ -794,7 +917,7 @@ var openEBook = function (ebook,filetype) {
 $scope.readEbook = function (filename,filetype) {
   
   var platform= $cordovaDevice.getPlatform();
-
+document.addEventListener('deviceready', function () {
     
   if (platform == "iOS") {
      var ebook = cordova.file.documentsDirectory+filename;
@@ -804,8 +927,8 @@ $scope.readEbook = function (filename,filetype) {
       openEBook(ebook,filetype);
       
      }, function (error){
-        downloadEBook(ebook,filename);
-        
+        downloadEBook(ebook,filename,filetype);
+        console.log(ebook)
       })
    }
 
@@ -817,14 +940,14 @@ $scope.readEbook = function (filename,filetype) {
       //file exist
       openEBook(ebook,filetype);
      }, function (error){
-          downloadEBook(ebook,filename);
+          downloadEBook(ebook,filename,filetype);
 
      })
   
    console.log(ebook);
   }
   
-  
+  })
   }
 
 

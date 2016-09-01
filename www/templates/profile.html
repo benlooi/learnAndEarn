@@ -3,10 +3,11 @@
 	<label class="item item-input">
 	<input type="text" placeholder="search user" ng-model="searchUser"/>
 </label>
-	<div class="users" ng-repeat="user in users|filter:searchUser" ng-click="goToUser(user)">
+	<div class="users" ng-repeat="user in users|filter:searchUser|orderBy: '-bookCount'" ng-click="goToUser(user)">
 		<img ng-src="http://www.learnandearn123.com/apis/assets/images/avatars/{{user.avatar}}">
 		<div class="username"> {{user.username}}</div>
 		<div class="details">{{user.ebooks.length}} books</div>
+		<div class="details">{{user.followers.length}} followers</div>
 	</div>
 	</ion-content>
 </ion-view>

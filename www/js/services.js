@@ -106,9 +106,46 @@ angular.module('services',[])
 			})
 			return deferred.promise;
   		},
+  		updateUserEBooks: function (user){
+  			var deferred=$q.defer();
+			$http.post(ApiEndPoint.Users+"updateUserEBooks",{user:user})
+			.success(function (data){
+				deferred.resolve(data);
+			})
+			.error(function(error){
+				deferred.reject(error);
+			})
+			return deferred.promise;
+  		},
   		setGCMRegID: function (regID,user){
   			var deferred=$q.defer();
 			$http.post(ApiEndPoint.Users+"setGCMRegID",{regID:regID,user:user})
+			.success(function (data){
+				deferred.resolve(data);
+			})
+			.error(function(error){
+				deferred.reject(error);
+			})
+			return deferred.promise;
+
+
+  		},
+  		followUser: function (follower,user){
+  			var deferred=$q.defer();
+			$http.post(ApiEndPoint.Users+"followUser",{follower:follower,user:user})
+			.success(function (data){
+				deferred.resolve(data);
+			})
+			.error(function(error){
+				deferred.reject(error);
+			})
+			return deferred.promise;
+
+
+  		},
+  		unfollowUser: function (follower,user){
+  			var deferred=$q.defer();
+			$http.post(ApiEndPoint.Users+"unfollowUser",{follower:follower,user:user})
 			.success(function (data){
 				deferred.resolve(data);
 			})
@@ -126,9 +163,9 @@ angular.module('services',[])
 })
 .factory('accountsServices',function ($http,$q){
 	return {
-		getUserBalance: function (){
+		getUserBalance: function (user){
 			var deferred=$q.defer();
-			$http.get(ApiEndPoint.Accounts+"getUserBalance")
+			$http.post(ApiEndPoint.Accounts+"getUserBalance",{user:user})
 			.success(function (data){
 				deferred.resolve(data);
 			})
@@ -139,9 +176,9 @@ angular.module('services',[])
 
 		},
 
-		getUserTransactions: function (){
+		getUserTransactions: function (user){
 			var deferred=$q.defer();
-			$http.get(ApiEndPoint.Accounts+"getUserTransactions")
+			$http.post(ApiEndPoint.Accounts+"getUserTransactions",{user:user})
 			.success(function (data){
 				deferred.resolve(data);
 			})
@@ -151,9 +188,9 @@ angular.module('services',[])
 			return deferred.promise;
 
 		},
-		getTransactionDetails: function (transaction){
+		getTransactionDetails: function (user,transaction){
 			var deferred=$q.defer();
-			$http.post(ApiEndPoint.Accounts+"getTransactionDetails",{transaction:transaction})
+			$http.post(ApiEndPoint.Accounts+"getTransactionDetails",{user:user,transaction:transaction})
 			.success(function (data){
 				deferred.resolve(data);
 			})

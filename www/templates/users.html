@@ -1,3 +1,15 @@
+<ion-nav-bar class="bar bar-positive" ng-controller="mainCtrl">
+      <ion-nav-buttons side="left"  ng-click="goBack()">
+         <i style="color: white;" class="button button-icon icon ion-chevron-left" ng-click="backToMain()"></i> 
+      </ion-nav-buttons>
+  </ion-nav-buttons>
+     
+<ion-nav-buttons side="right">
+    <i style="color: white;" class="button button-icon icon ion-ios-cart" ng-click="openCart()"><span class="badge badge-assertive">{{cart.length}}</span></i> 
+   
+</ion-nav-buttons>
+    </ion-nav-bar> 
+
 <ion-view view-title="User">
 
 	<ion-content >
@@ -6,7 +18,11 @@
 			<img ng-src="http://www.learnandearn123.com/apis/assets/images/avatars/{{user.avatar}}">
 			<h2>{{user.firstname}} {{user.lastname}}</h2>
 			<p>{{user.ebooks.length}} books</p>
-			<button class="button button-calm" ui-sref="login">Follow</button>
+			<p class="details">{{user.followers.length}} followers</p>
+			<div class="details text-center">
+			<button class="button button-calm" ng-click="follow(user.user_id)" ng-show="!following">Follow</button>
+			<button class="button button-positive" ng-click="unfollow(user.user_id)" ng-show="following">Unfollow</button>
+			</div>
 		</div>
 		<div class="books">
 			<div class="book" ng-repeat="book in user.ebooks" ng-click="goToBook(book,'main.users')">

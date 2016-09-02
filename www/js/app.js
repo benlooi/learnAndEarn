@@ -71,18 +71,18 @@ if(window.cordova && $cordovaPushV5) {
 .constant('shopSettings',{
 
 payPalSandboxId :'AcI9PSDkSycyk2RCjtd7m3qdLnx5GcV1Jf3yDrz2IwCFQYLoSZNkiP9hUA4E6_0cDUZo0GpZ4x9wCiuK',
-payPalSandboxSIgnature:'Am3Q-yMfXU2jSNP.eDC9.Zj8u7a3ABGq6ZO3aBGRUrIj53yBVzudXDM2',
+payPalSandboxSignature:'Am3Q-yMfXU2jSNP.eDC9.Zj8u7a3ABGq6ZO3aBGRUrIj53yBVzudXDM2',
 payPalSandboxPW:'1408486369',
 payPalSandboxUsername:'ben.looi-facilitator_api1.tellmyfriends.biz',
-payPalProductionId : 'production id here',
+payPalProductionId : 'AXukI-JvV6fFKtEF2AOW4Hd-450u2iVX8_PFeNZx8JB8pX7y1-cAZE-pRZX6yoFLVXCObO73nMv5ghp3',
 
-payPalEnv: 'PayPalEnvironmentSandbox', // for testing production for production
+payPalEnv: 'PayPalEnvironmentProduction', // for testing production for production
 
-payPalShopName : 'MyShopName',
+payPalShopName : 'Creative Spectrum',
 
-payPalMerchantPrivacyPolicyURL : 'url to policy',
+payPalMerchantPrivacyPolicyURL : 'http://www.pompipi.co/main/privacypolicy',
 
-payPalMerchantUserAgreementURL : 'url to user agreement '
+payPalMerchantUserAgreementURL : 'http://www.pompipi.co/main/user_agreement'
 
 })
 

@@ -13,12 +13,12 @@ angular.module('controllers',[])
                           $rootScope.loggedinUser.followers=JSON.parse($rootScope.loggedinUser.followers);
 
                           console.log($rootScope.loggedinUser);
-                          localStorage.setItem("pomuser",JSON.stringify($rootScope.loggedinUser));
+                      /*    localStorage.setItem("pomuser",JSON.stringify($rootScope.loggedinUser));
                         var regID=localStorage.getItem('gcmRegID');
     UserService.setGCMRegID(regID,$rootScope.loggedinUser.user_id).then(function(resp){
 
       console.log(resp);
-    });
+    });*/
                         }
                       
 
@@ -53,16 +53,7 @@ angular.module('controllers',[])
       });*/
       $ionicLoading.hide();
       $state.go("main.home");
-/*
-      UserService.getuser().then(function (resp){
-        console.log("fb-user ="+resp);
-        $rootScope.loggedinUser=resp;
-      })
-      $state.go('main.home');
-    }, function(fail){
-      // Fail get profile info
-      console.log('profile info fail', fail);
-    });*/
+
   };
 
   // This is the fail callback from the login method
@@ -179,10 +170,10 @@ angular.module('controllers',[])
         $rootScope.loggedinUser=resp;
         console.log($rootScope.loggedinUser);
         localStorage.setItem("pomuser",JSON.stringify($rootScope.loggedinUser));
-        var regID=localStorage.getItem('gcmRegID');
+       /* var regID=localStorage.getItem('gcmRegID');
        UserService.setGCMRegID(regID,$rootScope.loggedinUser.user_id).then(function(resp){
         console.log(resp);
-       });
+       });*/
         $state.go('main.home');
 
       } else if (resp=="user not found"||!resp.user_id){
@@ -275,17 +266,12 @@ angular.module('controllers',[])
     $ionicSideMenuDelegate.toggleLeft();
   }
 	
-	$scope.haveBackView=false;
+  UserService.getCountries().then(function (resp){
+    $scope.countries=resp;
+  })
+	
+  $scope.shipping={};
 
-  if ($ionicHistory.backView!=null) {
-    $scope.haveBackView=true;
-  } else {
-    $scope.haveBackView=false;
-  }
-	$scope.goBack= function () {
-    $scope.cartmodal.hide();
-  }
- 
  var cart=localStorage.getItem("pomcart");
  if (cart==null){
   $rootScope.cart=[];
@@ -299,8 +285,27 @@ angular.module('controllers',[])
   }).then(function(modal) {
     $scope.cartmodal = modal;
   });
- 
 
+  
+ 
+ $scope.showShippingAddress=true;
+var physicalItemCheck = function () {
+  var item_types= $rootScope.cart.map(function(item){
+    if (item.type=="fashion"||item.type=="electronics"){
+      return "physical";
+    } else {
+      return item.type;
+    }
+    
+  });
+console.log(JSON.stringify(item_types));
+  var a = item_types.indexOf('physical');
+  if (a!= -1){
+    $scope.showShippingAddress=true;
+  } else if (a== -1) {
+    $scope.showShippingAddress=false;
+  }
+}
  $scope.backToMain= function (fromState) {
  
   $state.go ($rootScope.thisState);
@@ -308,6 +313,7 @@ angular.module('controllers',[])
  }
 
   $scope.openCart = function () {
+    physicalItemCheck();
       $scope.cartmodal.show();
        $scope.total=0;
       for (i=0;i<$rootScope.cart.length;i++){
@@ -318,10 +324,40 @@ angular.module('controllers',[])
 
   }
   $scope.removeItem = function (index){
+    //find out if any physical item
+
+
     $scope.total =$scope.total-$rootScope.cart[index].price;
     $rootScope.cart.splice(index,1);
     localStorage.setItem("pomcart",JSON.stringify($rootScope.cart));
+    physicalItemCheck();
 
+  }
+
+  $scope.increaseQty= function (index){
+    $rootScope.cart[index].quantity++;
+    $scope.total =$scope.total+$rootScope.cart[index].price;
+    localStorage.setItem("pomcart",JSON.stringify($rootScope.cart));
+  }
+
+  $scope.decreaseQty= function (index){
+    if ($rootScope.cart[index].quantity>1){
+      $rootScope.cart[index].quantity--;
+      $scope.total =$scope.total-$rootScope.cart[index].price;
+      physicalItemCheck();
+      localStorage.setItem("pomcart",JSON.stringify($rootScope.cart));
+      
+    }
+
+   
+     else if ($rootScope.cart[index].quantity==1){
+      $rootScope.cart[index].quantity--;
+      $scope.total =$scope.total-$rootScope.cart[index].price;
+      $rootScope.cart.splice(index,1);
+      physicalItemCheck();
+      localStorage.setItem("pomcart",JSON.stringify($rootScope.cart));
+
+     }
   }
 
   $scope.buyNow = function () { 
@@ -342,7 +378,8 @@ angular.module('controllers',[])
               ref:resp.response.id,
               datetime:resp.response.create_time,
               products:$rootScope.cart,
-              buyer:$rootScope.loggedinUser.user_id
+              buyer:$rootScope.loggedinUser.user_id,
+              shipping:$scope.shipping
             } 
 
             //update user's shelf in-app
@@ -390,12 +427,28 @@ angular.module('controllers',[])
       })
     }
 
+    $scope.goBack = function () {
+      $scope.cartmodal.hide();
+    }
 
 })
-.controller('homeCtrl', function ($rootScope,$scope,$state,bookServices,$stateParams,UserService){
+.controller('homeCtrl', function ($rootScope,$scope,$state,bookServices,productServices,$stateParams,UserService,$ionicLoading){
 console.log($rootScope.loggedinUser);
+$ionicLoading.show({
+  template: "<ion-spinner></ion-spinner><p>just a moment...</p>"
+});
+
+  productServices.getElectronics().then(function(resp){
+    $scope.Electronics=resp;
+    console.log(resp);
+  })
+  productServices.getFashion().then(function(resp){
+    $scope.Fashion=resp;
+    console.log(resp);
+  })
 
   bookServices.getLatest().then(function(resp){
+    $ionicLoading.hide();
     console.log(resp);
     $scope.latestEbooks=resp;
   })
@@ -415,11 +468,19 @@ console.log($rootScope.loggedinUser);
     console.log(JSON.stringify(ebook));
   }
 
-  $scope.goToUser = function (user){
+  $scope.goToUser= function (user){
     console.log(user);
     $rootScope.user=user;
-    $state.go('main.user',{user:user});
+    $rootScope.thisState="main.home";
+    $state.go('user',{user:user,fromState:"main.home"});
   }
+  $scope.showProduct =function(product,fromState) {
+    product.referrer=product.buyer.user_id;
+    
+    $state.go('product',{product:product,fromState:fromState});
+    console.log(JSON.stringify(product));
+  }
+
 
    $scope.doRefresh= function () {
      bookServices.getLatest().then(function(resp){
@@ -443,7 +504,8 @@ console.log($rootScope.loggedinUser);
  // $scope.user=$state.params.user;
  // console.log($scope.user);
   $scope.following=false;
-  
+  $rootScope.thisState=$state.params.fromState;
+  console.log($state.params.fromState);
   var checkIfFollowing = function (){
 
     var following=$rootScope.loggedinUser.following;
@@ -561,6 +623,14 @@ console.log($rootScope.loggedinUser);
   $scope.thisEbook=$state.params.book;
   $rootScope.thisState=$state.params.fromState;
   console.log($scope.thisEbook);
+$scope.comment={};
+$scope.comment.comment_by=$rootScope.loggedinUser.user_id;
+$scope.comment.username=$rootScope.loggedinUser.username;
+$scope.comment.facebookID=$rootScope.loggedinUser.facebookID;
+$scope.comment.product_id=$scope.thisEbook.product_id;
+$scope.comment.product_type="ebooks";
+
+
 
   $ionicModal.fromTemplateUrl('templates/comments.html', {
     scope: $scope,
@@ -646,6 +716,7 @@ console.log($rootScope.loggedinUser);
       };
 
       $scope.ratingsCallback = function(rating) {
+        $scope.comment.rating=rating;
         console.log('Selected rating is : ', rating);
       };
 
@@ -655,6 +726,13 @@ console.log($rootScope.loggedinUser);
   }
 
   $scope.submitComment = function () {
+    console.log(JSON.stringify($scope.comment));
+    bookServices.addComment($scope.comment,$scope.loggedinUser.user_id).then(function(res){
+      console.log(res);
+      if (res=="comment added"){
+        $scope.thisEbook.comments.push($scope.comment);
+      }
+    })
 
     $scope.modal.hide();
   }
@@ -708,9 +786,240 @@ $state.go('main.home');
 
 }
 })
-.controller('usersCtrl', function ($rootScope,$scope,bookServices,$state,$stateParams){
+.controller('productCtrl', function ($scope,$rootScope, $stateParams,$state,$ionicPopup,$ionicModal,bookServices){
+  
+  var cart = localStorage.getItem("pomcart");
+
+  var SelectedProduct = $ionicModal.fromTemplateUrl('templates/product_selection.html',{
+      scope:$scope,
+      animation:'slide-in-up'
+    }).then(function(modal){
+      $scope.productmodal=modal;
+    })
+    if (cart==null) {
+      $rootScope.cart=[];
+    } else {
+      //cart = JSON.parse(cart);
+      $rootScope.cart=JSON.parse(cart);
+    }
+
+  //console.log(cart);
+
+  $scope.item_index=0;
+  $scope.thisProduct=$state.params.product;
+$scope.comment={};
+$scope.comment.comment_by=$rootScope.loggedinUser.user_id;
+$scope.comment.username=$rootScope.loggedinUser.username;
+$scope.comment.facebookID=$rootScope.loggedinUser.facebookID;
+$scope.comment.product_id=$scope.thisProduct.product_id;
+$scope.comment.product_type=$scope.thisProduct.type;
+
+
+  $rootScope.thisState=$state.params.fromState;
+  console.log($scope.thisProduct);
+
+  $ionicModal.fromTemplateUrl('templates/comments.html', {
+    scope: $scope,
+    animation: 'slide-in-up'
+  }).then(function(modal) {
+    $scope.modal = modal;
+  });
+
+
+
+
+
+   $scope.selectModel = function (product) {
+    $scope.selected_product=product.models;
+    $scope.order_product={};
+    $scope.order_product.name=product.name;
+    $scope.order_product.model=$scope.selected_product[0].model;
+    $scope.order_product.product_id=product.product_id;
+    $scope.order_product.referrer=product.referrer;
+    $scope.order_product.purch_ref=product.purch_ref;
+    $scope.order_product.price=parseFloat(product.price,2);
+    $scope.order_product.color=$scope.selected_product[0].color;
+     $scope.order_product.type=product.type;
+
+    $scope.order_product.quantity=1;
+    console.log(JSON.stringify($scope.selected_product));
+      $scope.productmodal.show();
+
+    }
+$scope.nextModel= function () {
+  if ($scope.item_index==$scope.selected_product.length-1){
+    var productMsg = $ionicPopup.alert({
+      title:"Product Information",
+      template:"Swipe right to view more."
+    });
+    productMsg.then(function(res){
+
+    })
+  } else if ($scope.item_index<$scope.selected_product.length){
+    $scope.item_index++;
+     $scope.order_product.model=$scope.selected_product[$scope.item_index].model;
+
+  }
+  
+
+}
+
+$scope.prevModel= function () {
+  if ($scope.item_index>0) {
+    $scope.item_index--;
+    $scope.order_product.model=$scope.selected_product[$scope.item_index].model;
+  } else if ($scope.item_index==0){
+    var productMsg = $ionicPopup.alert({
+      title:"Product Information",
+      template:"Swipe left to view more."
+    });
+     productMsg.then(function(res){
+      
+    })
+  }
+}
+  $scope.increaseQty= function () {
+    $scope.order_product.quantity++;
+  }
+
+  $scope.decreaseQty= function () {
+    if ($scope.order_product.quantity>1){
+      $scope.order_product.quantity--;
+    }
+    
+  }
+
+    $scope.closeProductDetails = function () {
+      $scope.productmodal.hide();
+    }
+    $scope.addItemToCart = function () {
+     
+      
+      //check order details 
+
+      if ((($scope.order_product.quantity<1 || $scope.order_product.size==null|| $scope.order_product.color==null) && $scope.order_product.type=="fashion") || (($scope.order_product.quantity<1 || $scope.order_product.color==null) && $scope.order_product.type=="elecronics" )) {
+        var checkItemMsg = $ionicPopup.alert({
+          title: "Add To Cart",
+          template:"Please specify required information."
+        });
+        checkItemMsg.then (function(resp){
+
+        })
+      } else {
+        $scope.productmodal.hide();
+        $rootScope.cart.push($scope.order_product);
+      }
+      console.log(JSON.stringify($scope.order_product))
+      
+    }
+
+    $scope.selectSize = function (index) {
+
+
+    }
+  $scope.buy=function (product) {
+
+    var confirmBuy= $ionicPopup.confirm({
+      title:"Add to Cart",
+      template:'Confirm add to cart?'
+    }
+      );
+    confirmBuy.then(function (res){
+      
+           
+
+                  var thisProduct={
+                  "name":product.name,
+                  "quantity":1,
+                  "currency":"SGD",
+                  "type":product.type,
+                  "price":parseFloat(product.price),
+                  "sku":product.sku,
+                  "product_id":product.product_id,
+                  "referrer":product.referrer,
+                  "purch_ref":product.purch_ref,
+                  "buyer":$rootScope.loggedinUser.user_id
+                  }
+            console.log(thisProduct);
+
+          var product_index = $rootScope.cart.map(function (pd){
+            return pd.product_id;
+          } )
+
+          var isInCart = product_index.indexOf(thisProduct.product_id);
+           if (isInCart== -1){
+            $rootScope.cart.push(thisProduct);
+          } else {
+            var InCartMsg = $ionicPopup.alert({
+              title:"Cart Status",
+              template:"Item already in cart."
+            });
+            inCartMsg.then(function (resp){
+              console.log("item in cart already");
+            })
+          }
+      
+      //console.log(josn.stringify(cart));
+      localStorage.setItem("pomcart",JSON.stringify($rootScope.cart));
+      console.log(JSON.stringify($rootScope.cart));
+     // $state.go('cart',{cart:$rootScope.cart});
+      
+  })
+  } //END SCOPEBUY
+
+    $scope.ratingsObject = {
+        iconOn: 'ion-ios-star',    //Optional
+        iconOff: 'ion-ios-star-outline',   //Optional
+        iconOnColor: 'rgb(200, 200, 100)',  //Optional
+        iconOffColor:  'rgb(200, 100, 100)',    //Optional
+        rating:  2, //Optional
+        minRating:1,    //Optional
+        readOnly: true, //Optional
+        callback: function(rating) {    //Mandatory
+          $scope.ratingsCallback(rating);
+        }
+      };
+
+      $scope.ratingsCallback = function(rating) {
+        $scope.comment.rating=rating;
+        console.log('Selected rating is : ', rating);
+      };
+
+
+  $scope.rate=function () {
+    $scope.modal.show();
+  }
+
+  $scope.submitComment = function () {
+    console.log(JSON.stringify($scope.comment));
+    bookServices.addComment($scope.comment,$scope.loggedinUser.user_id).then(function(res){
+      console.log(res);
+      if (res=="comment added"){
+        $scope.thisProduct.comments.push($scope.comment);
+      }
+    })
+
+    $scope.modal.hide();
+  }
+
+  
+  
+
+
+   $scope.backToApp= function () {
+    $cordovaInAppBrowser.close();
+   } 
+
+
+})
+.controller('usersCtrl', function ($rootScope,$scope,bookServices,$state,$stateParams,$ionicLoading){
+$ionicLoading.show({
+
+  template:"<ion-spinner></ion-spinner><p>just a moment...</p>"
+})
+
   bookServices.getUsers().then(function (resp){
-   
+   $ionicLoading.hide();
     for (i=0;i<resp.length;i++){
       var bookCount=resp[i].ebooks.length;
       resp[i].bookCount=bookCount;
@@ -725,7 +1034,8 @@ $state.go('main.home');
   $scope.goToUser= function (user){
     console.log(user);
     $rootScope.user=user;
-    $state.go('main.user',{user:user});
+    $rootScope.thisState="main.users";
+    $state.go('user',{user:user,fromState:"main.users"});
   }
   
 })

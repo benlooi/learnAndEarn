@@ -1,5 +1,5 @@
 <ion-nav-bar class="bar bar-positive" ng-controller="mainCtrl">
-      <ion-nav-buttons side="left"  ng-click="goBack()">
+      <ion-nav-buttons side="left"  >
          <i style="color: white;" class="button button-icon icon ion-chevron-left" ng-click="backToMain()"></i> 
       </ion-nav-buttons>
   </ion-nav-buttons>
@@ -35,6 +35,29 @@
 					</div>
 				</div>
 			</div>
+<!--
+			<h3>Electronics</h3>
+			<div class="book" ng-repeat="item in user.products" ng-click="showProduct(item,'main.users')">
+
+				<img ng-src="http://www.learnandearn123.com/assets/images/{{item.image}}" class="thumbnail" >
+				<div class="info">
+				<div class="title">{{item.name}}</div>
+					<div class="author">{{item.author}}
+					<span class="rating">3 stars</span>
+					</div>
+				</div>
+			</div>
+			<h3>Fashion</h3>
+			<div class="book" ng-repeat="item in user.products" ng-click="showProduct(item,'main.users')">
+
+				<img ng-src="http://www.learnandearn123.com/assets/images/{{item.image}}" class="thumbnail" >
+				<div class="info">
+				<div class="title">{{item.name}}</div>
+					<div class="author">{{item.author}}
+					<span class="rating">3 stars</span>
+					</div>
+				</div>
+			</div> -->
 		</div>
 	</ion-content>
 </ion-view>

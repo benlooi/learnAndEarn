@@ -1,5 +1,5 @@
 <ion-view view-title="Home">
-	<ion-content>
+	<ion-content lazy-scroll>
 	<ion-refresher
     pulling-text="Pull to refresh..."
     on-refresh="doRefresh()">
@@ -19,8 +19,8 @@
 		
 			
 			<div class="mainhilight">
-					<span class="cardz" ng-click="showBook()" ng-repeat="ebook in latestEbooks" >
-			<img ng-src="http://www.learnandearn123.com/assets/images/{{ebook.image}}" class="thumbnail" ng-click="goToBook(ebook,'main.home')">
+					<span class="cardz" ng-click="goToBook(ebook,'main.home')" ng-repeat="ebook in latestEbooks" >
+			<img image-lazy-src="http://www.learnandearn123.com/assets/images/{{ebook.image}}" image-lazy-loader="lines" class="thumbnail" >
 					<p>{{ebook.title}}</p>
 					<p>{{ebook.author}}</p>
 				</span>
@@ -33,7 +33,45 @@
 	</div>
 		</ion-scroll>
 		
+	<h3>Electronics</h3>
 	
+	
+		<ion-scroll direction="x" class="wide-as-needed" scrollbar-x="false" has-bouncing="true">
+		
+			
+			<div class="mainhilight">
+					<span class="cardz" ng-click="showProduct(elproduct,'main.home')" ng-repeat="elproduct in Electronics" >
+			<img image-lazy-src="http://www.learnandearn123.com/assets/images/{{elproduct.image}}" image-lazy-loader="lines" class="thumbnail" >
+					<p>{{elproduct.name}}</p>
+					
+				</span>
+		
+	
+			
+	
+		
+	</div>
+		</ion-scroll>
+
+		<h3>Fashion</h3>
+	
+	
+		<ion-scroll direction="x" class="wide-as-needed" scrollbar-x="false" has-bouncing="true">
+		
+			
+			<div class="mainhilight">
+					<span class="cardz" ng-click="showProduct(fproduct,'main.home')" ng-repeat="fproduct in Fashion" >
+			<img image-lazy-src="http://www.learnandearn123.com/assets/images/{{fproduct.image}}" image-lazy-loader="lines" class="thumbnail" >
+					<p>{{fproduct.name}}</p>
+					
+				</span>
+		
+	
+			
+	
+		
+	</div>
+		</ion-scroll>
 
 	<h3>Who's reading</h3>
 	
@@ -43,7 +81,7 @@
 			
 			<div class="mainhilight">
 					<span class="cardz" ng-click="goToUser(user)" ng-repeat="user in whosReading" >
-			<img ng-src="http://www.learnandearn123.com/apis/assets/images/avatars/{{user.avatar}}" class="thumbnail" >
+			<img image-lazy-src="http://www.learnandearn123.com/apis/assets/images/avatars/{{user.avatar}}" class="thumbnail" >
 					<p>{{user.username}}</p>
 					<p>{{user.ebooks.length}} books</p>
 				</span>

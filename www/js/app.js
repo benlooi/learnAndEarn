@@ -3,7 +3,7 @@
 // angular.module is a global place for creating, registering and retrieving Angular modules
 // 'starter' is the name of this angular module example (also set in a <body> attribute in index.html)
 // the 2nd parameter is an array of 'requires'
-angular.module('starter', ['ionic','directives','controllers','services','ngCordova','starter.payPalService','ionic-ratings'])
+angular.module('starter', ['ionic','directives','controllers','services','ngCordova','starter.payPalService','ionicLazyLoad','ionic-ratings'])
 
 .run(function($ionicPlatform,$http, $cordovaPushV5,$rootScope,UserService) {
 
@@ -47,6 +47,8 @@ if(window.cordova && $cordovaPushV5) {
 
       console.log(registrationId);
     })
+  })
+}
   });
   
   // triggered every time notification received
@@ -64,10 +66,10 @@ if(window.cordova && $cordovaPushV5) {
     // e.message
   });
 
-}
-  });
 
-})
+  })
+
+
 .constant('shopSettings',{
 
 payPalSandboxId :'AcI9PSDkSycyk2RCjtd7m3qdLnx5GcV1Jf3yDrz2IwCFQYLoSZNkiP9hUA4E6_0cDUZo0GpZ4x9wCiuK',
@@ -76,7 +78,7 @@ payPalSandboxPW:'1408486369',
 payPalSandboxUsername:'ben.looi-facilitator_api1.tellmyfriends.biz',
 payPalProductionId : 'AXukI-JvV6fFKtEF2AOW4Hd-450u2iVX8_PFeNZx8JB8pX7y1-cAZE-pRZX6yoFLVXCObO73nMv5ghp3',
 
-payPalEnv: 'PayPalEnvironmentProduction', // for testing production for production
+payPalEnv: 'PayPalEnvironmentSandbox', // for testing production for production
 
 payPalShopName : 'Creative Spectrum',
 
@@ -126,17 +128,20 @@ payPalMerchantUserAgreementURL : 'http://www.pompipi.co/main/user_agreement'
     }
     
   })
-  .state('main.user',{
+ // .state('main.user',{
+    .state('user',{
+      cache: false,
     url:'/user',
-    views: {
-      'main-users':{
+    //views: {
+    //  'main-users':{
     templateUrl:'templates/users.html',
     controller: 'userCtrl'
-    }
-    }
+   // }
+   // }
     ,
     params: {
-      user:null
+      user:null,
+      fromState:null
     }
 
   })
@@ -149,6 +154,20 @@ payPalMerchantUserAgreementURL : 'http://www.pompipi.co/main/user_agreement'
    ,
  params: {
   book:null,
+  fromState:null
+ }
+ 
+
+  })
+  .state('product',{
+    cache: false,
+    url:'/product',
+     
+    templateUrl:'templates/product.html',
+    controller: 'productCtrl'
+   ,
+ params: {
+  product:null,
   fromState:null
  }
  

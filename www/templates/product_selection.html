@@ -1,0 +1,39 @@
+<ion-modal-view>
+ 	<ion-header-bar class="bar-positive">
+      <h1 class="title">Shopping cart</h1>
+    </ion-header-bar>
+	<ion-content >
+	
+		<div class="card" on-swipe-left="nextModel()" on-swipe-right="prevModel()">
+			<div class="image">
+				<img ng-src="http://www.learnandearn123.com/assets/images/{{selected_product[item_index].image}}">
+			</div>
+			<div class="item">
+				{{selected_product[item_index].model}}
+			</div>
+			<div class="item item-input item-select" ng-show="selected_product[item_index].color">
+				<div class="input-label">Color
+				</div>
+				<select  ng-model="order_product.color" ng-options="color as color for color in selected_product[item_index].color">
+				</select>
+			</div>
+			<div class="item" ng-show="selected_product[item_index].stock[0].size">
+				<div class="input-label">Size
+				</div>
+				<select  ng-model="order_product.size" ng-options="stock.size as stock.size for stock in selected_product[item_index].stock">
+				</select>
+			</div>
+			<div class="item">
+				<div class="input-label">Quantity
+				</div>
+				<button class="button button-stable icon ion-minus" ng-click="decreaseQty()"></button>{{order_product.quantity}}<button class="button button-stable icon ion-plus" ng-click="increaseQty()"></button>
+			</div>
+		</div>
+		<div class="text-center">
+			<button class="button button-positive" ng-click="addItemToCart()" >Add To Cart</button>
+			<button class="button button-positive" ng-click="closeProductDetails()">Back</button>
+
+		</div>
+
+</ion-content>
+</ion-modal-view>

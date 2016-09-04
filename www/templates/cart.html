@@ -5,20 +5,51 @@
 	<ion-content >
 		
 		<div class="list card">
-			<div class="item item-icon-left" ng-repeat="book in cart track by $index">
-				{{book.name}}
+			<div class="item item-icon-left" ng-repeat="item in cart track by $index">
+				{{item.name}}
 				<i class="ion-ios-close-empty" ng-click="removeItem($index)"></i>
 				<span class="item-note">
-					{{book.currency}} {{book.price}}
+					{{item.currency}} {{item.price}}
 				</span>
-				<p>{{book.author}}</p>
-				<p>Qty : {{book.quantity}}</p>
+				<p>{{item.author}}</p>
+				<p>Qty : {{item.quantity}}</p>
+				<button class="button button-stable" ng-click="increaseQty($index)" ng-show="item.type!='ebooks'"><i class="icon ion-plus"></i></button>
+				<button class="button button-stable" ng-click="decreaseQty($index)" ng-show="item.type!='ebooks'"><i class="icon ion-minus"></i></button>
 				
 			</div>
 			<div class="item item-icon-left">
 				TOTAL
-				<span class="item-note"> {{book.currency}} {{total}}<span>
+				<span class="item-note"> {{book.currency}} {{total}}</span>
 			</div>
+		</div>
+		<div class="card" ng-show="showShippingAddress==true">
+			<div class="header">Shipping Address</div>
+			<form name="orderForm">
+				<div class="label">
+					<input type="text" placeholder="Address Line 1" ng-model="order.address1" ng-model="shipping.address1">
+				</div>
+				<div class="label">
+					<input type="text" placeholder="Address Line 2" ng-model="order.address2" ng-model="shipping.address2">
+				</div>
+				<div class="label">
+					<input type="text" placeholder="Postal code" ng-model="order.postalcode" ng-model="shipping.postcode">
+				</div>
+				<div class="label">
+					<input type="text" placeholder="State" ng-model="order.State" ng-model="shipping.State">
+				</div>
+			<div class="list">
+
+			  <label class="item item-input item-select">
+			    <div class="input-label">
+			     Country
+			    </div>
+			    <select ng-model="shipping.country" ng-options="country.name for country in countries">
+			    </select>
+			  </label>
+			</div>
+
+	</div>
+			</form>
 		</div>
 		<button class="button button-block button-positive" ng-click="buyNow()">Check out</button>
 		

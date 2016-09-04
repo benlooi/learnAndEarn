@@ -155,6 +155,19 @@ angular.module('services',[])
 			return deferred.promise;
 
 
+  		},
+  		getCountries: function (){
+  			var deferred=$q.defer();
+			$http.get('json/countries.json')
+			.success(function (data){
+				deferred.resolve(data);
+			})
+			.error(function(error){
+				deferred.reject(error);
+			})
+			return deferred.promise;
+
+
   		}
   // For the purpose of this example I will store user data on ionic local storage but you should save it on a database
   
@@ -266,9 +279,49 @@ angular.module('services',[])
 			})
 			return deferred.promise;
 
+		},
+		addComment: function (comment,user){
+			var deferred=$q.defer();
+			$http.post(ApiEndPoint.eBooks+"addComment",{comment:comment,user:user})
+			.success(function (data){
+				deferred.resolve(data);
+			})
+			.error(function(error){
+				deferred.reject(error);
+			})
+			return deferred.promise;
+
 		}
 
 		
+	}
+})
+.factory('productServices',function ($http,$q){
+	return {
+		getElectronics: function (){
+			var deferred=$q.defer();
+			$http.get(ApiEndPoint.eBooks+"getElectronics")
+			.success(function (data){
+				deferred.resolve(data);
+			})
+			.error(function(error){
+				deferred.reject(error);
+			})
+			return deferred.promise;
+
+		},
+		getFashion: function (){
+			var deferred=$q.defer();
+			$http.get(ApiEndPoint.eBooks+"getFashion")
+			.success(function (data){
+				deferred.resolve(data);
+			})
+			.error(function(error){
+				deferred.reject(error);
+			})
+			return deferred.promise;
+
+		}
 	}
 })
 .factory('Camera', ['$q', function($q) {

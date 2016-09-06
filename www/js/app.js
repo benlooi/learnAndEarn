@@ -173,6 +173,39 @@ payPalMerchantUserAgreementURL : 'http://www.pompipi.co/main/user_agreement'
  
 
   })
+
+    .state('coupon_admin',{
+      cache: false,
+    url:'/coupon_admin',
+    //views: {
+    //  'main-users':{
+    templateUrl:'templates/redemption.html',
+    controller: 'couponAdminCtrl'
+   // }
+   // }
+    ,
+    params: {
+      user:null,
+      fromState:null
+    }
+
+  })
+    .state('coupon',{
+      cache: false,
+    url:'/coupon',
+    //views: {
+    //  'main-users':{
+    templateUrl:'templates/coupon.html',
+    controller: 'couponAdminCtrl'
+   // }
+   // }
+    ,
+    params: {
+      user:null,
+      fromState:null
+    }
+
+  })
   .state('main.shelf',{
     url:'/shelf',
      views :{

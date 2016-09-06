@@ -1,0 +1,25 @@
+ <ion-nav-bar class="bar bar-positive" ng-controller="mainCtrl">
+      <ion-nav-buttons side="left"  ng-click="goBack()">
+         <i style="color: white;" class="button button-icon icon ion-chevron-left" ng-click="backToMain()"></i> 
+      </ion-nav-buttons>
+  </ion-nav-buttons>
+     
+<ion-nav-buttons side="right">
+    <i style="color: white;" class="button button-icon icon ion-ios-cart" ng-click="openCart()"><span class="badge badge-assertive">{{cart.length}}</span></i> 
+   
+</ion-nav-buttons>
+    </ion-nav-bar> 
+
+<ion-view view-title="Redeem Coupon">
+<ion-content>
+
+<div class="card">
+	<div class="content">
+		<button class="button button-assertive icon ion-camera" ng-click="scanQRCode()">Scan CouponCode</button>
+	</div>
+
+</div>
+
+</ion-content>
+
+</ion-view>

@@ -1,5 +1,6 @@
 ApiEndPoint = {
 	eBooks:"http://www.pompipi.co/apis/index.php/Appaccess/",
+	Coupons:"http://www.pompipi.co/apis/index.php/Coupons/",
 	Accounts:"http://www.pompipi.co/apis/index.php/Accounts/",
 	Users:"http://www.pompipi.co/apis/index.php/Appaccess/"
 	//eBooks:"v1/Appaccess/",
@@ -313,6 +314,34 @@ angular.module('services',[])
 		getFashion: function (){
 			var deferred=$q.defer();
 			$http.get(ApiEndPoint.eBooks+"getFashion")
+			.success(function (data){
+				deferred.resolve(data);
+			})
+			.error(function(error){
+				deferred.reject(error);
+			})
+			return deferred.promise;
+
+		}
+	}
+})
+.factory('couponServices',function ($http,$q){
+	return {
+		getCoupon: function (service){
+			var deferred=$q.defer();
+			$http.post(ApiEndPoint.Coupons+"getCoupon",{service:service})
+			.success(function (data){
+				deferred.resolve(data);
+			})
+			.error(function(error){
+				deferred.reject(error);
+			})
+			return deferred.promise;
+
+		},
+		redeemCoupon: function (coupon){
+			var deferred=$q.defer();
+			$http.post(ApiEndPoint.Coupons+"redeemCoupon",{coupon:coupon})
 			.success(function (data){
 				deferred.resolve(data);
 			})

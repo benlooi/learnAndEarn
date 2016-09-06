@@ -1294,6 +1294,49 @@ $scope.doRefresh = function() {
    $state.go('main.home');
   }
   })
+
+.controller('couponAdminCtrl', function ($scope,$rootScope,couponServices,$cordovaBarcodeScanner,$ionicModal){
+couponServices.getCoupon(coupon_id).then(function (res){
+  $scope.coupon=res;
+})
+
+ var locationChoice= $ionicModal.fromTemplateUrl('templates/locations.html',{
+              scope.$scope,
+              animation:'slide-in-up'
+            }).then(function (modal){
+              $scope.modal=modal;
+            })
+ $scope.couponData = {
+          couponcode:barcodeData,
+          processed_by:$rootScope.loggedinUser.user_id
+        }
+  $scope.scanQRCode= function () {
+
+    $cordovaBarcodeScanner
+      .scan()
+      .then(function(barcodeData) {
+       
+        // Success! Barcode data is here
+        console.log(barcodeData);
+        couponServices.checkCoupon(couponData).then (function (res){
+          if (res=="valid") {
+            console.log(res);
+            $scope.modal.show();
+
+          }
+        });
+
+      }, function(error) {
+        // An error occurred
+      });
+
+  }
+  $scope.selectLocation = function (location){
+    $scope.couponData.location=location;
+    $scope.modal.hide();
+  }
+
+})
 .filter('monthName', [function() {
     return function (monthNumber) { //1 = January
         var monthNames = [ 'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',

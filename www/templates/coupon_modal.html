@@ -1,0 +1,13 @@
+<ion-modal-view>
+ 	<ion-header-bar class="bar-positive">
+      <h1 class="title">Outlet Location</h1>
+    </ion-header-bar>
+	<ion-content >
+	Select Outlet location
+	<div class="list card">
+		<div class="item" ng-repeat="location in coupon.locations" ng-click="selectLocation(location.location)">
+			{{location.location}}
+		</div>
+	</div>
+</ion-content>
+</ion-model-view>

@@ -447,6 +447,11 @@ $ionicLoading.show({
     console.log(resp);
   })
 
+  productServices.getServices().then(function(resp){
+    $scope.Services=resp;
+    console.log(resp);
+  })
+
   bookServices.getLatest().then(function(resp){
     $ionicLoading.hide();
     console.log(resp);
@@ -478,6 +483,13 @@ $ionicLoading.show({
     product.referrer=product.buyer.user_id;
     
     $state.go('product',{product:product,fromState:fromState});
+    console.log(JSON.stringify(product));
+  }
+
+  $scope.showServices =function(service,fromState) {
+    service.referrer=service.buyer.user_id;
+    
+    $state.go('service',{service:service,fromState:fromState});
     console.log(JSON.stringify(product));
   }
 
@@ -943,7 +955,10 @@ $scope.prevModel= function () {
             console.log(thisProduct);
 
           var product_index = $rootScope.cart.map(function (pd){
-            return pd.product_id;
+            if (pd.type=="fashion"||pd.type=="electronics") {
+              return pd.product_id;
+            }
+            
           } )
 
           var isInCart = product_index.indexOf(thisProduct.product_id);
@@ -1011,6 +1026,187 @@ $scope.prevModel= function () {
    } 
 
 
+})
+.controller('serviceCtrl', function ($scope,$rootScope, $stateParams,$state,$ionicPopup,$ionicModal,bookServices,couponServices){
+  
+  var cart = localStorage.getItem("pomcart");
+
+  if (cart==null) {
+    $rootScope.cart=[];
+  } else {
+    //cart = JSON.parse(cart);
+    $rootScope.cart=JSON.parse(cart);
+  }
+
+  //console.log(cart);
+  $scope.thisService=$state.params.service;
+  $rootScope.thisState=$state.params.fromState;
+  console.log(JSON.stringify($scope.thisService));
+$scope.comment={};
+$scope.comment.comment_by=$rootScope.loggedinUser.user_id;
+$scope.comment.username=$rootScope.loggedinUser.username;
+$scope.comment.facebookID=$rootScope.loggedinUser.facebookID;
+$scope.comment.product_id=$scope.thisService.product_id;
+$scope.comment.product_type="service";
+
+
+
+  $ionicModal.fromTemplateUrl('templates/comments.html', {
+    scope: $scope,
+    animation: 'slide-in-up'
+  }).then(function(modal) {
+    $scope.modal = modal;
+  });
+  $scope.buy=function (svc) {
+    var confirmBuy= $ionicPopup.confirm({
+      title:"Add to Cart",
+      template:'Confirm add to cart?'
+    }
+      );
+    confirmBuy.then(function (res){
+      
+          couponServices.checkAvailable($scope.thisService.product_id).then(function (resp){
+            console.log(resp);
+            if (resp!="available"){
+              var informUser = $ionicPopup.alert({
+
+                title:"Coupon/Deal",
+                template:"This offer is sold out at the moment."
+              });
+
+              informUser.then(function (res){
+
+              });
+            } else if (resp=="available") {
+
+                  var thisService={
+                  "name":svc.name,
+                  "author":svc.author,
+                  "quantity":1,
+                  "currency":"SGD",
+                  "price":parseFloat(svc.price),
+                  "sku":svc.product_id+"-"+"20161007",
+                  "product_id":svc.product_id,
+                  "referrer":svc.referrer,
+                  "purch_ref":svc.purch_ref,
+                  "buyer":$rootScope.loggedinUser.user_id
+                  }
+            console.log(thisService);
+
+          var service_index = $rootScope.cart.map(function (sv){
+            if (sv.type=="services"){
+
+
+              return sv.product_id;}
+          } )
+
+          var isInCart = service_index.indexOf(thisService.product_id);
+           if (isInCart== -1){
+            $rootScope.cart.push(thisService);
+          } else {
+            var InCartMsg = $ionicPopup.alert({
+              title:"Cart Status",
+              template:"Item already in cart."
+            });
+            inCartMsg.then(function (resp){
+              console.log("item in cart already");
+            })
+          }
+      
+      //console.log(josn.stringify(cart));
+      localStorage.setItem("pomcart",JSON.stringify($rootScope.cart));
+      console.log(JSON.stringify($rootScope.cart));
+     // $state.go('cart',{cart:$rootScope.cart});
+      } 
+      
+  
+    }) //END BOOK SERVICES TO CHECK FOR BOOK
+  })
+  } //END SCOPEBUY
+
+    $scope.ratingsObject = {
+        iconOn: 'ion-ios-star',    //Optional
+        iconOff: 'ion-ios-star-outline',   //Optional
+        iconOnColor: 'rgb(200, 200, 100)',  //Optional
+        iconOffColor:  'rgb(200, 100, 100)',    //Optional
+        rating:  2, //Optional
+        minRating:1,    //Optional
+        readOnly: true, //Optional
+        callback: function(rating) {    //Mandatory
+          $scope.ratingsCallback(rating);
+        }
+      };
+
+      $scope.ratingsCallback = function(rating) {
+        $scope.comment.rating=rating;
+        console.log('Selected rating is : ', rating);
+      };
+
+
+  $scope.rate=function () {
+    $scope.modal.show();
+  }
+
+  $scope.submitComment = function () {
+    console.log(JSON.stringify($scope.comment));
+    bookServices.addComment($scope.comment,$scope.loggedinUser.user_id).then(function(res){
+      console.log(res);
+      if (res=="comment added"){
+        $scope.thisService.comments.push($scope.comment);
+      }
+    })
+
+    $scope.modal.hide();
+  }
+
+  
+  
+
+  var options = {
+      location: 'yes',
+      clearcache: 'yes',
+      toolbar: 'yes'
+    };
+
+
+  $scope.payMoney=function () {
+    $cordovaInAppBrowser.open('http://www.paypal.com', '_blank', options)
+      .then(function(event) {
+        // success
+        console.log('success');
+        console.log(event);
+      })
+      .catch(function(event) {
+        // error
+         console.log('error');
+         console.log(event);
+      });
+  }
+
+   $scope.backToApp= function () {
+    $cordovaInAppBrowser.close();
+   } 
+
+$scope.paypalPay = function () {
+
+  PaypalService.initPaymentUI().then(function () {
+
+PaypalService.makePayment(90, 'Total Amount').then(function (response) {
+
+alert('success'+JSON.stringify(response));
+console.log(response);
+$state.go('main.home');
+
+}, function (error) {
+
+alert('Transaction Canceled');
+$state.go('main.home');
+
+});
+
+});
+
+}
 })
 .controller('usersCtrl', function ($rootScope,$scope,bookServices,$state,$stateParams,$ionicLoading){
 $ionicLoading.show({
@@ -1295,35 +1491,54 @@ $scope.doRefresh = function() {
   }
   })
 
-.controller('couponAdminCtrl', function ($scope,$rootScope,couponServices,$cordovaBarcodeScanner,$ionicModal){
-couponServices.getCoupon(coupon_id).then(function (res){
-  $scope.coupon=res;
-})
+.controller('couponAdminCtrl', function ($scope,$state,$rootScope,couponServices,$cordovaBarcodeScanner,$ionicPopup,$ionicModal){
+$rootScope.thisState=$state.params.fromState;
 
  var locationChoice= $ionicModal.fromTemplateUrl('templates/locations.html',{
-              scope.$scope,
+              scope:$scope,
               animation:'slide-in-up'
             }).then(function (modal){
               $scope.modal=modal;
             })
- $scope.couponData = {
-          couponcode:barcodeData,
-          processed_by:$rootScope.loggedinUser.user_id
-        }
+ 
   $scope.scanQRCode= function () {
+
+    couponServices.getCouponInfo('1').then(function (res){
+      console.log(res);
+  
+})
 
     $cordovaBarcodeScanner
       .scan()
       .then(function(barcodeData) {
        
         // Success! Barcode data is here
-        console.log(barcodeData);
-        couponServices.checkCoupon(couponData).then (function (res){
-          if (res=="valid") {
-            console.log(res);
+        console.log(JSON.stringify(barcodeData));
+        var couponcode=barcodeData.text;
+        var thiscoupon=couponcode.split('-');
+        var coupon_id=thiscoupon[0];
+        console.log(thiscoupon);
+        $scope.couponData = {
+          couponcode:thiscoupon[1],
+          coupon_id:coupon_id,
+          processed_by:$rootScope.loggedinUser.user_id
+        }
+        couponServices.getCouponInfo(coupon_id).then (function (res){
+          if (res.locations) {
+           console.log(res);
+           $scope.service=res;
+  $scope.locations=$scope.service.locations;
             $scope.modal.show();
 
-          }
+         } else {
+          var informStaff =$ionicPopup.alert({
+            title:"Not Available",
+            template:"Sale ended or sold out"
+          });
+          informStaff.then(function (res){
+            //done
+          })
+         }
         });
 
       }, function(error) {
@@ -1331,10 +1546,51 @@ couponServices.getCoupon(coupon_id).then(function (res){
       });
 
   }
+
+  $scope.closeModal = function (){
+    $scope.modal.hide();
+  }
   $scope.selectLocation = function (location){
     $scope.couponData.location=location;
     $scope.modal.hide();
   }
+
+$scope.acceptCoupon = function () {
+  couponServices.redeemCoupon($scope.couponData).then(function (res){
+    console.log(res);
+    if (res=="coupon redeemed"){
+      var informStaff= $ionicPopup.alert({
+        title:"Coupon Status",
+        template:"Coupon accepted"
+      });
+      informStaff.then(function(res){
+        //done
+      });
+    } else if (res!="coupon redeemed"){
+var informStaff= $ionicPopup.alert({
+        title:"Coupon Status",
+        template:"Coupon rejected"
+      });
+      informStaff.then(function(res){
+        //done
+      });
+
+
+    }
+  })
+}
+
+
+})
+.controller('couponCtrl', function ($scope,$rootScope,$state,couponServices){
+
+  couponServices.getUserCoupons($rootScope.loggedinUser.user_id).then(function(res){
+
+    if (res.length>0){
+      $scope.userCoupons=res;
+    } 
+  })
+  $rootScope.thisState="main.home";
 
 })
 .filter('monthName', [function() {

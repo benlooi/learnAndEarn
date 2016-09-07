@@ -322,14 +322,27 @@ angular.module('services',[])
 			})
 			return deferred.promise;
 
+		},
+		getServices: function (){
+			var deferred=$q.defer();
+			$http.get(ApiEndPoint.eBooks+"getServices")
+			.success(function (data){
+				deferred.resolve(data);
+			})
+			.error(function(error){
+				deferred.reject(error);
+			})
+			return deferred.promise;
+
 		}
 	}
 })
 .factory('couponServices',function ($http,$q){
 	return {
-		getCoupon: function (service){
+		
+		getCouponInfo: function (service){
 			var deferred=$q.defer();
-			$http.post(ApiEndPoint.Coupons+"getCoupon",{service:service})
+			$http.post(ApiEndPoint.Coupons+"getCouponInfo",{service:service})
 			.success(function (data){
 				deferred.resolve(data);
 			})
@@ -350,7 +363,43 @@ angular.module('services',[])
 			})
 			return deferred.promise;
 
-		}
+		},
+		acceptCoupon: function (coupon){
+			var deferred=$q.defer();
+			$http.post(ApiEndPoint.Coupons+"acceptCoupon",{coupon:coupon})
+			.success(function (data){
+				deferred.resolve(data);
+			})
+			.error(function(error){
+				deferred.reject(error);
+			})
+			return deferred.promise;
+
+		},
+		checkAvailable: function (service){
+			var deferred=$q.defer();
+			$http.post(ApiEndPoint.Coupons+"checkAvailable",{service:service})
+			.success(function (data){
+				deferred.resolve(data);
+			})
+			.error(function(error){
+				deferred.reject(error);
+			})
+			return deferred.promise;
+
+		},
+		getUserCoupons: function (user){
+			var deferred=$q.defer();
+			$http.post(ApiEndPoint.Coupons+"getUserCoupons",{user:user})
+			.success(function (data){
+				deferred.resolve(data);
+			})
+			.error(function(error){
+				deferred.reject(error);
+			})
+			return deferred.promise;
+
+		},
 	}
 })
 .factory('Camera', ['$q', function($q) {

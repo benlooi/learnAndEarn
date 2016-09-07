@@ -173,6 +173,20 @@ payPalMerchantUserAgreementURL : 'http://www.pompipi.co/main/user_agreement'
  
 
   })
+   .state('service',{
+    cache: false,
+    url:'/service',
+     
+    templateUrl:'templates/service.html',
+    controller: 'serviceCtrl'
+   ,
+ params: {
+  service:null,
+  fromState:null
+ }
+ 
+
+  })
 
     .state('coupon_admin',{
       cache: false,
@@ -185,8 +199,8 @@ payPalMerchantUserAgreementURL : 'http://www.pompipi.co/main/user_agreement'
    // }
     ,
     params: {
-      user:null,
-      fromState:null
+      
+      fromState:'main.home'
     }
 
   })
@@ -196,7 +210,7 @@ payPalMerchantUserAgreementURL : 'http://www.pompipi.co/main/user_agreement'
     //views: {
     //  'main-users':{
     templateUrl:'templates/coupon.html',
-    controller: 'couponAdminCtrl'
+    controller: 'couponCtrl'
    // }
    // }
     ,
@@ -215,6 +229,7 @@ payPalMerchantUserAgreementURL : 'http://www.pompipi.co/main/user_agreement'
    }
  }
   })
+
   .state('main.account',{
     url:'/account',
      views: {

@@ -1,6 +1,6 @@
-  
-<ion-view view-title="Products">
-	 <ion-nav-bar class="bar bar-positive" ng-controller="mainCtrl">
+
+<ion-view view-title="Services">
+	   <ion-nav-bar class="bar bar-positive" ng-controller="mainCtrl">
       <ion-nav-buttons side="left"  ng-click="goBack()">
          <i style="color: white;" class="button button-icon icon ion-chevron-left" ng-click="backToMain()"></i> 
       </ion-nav-buttons>
@@ -14,27 +14,27 @@
 	<ion-content >
 	
 	<div class="selected-book">
-		<img ng-src="http://www.learnandearn123.com/assets/images/{{thisProduct.image}}">
-		<div class="price">${{thisProduct.price}}</div>
+		<img ng-src="http://www.learnandearn123.com/assets/images/{{thisService.image}}">
+		<div class="price">${{thisService.price}}</div>
 
 		<div class="info">
-			<div class="title">{{thisProduct.name}}</div>
-			
-			<div class="addtocart" ng-click="selectModel(thisProduct)"><i class="ion-android-cart"></i></div>
+			<div class="title">{{thisService.name}}</div>
+			<div class="author">{{thisService.company}}</div>
+			<div class="addtocart" ng-click="buy(thisService)"><i class="ion-android-cart"></i></div>
 			<div class="rate" ng-click="rate()"><i class="ion-ios-star"></i></div>
 			
 		</div>
 		<div class="recommends">
-		<img ng-src="http://www.learnandearn123.com/apis/assets/images/avatars/{{thisProduct.buyer.avatar}}" >
-		<div class="user">{{thisProduct.buyer.username}} recommends this.</div> 
+		<img ng-src="http://www.learnandearn123.com/apis/assets/images/avatars/{{thisService.buyer.avatar}}" >
+		<div class="user">{{thisService.buyer.username}} recommends this.</div> 
 		
 	</div>
 	<div>
 	<h3>Synopsis</h3>
 	
-	<p>{{thisProduct.description}}</p>
+	<p>{{thisService.description}}</p>
 	</div>
-<div class="item item-avatar" ng-repeat="comment in thisProduct.comments">
+<div class="item item-avatar" ng-repeat="comment in thisService.comments">
 		<img ng-src="http://graph.facebook.com/{{comment.facebookID}}/picture?type=large"ng-show="comment.facebookID">
 		<img ng-src="http://www.learnandearn123.com/apis/assets/images/avatars/{{comment.avatar}}" ng-hide="comment.facebookID">
 		<h2>{{comment.username}}</h2>

@@ -1,5 +1,6 @@
- <ion-nav-bar class="bar bar-positive" ng-controller="mainCtrl">
-      <ion-nav-buttons side="left"  ng-click="goBack()">
+ <ion-view view-title="Redeem Coupon">
+<ion-nav-bar class="bar bar-positive" ng-controller="mainCtrl">
+      <ion-nav-buttons side="left"  >
          <i style="color: white;" class="button button-icon icon ion-chevron-left" ng-click="backToMain()"></i> 
       </ion-nav-buttons>
   </ion-nav-buttons>
@@ -9,16 +10,28 @@
    
 </ion-nav-buttons>
     </ion-nav-bar> 
-
-<ion-view view-title="Redeem Coupon">
 <ion-content>
 
-<div class="card">
-	<div class="content">
-		<button class="button button-assertive icon ion-camera" ng-click="scanQRCode()">Scan CouponCode</button>
+<div class="list card">
+	
+		<button class="button button-assertive icon ion-qr-scanner" ng-click="scanQRCode()"> Scan CouponCode</button>
 	</div>
 
-</div>
+	<div class="list card">
+		<div class="item">
+			Deal/Campaign<span class="item-info">{{service.name}}</span>
+		</div>
+		<div class="item">
+			Description
+			<p>{{service.description}}</p>
+		</div>
+		<div class="item">
+			Quantity available<span class="item-info">{{service.quantity}}</span>
+		</div>
+		<div class="item">
+			<button class="button button-assertive" ng-click="acceptCoupon()">Accept Coupon</button>
+		</div>
+	</div>
 
 </ion-content>
 

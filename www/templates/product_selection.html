@@ -4,9 +4,9 @@
     </ion-header-bar>
 	<ion-content >
 	
-		<div class="card" on-swipe-left="nextModel()" on-swipe-right="prevModel()">
-			<div class="image">
-				<img ng-src="http://www.learnandearn123.com/assets/images/{{selected_product[item_index].image}}">
+		<div class="list card" on-swipe-left="nextModel()" on-swipe-right="prevModel()">
+			<div class="item item-image">
+				<img ng-src="http://www.learnandearn123.com/assets/images/{{selected_product[item_index].image}}" >
 			</div>
 			<div class="item">
 				{{selected_product[item_index].model}}

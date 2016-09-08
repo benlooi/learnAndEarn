@@ -23,19 +23,24 @@
 			</div>
 		</div>
 		<div class="card" ng-show="showShippingAddress==true">
+			<pre>{{shipping}}</pre>
 			<div class="header">Shipping Address</div>
 			<form name="orderForm">
 				<div class="label">
-					<input type="text" placeholder="Address Line 1" ng-model="order.address1" ng-model="shipping.address1">
+					<input type="text" placeholder="Address Line 1"  name="address1" ng-model="shipping.address1" ng-pattern="/^[0-9A-Za-z\s\'\#\_\-@\.]{3,40}$/" required>
+				</div>
+				<p ng-show="orderForm.address1.$error.pattern && orderForm.address1.$touched">SSorry, your info contains invalid characters. Letters, numbers, space and any of these only: # - _ ' @ . </p>
+				<div class="label">
+					<input type="text" placeholder="Address Line 2"  name="address2" ng-model="shipping.address2" ng-pattern="/^[0-9A-Za-z\s\'\#\_\-@\.]{3,40}$/" required>
+					<p ng-show="orderForm.address2.$error.pattern && orderForm.address2.$touched">Sorry, your info contains invalid characters. Letters, numbers, space, and any of these only: # - _ ' @ .</p>
 				</div>
 				<div class="label">
-					<input type="text" placeholder="Address Line 2" ng-model="order.address2" ng-model="shipping.address2">
+					<input type="text" placeholder="Postal code" name="postcode" ng-model="shipping.postcode" ng-pattern="/^[A-Z0-9]{4,10}$/" required>
 				</div>
+				<p ng-show="orderForm.postcode.$error.pattern && orderForm.postcode.$touched">Sorry, your info is invalid.UPPERCASE and numbers only. </p>
 				<div class="label">
-					<input type="text" placeholder="Postal code" ng-model="order.postalcode" ng-model="shipping.postcode">
-				</div>
-				<div class="label">
-					<input type="text" placeholder="State" ng-model="order.State" ng-model="shipping.State">
+					<input type="text" placeholder="State" name="state" ng-model="shipping.state" ng-pattern="/^[0-9A-Za-z\s\'\#\_\-@]{3,40}$/">
+					<p ng-show="orderForm.state.$error.pattern && orderForm.state.$touched">Sorry, your info contains invalid characters </p>
 				</div>
 			<div class="list">
 
@@ -43,7 +48,7 @@
 			    <div class="input-label">
 			     Country
 			    </div>
-			    <select ng-model="shipping.country" ng-options="country.name for country in countries">
+			    <select ng-model="shipping.country" name="country" ng-options="country.name for country in countries" required> 
 			    </select>
 			  </label>
 			</div>
@@ -51,7 +56,7 @@
 	</div>
 			</form>
 		</div>
-		<button class="button button-block button-positive" ng-click="buyNow()">Check out</button>
+		<button class="button button-block button-positive" ng-click="buyNow()" ng-disabled="showShippingAddress==true && orderForm.$invalid">Check out</button>
 		
 		<button class="button button-block button-calm" ng-click="goBack()">Back</button>
 	

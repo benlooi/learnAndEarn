@@ -379,7 +379,7 @@ console.log(JSON.stringify(item_types));
               datetime:resp.response.create_time,
               products:$rootScope.cart,
               buyer:$rootScope.loggedinUser.user_id,
-              shipping:$scope.shipping
+              shipping:$rootScope.shipping
             } 
 
             //update user's shelf in-app
@@ -852,6 +852,7 @@ $scope.comment.product_type=$scope.thisProduct.type;
     $scope.order_product.price=parseFloat(product.price,2);
     $scope.order_product.color=$scope.selected_product[0].color;
      $scope.order_product.type=product.type;
+     $scope.order_product.buyer=$rootScope.loggedinUser.user_id;
 
     $scope.order_product.quantity=1;
     console.log(JSON.stringify($scope.selected_product));
@@ -1047,7 +1048,7 @@ $scope.comment.comment_by=$rootScope.loggedinUser.user_id;
 $scope.comment.username=$rootScope.loggedinUser.username;
 $scope.comment.facebookID=$rootScope.loggedinUser.facebookID;
 $scope.comment.product_id=$scope.thisService.product_id;
-$scope.comment.product_type="service";
+$scope.comment.product_type="services";
 
 
 
@@ -1089,7 +1090,8 @@ $scope.comment.product_type="service";
                   "product_id":svc.product_id,
                   "referrer":svc.referrer,
                   "purch_ref":svc.purch_ref,
-                  "buyer":$rootScope.loggedinUser.user_id
+                  "buyer":$rootScope.loggedinUser.user_id,
+                  "type":'services'
                   }
             console.log(thisService);
 
@@ -1104,12 +1106,17 @@ $scope.comment.product_type="service";
            if (isInCart== -1){
             $rootScope.cart.push(thisService);
           } else {
-            var InCartMsg = $ionicPopup.alert({
+            var InCartMsg = $ionicPopup.confirm({
               title:"Cart Status",
-              template:"Item already in cart."
+              template:"Item already in cart. Do you want to buy more?"
             });
             inCartMsg.then(function (resp){
-              console.log("item in cart already");
+              if (resp) {
+                $rootScope.cart[isInCart].quantity++;
+              } else {
+                console.log("item in cart already");
+              }
+              
             })
           }
       

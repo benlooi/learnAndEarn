@@ -317,7 +317,7 @@ console.log(JSON.stringify(item_types));
       $scope.cartmodal.show();
        $scope.total=0;
       for (i=0;i<$rootScope.cart.length;i++){
-    $scope.total+=$rootScope.cart[i].price;
+    $scope.total+=$rootScope.cart[i].price*$rootScope.cart[i].quantity;
 
   } 
 
@@ -379,7 +379,7 @@ console.log(JSON.stringify(item_types));
               datetime:resp.response.create_time,
               products:$rootScope.cart,
               buyer:$rootScope.loggedinUser.user_id,
-              shipping:$rootScope.shipping
+              shipping:$scope.shipping
             } 
 
             //update user's shelf in-app

@@ -9,7 +9,8 @@
 				{{item.name}}
 				<i class="ion-ios-close-empty" ng-click="removeItem($index)"></i>
 				<span class="item-note">
-					{{item.currency}} {{item.price}}
+					<p>{{item.currency}} {{item.price}}</p>
+					<p>sub-total: {{item.currency}} {{item.price*item.quantity}}</p>
 				</span>
 				<p>{{item.author}}</p>
 				<p>Qty : {{item.quantity}}</p>
@@ -23,7 +24,7 @@
 			</div>
 		</div>
 		<div class="card" ng-show="showShippingAddress==true">
-			<pre>{{shipping}}</pre>
+			
 			<div class="header">Shipping Address</div>
 			<form name="orderForm">
 				<div class="label">

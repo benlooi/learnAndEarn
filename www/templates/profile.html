@@ -4,10 +4,11 @@
 	<input type="text" placeholder="search user" ng-model="searchUser"/>
 </label>
 	<div class="users" ng-repeat="user in users|filter:searchUser|orderBy: '-bookCount'" ng-click="goToUser(user)">
-		<img image-lazy-src="http://www.learnandearn123.com/apis/assets/images/avatars/{{user.avatar}}" image-lazy-loader="lines">
+		<img image-lazy-src="http://www.learnandearn123.com/apis/assets/images/avatars/{{user.avatar}}" image-lazy-loader="lines" ng-show="user.facebookID.length<5">
+		 <img image-lazy-src="http://graph.facebook.com/{{user.facebookID}}/picture?type=large" ng-show="user.facebookID.length>5"/>
 		<div class="username"> {{user.username}}</div>
-		<div class="details">{{user.ebooks.length}} books</div>
-		<div class="details">{{user.followers.length}} followers</div>
+	
+		
 	</div>
 
 	

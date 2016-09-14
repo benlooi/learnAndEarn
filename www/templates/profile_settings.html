@@ -1,0 +1,135 @@
+<ion-view view-title="Profile Settings">
+<ion-nav-bar class="bar bar-dark" ng-controller="mainCtrl">
+      <ion-nav-buttons side="left"  ng-click="goBack()">
+         <i style="color: white;" class="button button-icon icon ion-chevron-left" ng-click="backToMain()"></i> 
+      </ion-nav-buttons>
+  </ion-nav-buttons>
+     
+<ion-nav-buttons side="right">
+    <i style="color: white;" class="button button-icon icon ion-ios-cart" ng-click="openCart()"><span class="badge badge-assertive">{{cart.length}}</span></i> 
+   
+</ion-nav-buttons>
+    </ion-nav-bar> 
+	<ion-content>
+	<div class="list card">
+		<div class="item item-divider">
+			Update Avatar
+		</div>
+		<div class="item item-body">
+			<div class="cropArea full-image">
+					<img-crop image="selectedImage"                 
+					result-image="croppedDataUrl" >
+					</img-crop>
+				</div>
+					<button class="button button-dark button-block"  ng-click="setAvatar()">
+					Select Picture</button>
+					</div>
+		<div class="item item-avatar">
+  <img  ng-src="{{croppedDataUrl}}" />
+		<h2>{{loggedinUser.username}}</h2>
+		<button class="button button-small" ng-click="updateAvatar()">Update</button>
+		<button class="button button-small">Updated</button>
+		</div>
+		<div class="item">
+			<ion-checkbox ng-model="useAvatar" ng-change="updateUseAvatar()">Use Facebook Avatar</ion-checkbox>
+		</div>
+	</div>
+
+		<div class="list card">
+			<div class="item item-header item-button-right">
+				My shipping address
+				
+				<p>Current:</p>
+				<p ng-show="!myinfo.address1">Not specified.</p>
+				<div ng-show="myinfo.address1"> 
+				<p>{{myinfo.address1}} {{myinfo.address2}}</p>
+				<p>{{myinfo.postcode}} </p>
+				<p>{{myinfo.state}} , {{myinfo.country}} </p>
+				</div>
+				
+			</div>
+			<div ng-show="shipping_update">
+			<div class="item item-input">
+				<input type="text" placeholder="Address 1" ng-model="shippingAddress.address1">
+			</div>
+			<div class="item item-input">
+				<input type="text" placeholder="Address 2" ng-model="shippingAddress.address2">
+			</div>
+			<div class="item item-input">
+				<input type="text" placeholder="Postal Code" ng-model="shippingAddress.postcode">
+			</div>
+			<div class="item item-input">
+				<input type="text" placeholder="State" ng-model="shippingAddress.state">
+			</div>
+			<div class="item item-input">
+				<input type="text" placeholder="Country" ng-model="shippingAddress.country">
+			</div>
+			</div>
+			<div class="item ">
+				<button class="button button-block button-dark" ng-click="showShipping()" ng-show="!shipping_update">Add/Update</button>
+				<button class="button button-block button-balanced" ng-click="updateShipping()" ng-show="shipping_update">Cancel</button>
+				<button class="button button-block button-assertive" ng-click="updateShipping()" ng-show="shipping_update">Submit</button>
+			</div>
+		
+		</div>
+		<div class="list card">
+			<div class="item item-header">
+				My mailing address
+				<p>Receive payments via cheque</p>
+
+				<div ng-show="myinfo"> 
+				<p>Current:</p>
+				<p ng-show="!myinfo.mail_address1">Not specified.</p>
+					<div ng-show="myinfo.mail_address1">
+						<p>{{myinfo.mail_address1}} {{myinfo.mail_address2}}</p>
+						<p>{{myinfo.mail_postcode}} </p>
+						<p>{{myinfo.mail_state}} , {{myinfo.mail_country}} </p>
+					</div>
+				</div>
+			</div>
+			<div ng-show="mailing_upate">
+			<div class="item item-input">
+				<input type="text" placeholder="Address 1" ng-model="mailingAddress.mail_address1">
+			</div>
+			<div class="item item-input">
+				<input type="text" placeholder="Address 2" ng-model="mailingAddress.mail_address2">
+			</div>
+			<div class="item item-input">
+				<input type="text" placeholder="Postal Code" ng-model="mailingAddress.mail_postcode">
+			</div>
+			<div class="item item-input">
+				<input type="text" placeholder="State" ng-model="mailingAddress.mail_state">
+			</div>
+			<div class="item item-input">
+				<input type="text" placeholder="Country" ng-model="mailingAddress.mail_country">
+			</div>
+			</div>
+			<div class="item ">
+				<button class="button button-block button-dark" ng-click="showMailing()" ng-show="!mailing_update">Add/Update</button>
+				<button class="button button-block button-balanced" ng-click="showMailing()" ng-show="mailing_update">Cancel</button>
+				<button class="button button-block button-assertive" ng-click="updateMailing()" ng-show="mailing_update">Submit</button>
+			</div>
+		
+		</div>
+		<div class="list card">
+			<div class="item item-header">
+				My Paypal account name
+				<p>Receive payments via Paypal</p>
+				<p ng-show="!myinfo.paypal">None.</p>
+				<p ng-show="myinfo.paypal">{{myinfo.paypalAddress}}</p>
+			</div>
+			<div ng-show="showPaypal">
+				<div class="item item-input">
+					<input type="text" placeholder="Paypal account" ng-model="paypalAdress">
+				</div>
+			</div>
+			<div class="item ">
+				<button class="button button-block button-dark" ng-click="showPaypal()" ng-show="!paypal_update">Add/Update</button>
+				<button class="button button-block button-balanced" ng-click="showPaypal()" ng-show="paypal_update">Cancel</button>
+				<button class="button button-block button-assertive" ng-click="updatePaypal()" ng-show="paypal_update">Submit</button>
+			</div> 
+			
+		</div>
+
+	</ion-content>
+</ion-view>

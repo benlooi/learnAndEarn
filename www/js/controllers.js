@@ -5,14 +5,13 @@ angular.module('controllers',[])
     var PompipiSync = function (authResponse) {
     getFacebookProfileInfo(authResponse).then(function (resp){
                   console.log(JSON.stringify(resp));
-                     UserService.facebookSignIn(resp).then(function (resp){
-                      console.log(JSON.stringify(resp));
-                        if(resp.user_id!=null){
-                          $rootScope.loggedinUser=resp;
-                          $rootScope.loggedinUser.following=JSON.parse($rootScope.loggedinUser.following);
-                          $rootScope.loggedinUser.followers=JSON.parse($rootScope.loggedinUser.followers);
-
-                          console.log($rootScope.loggedinUser);
+                  resp.gcmRegID=localStorage.getItem('gcmRegID');
+                     UserService.facebookSignIn(resp).then(function (res){
+                      console.log(JSON.stringify(res));
+                        if(res.user_id!=null){
+                          $rootScope.loggedinUser=res;
+                          
+                          console.log(JSON.stringify($rootScope.loggedinUser));
                       /*    localStorage.setItem("pomuser",JSON.stringify($rootScope.loggedinUser));
                         var regID=localStorage.getItem('gcmRegID');
     UserService.setGCMRegID(regID,$rootScope.loggedinUser.user_id).then(function(resp){
@@ -90,7 +89,7 @@ angular.module('controllers',[])
       //console.log(success.authResponse.userID);
         if(success.status == 'connected'){
           $ionicLoading.hide();
-         console.log("we are here");
+        // console.log("we are here");
         // The user is logged in and has authenticated your app, and response.authResponse supplies
         // the user's ID, a valid access token, a signed request, and the time the access token
         // and signed request each expire
@@ -100,7 +99,7 @@ angular.module('controllers',[])
               $ionicLoading.hide();
               console.log('login with Facebook');
               facebookConnectPlugin.login(['email', 'public_profile'], fbLoginSuccess, fbLoginError);
-            
+            PompipiSync(success.authResponse);
               }
             },
 
@@ -140,7 +139,8 @@ angular.module('controllers',[])
   $scope.showSignUp = function () {
     $scope.signup=!$scope.signup;
   }
-
+ $scope.croppedDataUrl="";
+ $scope.selectedImage="";
   $scope.setAvatar = function () {
      var options = {
       quality: 90,
@@ -156,24 +156,28 @@ angular.module('controllers',[])
     };
     
     Camera.getPicture(options).then(function(imageData) {
-       $scope.user.avatar = "data:image/jpeg;base64,"+imageData;
-      var preview=document.getElementById('preview');
-       preview.src=$scope.user.avatar;
+      console.log(imageData);
+       $scope.selectedImage = "data:image/jpeg;base64,"+imageData;
+      
   })
 
 }
   $scope.normalLogin = function () {
+    $ionicLoading.show({
+    template:"<ion-spinner></ion-spinner><p>just a moment...</p>"
+   });
     
     UserService.normalLogin($scope.user).then(function (resp){
+      $ionicLoading.hide();
       if (resp.user_id){
 
         $rootScope.loggedinUser=resp;
         console.log($rootScope.loggedinUser);
         localStorage.setItem("pomuser",JSON.stringify($rootScope.loggedinUser));
-       /* var regID=localStorage.getItem('gcmRegID');
+       var regID=localStorage.getItem('gcmRegID');
        UserService.setGCMRegID(regID,$rootScope.loggedinUser.user_id).then(function(resp){
         console.log(resp);
-       });*/
+       });
         $state.go('main.home');
 
       } else if (resp=="user not found"||!resp.user_id){
@@ -193,8 +197,11 @@ angular.module('controllers',[])
   })
 }
   $scope.normalSignUp = function () {
-    $ionicLoading.show();
+   $ionicLoading.show({
+    template:"<ion-spinner></ion-spinner><p>just a moment...</p>"
+   });
     var regID=localStorage.getItem('gcmRegID');
+    $scope.user.avatar=$scope.croppedDataUrl;
     UserService.normalSignUp($scope.user,regID).then(function (resp){
       if (resp.user_id){
         $rootScope.loggedinUser=resp;
@@ -286,6 +293,10 @@ angular.module('controllers',[])
     $scope.cartmodal = modal;
   });
 
+$scope.goToPage=function (page){
+  $state.go(page);
+  $scope.toggleMenu();
+}
   
  
  $scope.showShippingAddress=true;
@@ -458,13 +469,13 @@ $ionicLoading.show({
     $scope.latestEbooks=resp;
   })
 
-  bookServices.getWhosReading().then(function(resp){
+  UserService.getNewUsers().then(function(resp){
     console.log(resp);
     for (i=0;i<resp.length;i++){
       resp[i].following=JSON.parse(resp[i].following);
       resp[i].followers=JSON.parse(resp[i].followers);
     }
-    $scope.whosReading=resp;
+    $scope.newUsers=resp;
   })
   $scope.goToBook = function (ebook,fromState) {
     ebook.referrer=ebook.buyer.user_id;
@@ -490,7 +501,7 @@ $ionicLoading.show({
     service.referrer=service.buyer.user_id;
     
     $state.go('service',{service:service,fromState:fromState});
-    console.log(JSON.stringify(product));
+    console.log(JSON.stringify(service));
   }
 
 
@@ -513,15 +524,29 @@ $ionicLoading.show({
 })
 .controller('userCtrl',function ($scope,$rootScope,$state,$stateParams,$ionicLoading,UserService,$ionicPopup){
  
- // $scope.user=$state.params.user;
+  //$scope.user=$state.params.user;
  // console.log($scope.user);
+
+ UserService.getUserPurchasedItems($rootScope.user.user_id).then(function(resp){
+  console.log(JSON.stringify(resp));
+$rootScope.user.electronics=resp.electronics;
+$rootScope.user.fashion=resp.fashion;
+$rootScope.user.services=resp.services;
+$rootScope.user.ebooks=resp.ebooks;
+
+ }, function (err){
+  console.log(err);
+ });
+ 
   $scope.following=false;
   $rootScope.thisState=$state.params.fromState;
   console.log($state.params.fromState);
-  var checkIfFollowing = function (){
+  /*var checkIfFollowing = function (){
+    console.log(JSON.stringify($state.params.user));
+    console.log($rootScope.loggedinUser.following);
 
     var following=$rootScope.loggedinUser.following;
-    var in_list=following.indexOf($state.params.user.user_id);
+    var in_list=following.indexOf(parseInt($state.params.user.user_id));
     if (in_list==-1){
       $scope.following=false;
     } else if (in_list>0) {
@@ -530,7 +555,7 @@ $ionicLoading.show({
   }
 
   checkIfFollowing();
-
+*/
   $scope.goToBook=function (book,fromState){
     book.referrer=$state.params.user.user_id;
     book.product_id=book.ebook_id;
@@ -543,6 +568,24 @@ $ionicLoading.show({
     
 
   }
+  $scope.showProduct =function(product,fromState) {
+    product.referrer=$state.params.user.user_id;
+    product.product_id=product.product_id;
+    product.buyer=$state.params.user;
+    
+    $state.go('product',{product:product,fromState:fromState});
+    //console.log(JSON.stringify(product));
+  }
+
+  $scope.showServices =function(service,fromState) {
+    service.referrer=$state.params.user.user_id;
+     service.product_id=service.service_id;
+    service.buyer=$state.params.user;
+    
+    $state.go('service',{service:service,fromState:fromState});
+    console.log(JSON.stringify(product));
+  }
+
 
   
 
@@ -618,9 +661,11 @@ $ionicLoading.show({
 }
 
 
+
+
 })
 
-.controller('bookCtrl', function ($scope,$rootScope, $stateParams,$state,$ionicPopup,$ionicModal,bookServices){
+.controller('bookCtrl', function ($scope,$rootScope, $stateParams,$state,$ionicPopup,$ionicModal,bookServices,UserService){
   
   var cart = localStorage.getItem("pomcart");
 
@@ -797,8 +842,26 @@ $state.go('main.home');
 });
 
 }
+
+$scope.goToUser = function (user){
+
+    $rootScope.user=user;
+  $state.go('user',{user:$rootScope.user,fromState:$rootScope.thisState})
+}
+
+$scope.goToCommentUser = function(user){
+
+  UserService.getUser(user).then(function(resp){
+    console.log(resp);
+    $rootScope.user=resp;
+    $state.go('user',{user:$rootScope.user,fromState:$rootScope.thisState});
+  }, function (err){
+    console.log(err);
+  })
+}
+
 })
-.controller('productCtrl', function ($scope,$rootScope, $stateParams,$state,$ionicPopup,$ionicModal,bookServices){
+.controller('productCtrl', function ($scope,$rootScope, $stateParams,$state,$ionicPopup,$ionicModal,bookServices,UserService){
   
   var cart = localStorage.getItem("pomcart");
 
@@ -1020,15 +1083,31 @@ $scope.prevModel= function () {
 
   
   
-
-
    $scope.backToApp= function () {
     $cordovaInAppBrowser.close();
    } 
 
+$scope.goToUser = function (user){
+
+    UserService.getUser(user.user_id).then(function(resp){
+    console.log(JSON.stringify(resp));
+    $rootScope.user=resp;
+    console.log(JSON.stringify($rootScope.user));
+  $state.go('user',{user:$rootScope.user,fromState:$rootScope.thisState})
+})
+}
+
+$scope.goToCommentUser = function(user){
+
+  UserService.getUser(user).then(function(resp){
+    console.log(JSON.stringify(resp));
+    $rootScope.user=resp;
+    $state.go('user',{user:$rootScope.user,fromState:$rootScope.thisState});
+  })
+}
 
 })
-.controller('serviceCtrl', function ($scope,$rootScope, $stateParams,$state,$ionicPopup,$ionicModal,bookServices,couponServices){
+.controller('serviceCtrl', function ($scope,$rootScope, $stateParams,$state,$ionicPopup,$ionicModal,bookServices,couponServices,UserService){
   
   var cart = localStorage.getItem("pomcart");
 
@@ -1193,7 +1272,20 @@ $scope.comment.product_type="services";
    $scope.backToApp= function () {
     $cordovaInAppBrowser.close();
    } 
+$scope.goToUser = function (user){
 
+    $rootScope.user=user;
+  $state.go('user',{user:user,fromState:$rootScope.thisState});
+}
+
+$scope.goToCommentUser = function(user){
+
+  UserService.getUser(user).then(function(resp){
+    console.log(resp);
+    $rootScope.user=resp;
+    $state.go('user',{user:$rootScope.user,fromState:$rootScope.thisState});
+  })
+}
 $scope.paypalPay = function () {
 
   PaypalService.initPaymentUI().then(function () {
@@ -1309,7 +1401,7 @@ if (platform=="iOS") {
   $scope.goToDetails = function (transaction){
     console.log(transaction);
     accountsServices.getTransactionDetails($rootScope.loggedinUser.user_id,transaction).then(function (resp){
-      console.log(resp);
+      console.log(JSON.stringify(resp));
       $scope.tx=resp;
       $state.go('earnings_details',{tx:resp});
     })
@@ -1522,15 +1614,22 @@ $rootScope.thisState=$state.params.fromState;
         // Success! Barcode data is here
         console.log(JSON.stringify(barcodeData));
         var couponcode=barcodeData.text;
-        var thiscoupon=couponcode.split('-');
-        var coupon_id=thiscoupon[0];
-        console.log(thiscoupon);
+        
+        var thiscoupon=couponcode.split('service');
+        var coupon_info=thiscoupon[1];
+        coupon_info=coupon_info.split('-');
+        var service_id=coupon_info[1];
+        purch_ref=coupon_info[2];
+        console.log(coupon_id);
         $scope.couponData = {
-          couponcode:thiscoupon[1],
-          coupon_id:coupon_id,
+          couponcode:barcodeData.text,
+          purch_ref:purch_ref,
+          service_id:service_id,
+          buyer_id:coupon_info[0],
           processed_by:$rootScope.loggedinUser.user_id
         }
-        couponServices.getCouponInfo(coupon_id).then (function (res){
+        couponServices.getCouponInfo(service_id).then (function (res){
+          console.log(res);
           if (res.locations) {
            console.log(res);
            $scope.service=res;
@@ -1589,16 +1688,157 @@ var informStaff= $ionicPopup.alert({
 
 
 })
-.controller('couponCtrl', function ($scope,$rootScope,$state,couponServices){
+.controller('couponCtrl', function ($scope,$rootScope,$state,couponServices,$ionicLoading){
 
   couponServices.getUserCoupons($rootScope.loggedinUser.user_id).then(function(res){
 
     if (res.length>0){
       $scope.userCoupons=res;
+      console.log(res);
     } 
   })
   $rootScope.thisState="main.home";
 
+})
+.controller('profileSettingsCtrl', function ($scope,$rootScope,$state,Camera,$cordovaImagePicker,UserService,$ionicPopup){
+
+  $scope.user_info={};
+  $rootScope.thisState="main.home";
+
+  $scope.selectedImage="";
+  $scope.croppedDataUrl="";
+
+  $scope.shippingAddress={};
+  $scope.mailingAddress={};
+  $scope.paypalAddress="";
+  $scope.shipping_update=false;
+  $scope.mailing_update=false;
+  $scope.paypal_update=false;
+
+  UserService.getUpdateInfo($rootScope.loggedinUser.user_id).then(function (res) {
+    $scope.myinfo.shippingAdress=res.shippingAddress;
+    $scope.myinfo.mailingAddress=res.mailingAddress;
+    $scope.myinfo.paypalAddress=res.paypalAddress;
+  })
+
+  $scope.setAvatar = function () {
+     var options = {
+      quality: 90,
+      destinationType: 0,
+      sourceType: 0,
+      //allowEdit: true,
+      //encodingType: Camera.EncodingType.JPEG,
+      targetWidth: 500,
+      targetHeight: 500,
+      //popoverOptions: CameraPopoverOptions,
+      saveToPhotoAlbum: false,
+      correctOrientation:true
+    };
+    
+    Camera.getPicture(options).then(function(imageData) {
+      console.log(imageData);
+       $scope.selectedImage = "data:image/jpeg;base64,"+imageData;
+      
+  })
+
+}
+$scope.useAvatar=false;
+$scope.updateAvatar = function () {
+  $ionicLoading.show({
+    template:"<ion-spinner></ion-spinner><p>just a moment...</p>"
+  })
+  UserService.updateAvatar($rootScope.loggedinUser.user_id,$scope.croppedDataUrl).then(function (res){
+    $ionicLoading.hide();
+    if (res.status=="updated"){
+      $rootScope.loggedinUser.avatar=res.avatar;
+    }
+  })
+}
+
+$scope.updateUseAvatar= function () {
+  $ionicLoading.show({
+    template:"<ion-spinner></ion-spinner><p>just a moment...</p>"
+  })
+  UserService.updateUseAvatar($rootScope.loggedinUser.user_id,$scope.useAvatar).then(function (res){
+    $ionicLoading.hide();
+
+    if (res=="updated"){
+      $rootScope.loggedinUser.useAvatar=$scope.useAvatar;
+      var updateProfile = $ionicPopup.alert({
+        title:"Avatar Update",
+        template:"Your avatar settings is updated."
+      })
+
+      updateProfile.then(function (res){
+        //done
+      })
+    } else {
+      //console.log(not updated)
+    }
+  })
+
+}
+
+  $scope.showShipping= function () {
+$scope.shipping_update=!$scope.shipping_update;
+
+  }
+
+  $scope.showMailing= function () {
+$scope.mailing_update=!$scope.mailing_update;
+
+  }
+
+  $scope.showPaypal= function () {
+$scope.paypal_update=!$scope.paypal_update;
+
+  }
+
+  $scope.updateShipping = function () {
+$ionicLoading.show({
+
+  template:"<ion-spinner></ion-spinner><p>just a moment...</p>"
+});
+
+  UserService.updateShipping($rootScope.loggedinUser.user_id,$scope.shippingAddress),then(function (res){
+    $ionicLoading.hide();
+    if (res.status=="ok"){
+      $rootScope.loggedinUser.shippingAddress=$scope.shippingAddress;
+    }
+  })
+  $scope.showShipping();
+}
+
+$scope.updateMailing = function () {
+$ionicLoading.show({
+
+  template:"<ion-spinner></ion-spinner><p>just a moment...</p>"
+});
+
+UserService.updateMailing($rootScope.loggedinUser.user_id,$scope.mailingAddress),then(function (res){
+    $ionicLoading.hide();
+    if (res.status=="ok"){
+      $rootScope.loggedinUser.mailingAddress=$scope.mailingAddress;
+    }
+  })
+
+
+  $scope.showMailing();
+}
+$scope.updatePaypal = function () {
+$ionicLoading.show({
+
+  template:"<ion-spinner></ion-spinner><p>just a moment...</p>"
+});
+UserService.updatePaypal($rootScope.loggedinUser.user_id,$scope.paypalAddress),then(function (res){
+    $ionicLoading.hide();
+    if (res.status=="ok"){
+      $rootScope.loggedinUser.paypalAddress=$scope.paypalAddress;
+    }
+  })
+  
+  $scope.showPaypal();
+}
 })
 .filter('monthName', [function() {
     return function (monthNumber) { //1 = January

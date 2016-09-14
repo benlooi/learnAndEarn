@@ -1,4 +1,4 @@
-   <ion-nav-bar class="bar bar-positive" ng-controller="mainCtrl">
+   <ion-nav-bar class="bar bar-dark" ng-controller="mainCtrl">
       <ion-nav-buttons side="left"  ng-click="goBack()">
          <i style="color: white;" class="button button-icon icon ion-chevron-left" ng-click="backToMain()"></i> 
       </ion-nav-buttons>
@@ -24,7 +24,7 @@
 			<div class="rate" ng-click="rate()"><i class="ion-ios-star"></i></div>
 			
 		</div>
-		<div class="recommends">
+		<div class="recommends" ng-click="goToUser(thisEbook.buyer)">
 		<img ng-src="http://www.learnandearn123.com/apis/assets/images/avatars/{{thisEbook.buyer.avatar}}" >
 		<div class="user">{{thisEbook.buyer.username}} recommends this.</div> 
 		
@@ -34,7 +34,7 @@
 	
 	<p>{{thisEbook.synopsis}}</p>
 	</div>
-<div class="item item-avatar" ng-repeat="comment in thisEbook.comments">
+<div class="item item-avatar" ng-repeat="comment in thisEbook.comments" ng-click="goToCommentUser(comment.comment_by)">
 		<img ng-src="http://graph.facebook.com/{{comment.facebookID}}/picture?type=large"ng-show="comment.facebookID">
 		<img ng-src="http://www.learnandearn123.com/apis/assets/images/avatars/{{comment.avatar}}" ng-hide="comment.facebookID">
 		<h2>{{comment.username}}</h2>

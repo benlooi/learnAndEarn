@@ -3,9 +3,9 @@
 // angular.module is a global place for creating, registering and retrieving Angular modules
 // 'starter' is the name of this angular module example (also set in a <body> attribute in index.html)
 // the 2nd parameter is an array of 'requires'
-angular.module('starter', ['ionic','directives','controllers','services','ngCordova','starter.payPalService','ionicLazyLoad','ionic-ratings'])
+angular.module('starter', ['ionic','directives','controllers','services','ngCordova','ngImgCrop','starter.payPalService','ionicLazyLoad','ionic-ratings'])
 
-.run(function($ionicPlatform,$http, $cordovaPushV5,$rootScope,UserService) {
+.run(function($ionicPlatform,$http,$rootScope,UserService,$ionicPopup,$cordovaDevice) {
 
   var options = {
     android: {
@@ -32,7 +32,7 @@ angular.module('starter', ['ionic','directives','controllers','services','ngCord
     if(window.StatusBar) {
       StatusBar.styleDefault();
     }
-if(window.cordova && $cordovaPushV5) {
+/*if(window.cordova && $cordovaPushV5) {
     // initialize
   $cordovaPushV5.initialize(options).then(function() {
     // start listening for new notifications
@@ -49,10 +49,50 @@ if(window.cordova && $cordovaPushV5) {
     })
   })
 }
+*/
+FCMPlugin.getToken(
+  function(token){
+    //alert(token);
+    localStorage.setItem("gcmRegID",token);
+    console.log(token);
+  },
+  function(err){
+    console.log('error retrieving token: ' + err);
+  }
+)
+
+
+FCMPlugin.onNotification(
+  function(data){
+    console.log(JSON.stringify(data));
+    if(data.wasTapped){
+      //Notification was received on device tray and tapped by the user.
+      console.log('msg received: '+data);
+      
+    }else{
+      //Notification was received in foreground. Maybe the user needs to be notified.
+        console.log('msg received:  foreground -'+ data);
+        var msgBox=$ionicPopup.alert({
+          title:data.title,
+          template:data.body
+        });
+        msgBox.then(function (res){
+
+        });
+    }
+  },
+  function(msg){
+    console.log('onNotification callback successfully registered: ' + msg);
+  },
+  function(err){
+    console.log('Error registering onNotification callback: ' + err);
+  }
+);
+
   });
   
   // triggered every time notification received
-  $rootScope.$on('$cordovaPushV5:notificationReceived', function(event, data){
+ /* $rootScope.$on('$cordovaPushV5:notificationReceived', function(event, data){
     // data.message,
     // data.title,
     // data.count,
@@ -65,7 +105,7 @@ if(window.cordova && $cordovaPushV5) {
   $rootScope.$on('$cordovaPushV5:errorOcurred', function(event, e){
     // e.message
   });
-
+*/
 
   })
 
@@ -195,6 +235,22 @@ payPalMerchantUserAgreementURL : 'http://www.pompipi.co/main/user_agreement'
     //  'main-users':{
     templateUrl:'templates/redemption.html',
     controller: 'couponAdminCtrl'
+   // }
+   // }
+    ,
+    params: {
+      
+      fromState:'main.home'
+    }
+
+  })
+     .state('profile_settings',{
+      cache: false,
+    url:'/profile_settings',
+    //views: {
+    //  'main-users':{
+    templateUrl:'templates/profile_settings.html',
+    controller: 'profileSettingsCtrl'
    // }
    // }
     ,

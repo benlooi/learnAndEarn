@@ -18,6 +18,17 @@ angular.module('services',[])
 		getuser:function(){
     			return JSON.parse(window.localStorage.starter_facebook_user || '{}');
   	},
+  	getUser: function (user){
+  			var deferred=$q.defer();
+			$http.post(ApiEndPoint.Users+"getUser",{user:user})
+			.success(function (data){
+				deferred.resolve(data);
+			})
+			.error(function(error){
+				deferred.reject(error);
+			})
+			return deferred.promise;
+  		},
   		signUp: function (user){
   			var deferred=$q.defer();
 			$http.post(ApiEndPoint.Users+"normalSignUp",{user:user})
@@ -76,6 +87,17 @@ angular.module('services',[])
   		checkUsernameExists: function (username){
   			var deferred=$q.defer();
 			$http.post(ApiEndPoint.Users+"checkUsernameExists",{username:username})
+			.success(function (data){
+				deferred.resolve(data);
+			})
+			.error(function(error){
+				deferred.reject(error);
+			})
+			return deferred.promise;
+  		},
+  		getNewUsers: function (){
+  			var deferred=$q.defer();
+			$http.get(ApiEndPoint.Users+"getNewUsers")
 			.success(function (data){
 				deferred.resolve(data);
 			})
@@ -160,6 +182,98 @@ angular.module('services',[])
   		getCountries: function (){
   			var deferred=$q.defer();
 			$http.get('json/countries.json')
+			.success(function (data){
+				deferred.resolve(data);
+			})
+			.error(function(error){
+				deferred.reject(error);
+			})
+			return deferred.promise;
+
+
+  		},
+  		getUserPurchasedItems: function (user){
+  			var deferred=$q.defer();
+			$http.post(ApiEndPoint.Users+"getUserPurchasedItems",{user:user})
+			.success(function (data){
+				deferred.resolve(data);
+			})
+			.error(function(error){
+				deferred.reject(error);
+			})
+			return deferred.promise;
+
+
+  		},
+  		getUpdateInfo: function (user){
+  			var deferred=$q.defer();
+			$http.post(ApiEndPoint.Users+"getUpdateInfo",{user:user})
+			.success(function (data){
+				deferred.resolve(data);
+			})
+			.error(function(error){
+				deferred.reject(error);
+			})
+			return deferred.promise;
+
+
+  		},
+
+  		updateAvatar: function (user,avatar){
+  			var deferred=$q.defer();
+			$http.post(ApiEndPoint.Users+"updateAvatar",{user:user,avatar:avatar})
+			.success(function (data){
+				deferred.resolve(data);
+			})
+			.error(function(error){
+				deferred.reject(error);
+			})
+			return deferred.promise;
+
+
+  		},
+  		updateUseAvatar: function (user,useAvatar){
+  			var deferred=$q.defer();
+			$http.post(ApiEndPoint.Users+"updateUseAvatar",{user:user,useAvatar:useAvatar})
+			.success(function (data){
+				deferred.resolve(data);
+			})
+			.error(function(error){
+				deferred.reject(error);
+			})
+			return deferred.promise;
+
+
+  		},
+  		updateShipping: function (user,shippingAddress){
+  			var deferred=$q.defer();
+			$http.post(ApiEndPoint.Users+"updateShipping",{user:user,shippingAddress:shippingAddress})
+			.success(function (data){
+				deferred.resolve(data);
+			})
+			.error(function(error){
+				deferred.reject(error);
+			})
+			return deferred.promise;
+
+
+  		},
+  		updateMailing: function (user,mailingAddress){
+  			var deferred=$q.defer();
+			$http.post(ApiEndPoint.Users+"updateMailing",{user:user,shippingAddress:mailingAddress})
+			.success(function (data){
+				deferred.resolve(data);
+			})
+			.error(function(error){
+				deferred.reject(error);
+			})
+			return deferred.promise;
+
+
+  		},
+  		updatePaypal: function (user,paypalAddress){
+  			var deferred=$q.defer();
+			$http.post(ApiEndPoint.Users+"updatePaypal",{user:user,paypalAddress:paypalAddress})
 			.success(function (data){
 				deferred.resolve(data);
 			})

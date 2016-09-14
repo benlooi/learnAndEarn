@@ -1,23 +1,26 @@
 <ion-modal-view>
- 	<ion-header-bar class="bar-positive">
+ 	<ion-header-bar class="bar-dark">
       <h1 class="title">Shopping cart</h1>
     </ion-header-bar>
 	<ion-content >
 		
 		<div class="list card">
-			<div class="item item-icon-left" ng-repeat="item in cart track by $index">
+			
+			<div class="item" ng-repeat="item in cart track by $index">
 				{{item.name}}
-				<i class="ion-ios-close-empty" ng-click="removeItem($index)"></i>
+				<p style="color:#265E6D" ng-show="item.type=='fashion'">{{item.model}} / {{item.color}} / {{item.size}}</p>
 				<span class="item-note">
-					<p>{{item.currency}} {{item.price}}</p>
-					<p>sub-total: {{item.currency}} {{item.price*item.quantity}}</p>
+					<p>SGD {{item.price}}<span style="float:right"><i class="ion-ios-close-empty" ng-click="removeItem($index)"></i></span></p>
+					<p>sub-total: SGD {{item.price*item.quantity}}</p>
 				</span>
-				<p>{{item.author}}</p>
+				<p ng-show="item.type=='ebooks'">{{item.author}}</p>
+				<p ng-show="item.type!='ebooks'">{{item.company}}</p>
 				<p>Qty : {{item.quantity}}</p>
-				<button class="button button-stable" ng-click="increaseQty($index)" ng-show="item.type!='ebooks'"><i class="icon ion-plus"></i></button>
 				<button class="button button-stable" ng-click="decreaseQty($index)" ng-show="item.type!='ebooks'"><i class="icon ion-minus"></i></button>
+				<button class="button button-stable" ng-click="increaseQty($index)" ng-show="item.type!='ebooks'"><i class="icon ion-plus"></i></button>
 				
 			</div>
+
 			<div class="item item-icon-left">
 				TOTAL
 				<span class="item-note"> {{book.currency}} {{total}}</span>

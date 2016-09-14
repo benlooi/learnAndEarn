@@ -1,6 +1,6 @@
   
 <ion-view view-title="Products">
-	 <ion-nav-bar class="bar bar-positive" ng-controller="mainCtrl">
+	 <ion-nav-bar class="bar bar-dark" ng-controller="mainCtrl">
       <ion-nav-buttons side="left"  ng-click="goBack()">
          <i style="color: white;" class="button button-icon icon ion-chevron-left" ng-click="backToMain()"></i> 
       </ion-nav-buttons>
@@ -15,7 +15,12 @@
 	
 	<div class="selected-book">
 		<img ng-src="http://www.learnandearn123.com/assets/images/{{thisProduct.image}}">
-		<div class="price">${{thisProduct.price}}</div>
+		<div class="price">${{thisProduct.price}}
+			<p>rewards</p>
+			<div class="rewards">
+				<p ng-repeat="amount in thisProduct.commission track by $index"> {{amount * thisProduct.price }}</p>
+			</div>
+		</div>
 
 		<div class="info">
 			<div class="title">{{thisProduct.name}}</div>
@@ -24,17 +29,17 @@
 			<div class="rate" ng-click="rate()"><i class="ion-ios-star"></i></div>
 			
 		</div>
-		<div class="recommends">
+		<div class="recommends" ng-click="goToUser(thisProduct.buyer)">
 		<img ng-src="http://www.learnandearn123.com/apis/assets/images/avatars/{{thisProduct.buyer.avatar}}" >
 		<div class="user">{{thisProduct.buyer.username}} recommends this.</div> 
 		
 	</div>
 	<div>
-	<h3>Synopsis</h3>
+	<h3>Description</h3>
 	
 	<p>{{thisProduct.description}}</p>
 	</div>
-<div class="item item-avatar" ng-repeat="comment in thisProduct.comments">
+<div class="item item-avatar" ng-repeat="comment in thisProduct.comments" ng-click="goToCommentUser(comment.comment_by)">
 		<img ng-src="http://graph.facebook.com/{{comment.facebookID}}/picture?type=large"ng-show="comment.facebookID">
 		<img ng-src="http://www.learnandearn123.com/apis/assets/images/avatars/{{comment.avatar}}" ng-hide="comment.facebookID">
 		<h2>{{comment.username}}</h2>

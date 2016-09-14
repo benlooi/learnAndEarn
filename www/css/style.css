@@ -1,10 +1,17 @@
 /* Empty. Add your own CSS if you like */
+h3 {
+	font-family: Helvetica,Roboto,sans-serif!important;
+	font-weight: 100;
+
+}
 .login-container {
 	position:relative;
+	padding-top:10vh;
 	padding-left:10vw;
 	padding-right: 10vw;
+	padding-bottom:10vh;
 
-	height:100vh;
+	height:auto;
 	background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#5A827F), color-stop(100%,#94D7D3));
     background: -webkit-linear-gradient(top, #5A827F 0%,#94D7D3 100%);
 
@@ -19,14 +26,93 @@
 	border-radius: 50%;
 
 }
-.login-container input {
+.login-container .item {
+	background-color: transparent;
+	border:none;
+}
+.login-container .item  > i {
+	color:white;
+	size:2rem;
+}
+.login-container .item  > input {
 	border-bottom: 1px solid white;
 	background-color: transparent;
 	width:80vw;
+	color:white;
+	font-family: Helvetica,Roboto,sans-serif;
+	font-weight: 100;
+	size:2rem;
+	text-shadow:1px 1px 3px black;
+}
+.login-container .item > input::-webkit-input-placeholder { /* Chrome */
+  color: white;
+}
+.login-container .item > input:-ms-input-placeholder { /* IE 10+ */
+  color: white;
+}
+.login-container .item > input::-moz-placeholder { /* Firefox 19+ */
+  color: white;
+  opacity: 1;
+}
+.login-container .item > input:-moz-placeholder { /* Firefox 4 - 18 */
+  color: white;
+  opacity: 1;
+}
+
+.cropArea {
+    background: #E4E4E4;
+    overflow: hidden;
+    width:80vw;
+    height:80vw;
+    padding:5px;
+    margin-bottom:10px;
+}
+
+.stylo_side {
+	background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#5A827F), color-stop(100%,#94D7D3));
+    background: -webkit-linear-gradient(top, #5A827F 0%,#94D7D3 100%);
+}
+.stylo_list {
+	background-color: transparent;
+
+}
+.stylo_list >.item {
+	color:white;
+	text-shadow:1px 1px 1px black;
+	font-family: Helvetica, Roboto,sans-serif;
+	font-weight: 300;
+	background-color: transparent;
+	border:none;
+}
+.stylo_list >.item.activated{
+	color:white;
+	font-family: Helvetica, Roboto,sans-serif;
+	font-weight: 300;
+	background-color: rgba(255,255,255,0.5);
+	border:none;
+}
+
+.profile {
+
+	padding-top:20px;
+	padding-bottom:20px;
+}
+.profile img {
+
+	border-radius: 50%;
+	border:4px solid rgba(255,255,255,0.5);
+	width:50%;
+}
+.profile p {
+	font-family: Helvetica,Roboto,sans-serif;
+	color:white;
+	font-size: 1.4rem;
+	font-weight: 100;
 }
 .banner_ad {
 	height:150px;
-	background-color: teal;
+	background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#5A827F), color-stop(100%,#94D7D3));
+    background: -webkit-linear-gradient(top, #5A827F 0%,#94D7D3 100%);
 	margin-bottom: 100px;
 }
 
@@ -74,6 +160,11 @@
 }
 .user .details {
 	
+}
+.button .badge {
+    position: relative;
+    top: -28px;
+    left: -25px;
 }
 
 .mainhilight {
@@ -136,6 +227,11 @@ text-align: center
 	display:inline-block;
 	top:30vh;
 
+}
+.books h3 {
+
+	font-family: Helvetica,sans-serif;
+	font-weight: 100;
 }
 .books .book{
 
@@ -335,7 +431,7 @@ text-shadow:1px 1px 5px white;
 	float:left;
 	text-align:center;
 }
-.stats h1 {
+.stats h2 {
 	color:#48537F;
 }
 .stats h3 {

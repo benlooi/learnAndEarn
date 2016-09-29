@@ -1,5 +1,5 @@
 angular.module('controllers',[])
-.controller('loginCtrl', function ($scope,$rootScope,$cordovaImagePicker,Camera,$state,$q,$ionicPopup,$ionicLoading,UserService){
+.controller('loginCtrl', function ($scope,$rootScope,$cordovaImagePicker,Camera,$state,$jrCrop,$q,$ionicPopup,$ionicLoading,UserService){
   //checks for authresponse
 
     var PompipiSync = function (authResponse) {
@@ -105,6 +105,7 @@ angular.module('controllers',[])
 
 
                 function (fail){
+                  console.log(JSON.stringify(fail));
               var noFacebook = $ionicPopup.alert(
               {
                 title:"Facebook Login Failed",
@@ -139,28 +140,95 @@ angular.module('controllers',[])
   $scope.showSignUp = function () {
     $scope.signup=!$scope.signup;
   }
+  //new image impletmetnation
+  $scope.type = 'square';
+            $scope.imageDataURI = '';
+            $scope.dominantColor = [];
+            $scope.resBlob = {};
+            $scope.urlBlob = {};
+            $scope.resImgSize = 200;
+            $scope.paletteColor = '';
+            $scope.paletteColorLength = 8;
+            $scope.getBlob = function() {
+                console.log($scope.resBlob);
+            };
+            var handleFileSelect = function(evt) {
+                var file = evt.currentTarget.files[0],
+                    reader = new FileReader();
+                if(navigator.userAgent.match(/iP(hone|od|ad)/i) ) {
+                    var canvas = document.createElement('canvas'),
+                        mpImg = new MegaPixImage(file);
+                    canvas.width = mpImg.srcImage.width;
+                    canvas.height = mpImg.srcImage.height;
+                    EXIF.getData(file, function() {
+                        var orientation = EXIF.getTag(this, 'Orientation');
+                        mpImg.render(canvas, {
+                            maxHeight: $scope.resImgSize * 2,
+                            orientation: orientation
+                        }, function(){
+                            var tt = canvas.toDataURL("image/jpeg", 1);
+                            canvas.toBlob(function(blob) {
+                                $scope.$apply(function($scope) {
+                                    $scope.imageDataURI = blob;
+                                });
+                            });
+                        });
+                    });
+                } else {
+                    reader.onload = function(evt) {
+                        $scope.$apply(function($scope) {
+                            console.log(evt.target.result);
+                            $scope.imageDataURI = evt.target.result;
+                        });
+                    };
+                    reader.readAsDataURL(file);
+                }
+            };
+            angular.element(document.querySelector('#fileInput')).on('change', handleFileSelect);
+
+
+//end new image
+
  $scope.croppedDataUrl="";
  $scope.selectedImage="";
-  $scope.setAvatar = function () {
-     var options = {
-      quality: 90,
-      destinationType: 0,
-      sourceType: 0,
-      //allowEdit: true,
-      //encodingType: Camera.EncodingType.JPEG,
-      targetWidth: 500,
-      targetHeight: 500,
-      //popoverOptions: CameraPopoverOptions,
-      saveToPhotoAlbum: false,
-      correctOrientation:true
-    };
-    
-    Camera.getPicture(options).then(function(imageData) {
-      console.log(imageData);
-       $scope.selectedImage = "data:image/jpeg;base64,"+imageData;
-      
-  })
 
+
+  
+
+
+  $scope.setAvatar = function () {
+
+    //imgaePicker method
+
+    var options = {
+      height:600,
+      width:600,
+      quality:80,
+      maximumImagesCount:1
+    }
+
+    $cordovaImagePicker.getPictures(options).then(function (results){
+      console.log("image URI : "+results[0]);
+      var selectedImage=results[0];
+      $jrCrop.crop({
+        url:selectedImage,
+        width:200,
+        height:200,
+        circle:true
+      }).then(function (canvas){
+        console.log(canvas);
+        var croppedImage=canvas.toDataURL("image/jpeg",1);
+        console.log(croppedImage);
+       
+        $scope.croppedDataUrl=croppedImage;
+        
+      })
+     
+      })
+      
+
+
+    
 }
   $scope.normalLogin = function () {
     $ionicLoading.show({
@@ -468,6 +536,11 @@ $ionicLoading.show({
     console.log(resp);
     $scope.latestEbooks=resp;
   })
+  productServices.getLatestMusic().then(function(resp){
+    
+    console.log(resp);
+    $scope.Music=resp;
+  })
 
   UserService.getNewUsers().then(function(resp){
     console.log(resp);
@@ -503,9 +576,50 @@ $ionicLoading.show({
     $state.go('service',{service:service,fromState:fromState});
     console.log(JSON.stringify(service));
   }
-
+$scope.showAlbum =function(album,fromState) {
+    
+    album.referrer=album.buyer.user_id;
+   
+    
+    $state.go('music',{album:album,fromState:fromState});
+    //console.log(JSON.stringify(product));
+  }
 
    $scope.doRefresh= function () {
+     productServices.getElectronics().then(function(resp){
+    $scope.Electronics=resp;
+    console.log(resp);
+  })
+  productServices.getFashion().then(function(resp){
+    $scope.Fashion=resp;
+    console.log(resp);
+  })
+
+  productServices.getServices().then(function(resp){
+    $scope.Services=resp;
+    console.log(resp);
+  })
+
+  bookServices.getLatest().then(function(resp){
+    $ionicLoading.hide();
+    console.log(resp);
+    $scope.latestEbooks=resp;
+  })
+
+  productServices.getLatestMusic().then(function(resp){
+    
+    console.log(resp);
+    $scope.Music=resp;
+  })
+
+  UserService.getNewUsers().then(function(resp){
+    console.log(resp);
+    for (i=0;i<resp.length;i++){
+      resp[i].following=JSON.parse(resp[i].following);
+      resp[i].followers=JSON.parse(resp[i].followers);
+    }
+    $scope.newUsers=resp;
+  })
      bookServices.getLatest().then(function(resp){
     console.log(resp);
     $scope.latestEbooks=resp;
@@ -533,6 +647,7 @@ $rootScope.user.electronics=resp.electronics;
 $rootScope.user.fashion=resp.fashion;
 $rootScope.user.services=resp.services;
 $rootScope.user.ebooks=resp.ebooks;
+$rootScope.user.music=resp.music;
 
  }, function (err){
   console.log(err);
@@ -577,13 +692,23 @@ $rootScope.user.ebooks=resp.ebooks;
     //console.log(JSON.stringify(product));
   }
 
+  $scope.showAlbum =function(album,fromState) {
+    console.log('album clicked');
+    album.referrer=$state.params.user.user_id;
+    album.product_id=album.media_id;
+    album.buyer=$state.params.user;
+    
+    $state.go('music',{album:album,fromState:fromState});
+    //console.log(JSON.stringify(product));
+  }
+
   $scope.showServices =function(service,fromState) {
     service.referrer=$state.params.user.user_id;
      service.product_id=service.service_id;
     service.buyer=$state.params.user;
     
     $state.go('service',{service:service,fromState:fromState});
-    console.log(JSON.stringify(product));
+    //console.log(JSON.stringify(product));
   }
 
 
@@ -675,9 +800,37 @@ $rootScope.user.ebooks=resp.ebooks;
     //cart = JSON.parse(cart);
     $rootScope.cart=JSON.parse(cart);
   }
-
+$scope.factor=1;
   //console.log(cart);
   $scope.thisEbook=$state.params.book;
+  
+$scope.project= function (factor) {
+  var Projections=[];
+  for (i=0;i<$scope.thisEbook.commission.length;i++){
+
+    var thisProjection=($scope.thisEbook.price*$scope.thisEbook.commission[i]*Math.pow(factor,i+1)).toFixed(2);
+    console.log(thisProjection);
+    Projections.push(thisProjection);
+  }
+  $scope.thisEbook.projections=Projections;
+}
+
+$scope.increaseFactor= function () {
+  $scope.factor++;
+  $scope.project($scope.factor);
+  console.log($scope.thisEbook.projections);
+}
+
+$scope.decreaseFactor= function () {
+  if ($scope.factor>0){
+    $scope.factor--;
+    $scope.project($scope.factor);
+
+  }
+  
+}
+$scope.project($scope.factor);
+  
   $rootScope.thisState=$state.params.fromState;
   console.log($scope.thisEbook);
 $scope.comment={};
@@ -687,6 +840,11 @@ $scope.comment.facebookID=$rootScope.loggedinUser.facebookID;
 $scope.comment.product_id=$scope.thisEbook.product_id;
 $scope.comment.product_type="ebooks";
 
+ $scope.showRewards=false;
+
+  $scope.toggleRewards= function () {
+    $scope.showRewards=!$scope.showRewards;
+  }
 
 
   $ionicModal.fromTemplateUrl('templates/comments.html', {
@@ -794,6 +952,250 @@ $scope.comment.product_type="ebooks";
     $scope.modal.hide();
   }
 
+  $scope.closeComment = function () {
+     $scope.modal.hide();
+  }
+
+  
+  
+
+  var options = {
+      location: 'yes',
+      clearcache: 'yes',
+      toolbar: 'yes'
+    };
+
+
+  $scope.payMoney=function () {
+    $cordovaInAppBrowser.open('http://www.paypal.com', '_blank', options)
+      .then(function(event) {
+        // success
+        console.log('success');
+        console.log(event);
+      })
+      .catch(function(event) {
+        // error
+         console.log('error');
+         console.log(event);
+      });
+  }
+
+   $scope.backToApp= function () {
+    $cordovaInAppBrowser.close();
+   } 
+
+$scope.paypalPay = function () {
+
+  PaypalService.initPaymentUI().then(function () {
+
+PaypalService.makePayment(90, 'Total Amount').then(function (response) {
+
+alert('success'+JSON.stringify(response));
+console.log(response);
+$state.go('main.home');
+
+}, function (error) {
+
+alert('Transaction Canceled');
+$state.go('main.home');
+
+});
+
+});
+
+}
+
+$scope.goToUser = function (user){
+
+    $rootScope.user=user;
+  $state.go('user',{user:$rootScope.user,fromState:$rootScope.thisState})
+}
+
+$scope.goToCommentUser = function(user){
+
+  UserService.getUser(user).then(function(resp){
+    console.log(resp);
+    $rootScope.user=resp;
+    $state.go('user',{user:$rootScope.user,fromState:$rootScope.thisState});
+  }, function (err){
+    console.log(err);
+  })
+}
+
+})
+.controller('albumCtrl', function ($scope,$rootScope, $stateParams,$state,$ionicPopup,MediaManager,$ionicModal,bookServices,UserService){
+  
+  var cart = localStorage.getItem("pomcart");
+
+  if (cart==null) {
+    $rootScope.cart=[];
+  } else {
+    //cart = JSON.parse(cart);
+    $rootScope.cart=JSON.parse(cart);
+  }
+$scope.factor=1;
+  //console.log(cart);
+
+  
+
+  for(i=0;i<$state.params.album.contents.length;i++){
+    $state.params.album.contents[i].url='http://www.pompipi.co/apis/assets/fullsong/'+$state.params.album.contents[i].url;
+    $state.params.album.contents[i].file=$state.params.album.contents[i].url;
+    
+  }
+  $scope.thisAlbum=$state.params.album;
+$scope.project= function (factor) {
+  var Projections=[];
+  for (i=0;i<$scope.thisAlbum.commission.length;i++){
+
+    var thisProjection=($scope.thisAlbum.price*$scope.thisAlbum.commission[i]*Math.pow(factor,i+1)).toFixed(2);
+    //console.log(thisProjection);
+    Projections.push(thisProjection);
+  }
+  $scope.thisAlbum.projections=Projections;
+}
+
+$scope.increaseFactor= function () {
+  $scope.factor++;
+  $scope.project($scope.factor);
+  console.log($scope.thisAlbum.projections);
+}
+
+$scope.decreaseFactor= function () {
+  if ($scope.factor>0){
+    $scope.factor--;
+    $scope.project($scope.factor);
+
+  }
+  
+}
+$scope.project($scope.factor);
+  
+  $rootScope.thisState=$state.params.fromState;
+  console.log($scope.thisAlbum);
+$scope.comment={};
+$scope.comment.comment_by=$rootScope.loggedinUser.user_id;
+$scope.comment.username=$rootScope.loggedinUser.username;
+$scope.comment.facebookID=$rootScope.loggedinUser.facebookID;
+$scope.comment.product_id=$scope.thisAlbum.product_id;
+$scope.comment.product_type="ebooks";
+
+ $scope.showRewards=false;
+
+  $scope.toggleRewards= function () {
+    $scope.showRewards=!$scope.showRewards;
+  }
+
+
+  $ionicModal.fromTemplateUrl('templates/comments.html', {
+    scope: $scope,
+    animation: 'slide-in-up'
+  }).then(function(modal) {
+    $scope.modal = modal;
+  });
+  $scope.buy=function (book) {
+    var confirmBuy= $ionicPopup.confirm({
+      title:"Add to Cart",
+      template:'Confirm add to cart?'
+    }
+      );
+    confirmBuy.then(function (res){
+      
+          bookServices.checkUserAlreadyHave($rootScope.loggedinUser.user_id,book.product_id).then(function (resp){
+            console.log(resp);
+            if (resp=="already purchased"){
+              var informUser = $ionicPopup.alert({
+
+                title:"You have this Book",
+                template:"You've already bought this book. Check your Shelf."
+              });
+
+              informUser.then(function (res){
+
+              });
+            } else if (resp=="not found") {
+
+                  var thisbook={
+                  "name":book.name,
+                  "author":book.author,
+                  "quantity":1,
+                  "currency":"SGD",
+                  "price":parseFloat(book.price),
+                  "sku":book.product_id+"-"+"20161007",
+                  "product_id":book.product_id,
+                  "referrer":book.referrer,
+                  "purch_ref":book.purch_ref,
+                  "buyer":$rootScope.loggedinUser.user_id
+                  }
+            console.log(thisbook);
+
+          var books_index = $rootScope.cart.map(function (eb){
+            return eb.product_id;
+          } )
+
+          var isInCart = books_index.indexOf(thisbook.product_id);
+           if (isInCart== -1){
+            $rootScope.cart.push(thisbook);
+          } else {
+            var InCartMsg = $ionicPopup.alert({
+              title:"Cart Status",
+              template:"Item already in cart."
+            });
+            inCartMsg.then(function (resp){
+              console.log("item in cart already");
+            })
+          }
+      
+      //console.log(josn.stringify(cart));
+      localStorage.setItem("pomcart",JSON.stringify($rootScope.cart));
+      console.log(JSON.stringify($rootScope.cart));
+     // $state.go('cart',{cart:$rootScope.cart});
+      } 
+      
+  
+    }) //END BOOK SERVICES TO CHECK FOR BOOK
+  })
+  } //END SCOPEBUY
+
+    $scope.ratingsObject = {
+        iconOn: 'ion-ios-star',    //Optional
+        iconOff: 'ion-ios-star-outline',   //Optional
+        iconOnColor: 'rgb(200, 200, 100)',  //Optional
+        iconOffColor:  'rgb(200, 100, 100)',    //Optional
+        rating:  2, //Optional
+        minRating:1,    //Optional
+        readOnly: true, //Optional
+        callback: function(rating) {    //Mandatory
+          $scope.ratingsCallback(rating);
+        }
+      };
+
+      $scope.ratingsCallback = function(rating) {
+        $scope.comment.rating=rating;
+        console.log('Selected rating is : ', rating);
+      };
+
+
+  $scope.rate=function () {
+    $scope.modal.show();
+  }
+
+  $scope.submitComment = function () {
+    console.log(JSON.stringify($scope.comment));
+    bookServices.addComment($scope.comment,$scope.loggedinUser.user_id).then(function(res){
+      console.log(res);
+      if (res=="comment added"){
+        $scope.thisAlbum.comments.push($scope.comment);
+      }
+    })
+
+    $scope.modal.hide();
+  }
+
+  $scope.closeComment = function () {
+     $scope.modal.hide();
+  }
+
   
   
 
@@ -879,9 +1281,43 @@ $scope.goToCommentUser = function(user){
     }
 
   //console.log(cart);
+  $scope.showRewards=false;
+
+  $scope.toggleRewards= function () {
+    $scope.showRewards=!$scope.showRewards;
+  }
 
   $scope.item_index=0;
+
+  $scope.factor=1;
   $scope.thisProduct=$state.params.product;
+
+  $scope.project= function (factor) {
+  var Projections=[];
+  for (i=0;i<$scope.thisProduct.commission.length;i++){
+
+    var thisProjection=($scope.thisProduct.price*$scope.thisProduct.commission[i]*Math.pow(factor,i+1)).toFixed(2);
+    //console.log(thisProjection);
+    Projections.push(thisProjection);
+  }
+  $scope.thisProduct.projections=Projections;
+}
+
+$scope.increaseFactor= function () {
+  $scope.factor++;
+  $scope.project($scope.factor);
+  console.log($scope.thisProduct.projections);
+}
+
+$scope.decreaseFactor= function () {
+  if ($scope.factor>0){
+    $scope.factor--;
+    $scope.project($scope.factor);
+
+  }
+  
+}
+$scope.project($scope.factor);
 $scope.comment={};
 $scope.comment.comment_by=$rootScope.loggedinUser.user_id;
 $scope.comment.username=$rootScope.loggedinUser.username;
@@ -1081,7 +1517,9 @@ $scope.prevModel= function () {
     $scope.modal.hide();
   }
 
-  
+  $scope.closeComment = function () {
+     $scope.modal.hide();
+  }
   
    $scope.backToApp= function () {
     $cordovaInAppBrowser.close();
@@ -1118,10 +1556,44 @@ $scope.goToCommentUser = function(user){
     $rootScope.cart=JSON.parse(cart);
   }
 
+ $scope.showRewards=false;
+
+  $scope.toggleRewards= function () {
+    $scope.showRewards=!$scope.showRewards;
+  }
   //console.log(cart);
+  $scope.factor=1;
   $scope.thisService=$state.params.service;
+
+
+  $scope.project= function (factor) {
+  var Projections=[];
+  for (i=0;i<$scope.thisService.commission.length;i++){
+
+    var thisProjection=($scope.thisService.price*$scope.thisService.commission[i]*Math.pow(factor,i+1)).toFixed(2);
+    console.log(thisProjection);
+    Projections.push(thisProjection);
+  }
+  $scope.thisService.projections=Projections;
+}
+
+$scope.increaseFactor= function () {
+  $scope.factor++;
+  $scope.project($scope.factor);
+  console.log($scope.thisService.projections);
+}
+
+$scope.decreaseFactor= function () {
+  if ($scope.factor>0){
+    $scope.factor--;
+    $scope.project($scope.factor);
+
+  }
+  
+}
+$scope.project($scope.factor);
   $rootScope.thisState=$state.params.fromState;
-  console.log(JSON.stringify($scope.thisService));
+  //console.log(JSON.stringify($scope.thisService));
 $scope.comment={};
 $scope.comment.comment_by=$rootScope.loggedinUser.user_id;
 $scope.comment.username=$rootScope.loggedinUser.username;
@@ -1245,7 +1717,9 @@ $scope.comment.product_type="services";
     $scope.modal.hide();
   }
 
-  
+  $scope.closeComment = function () {
+     $scope.modal.hide();
+  }
   
 
   var options = {
@@ -1318,8 +1792,9 @@ $ionicLoading.show({
     for (i=0;i<resp.length;i++){
       var bookCount=resp[i].ebooks.length;
       resp[i].bookCount=bookCount;
-      resp[i].followers=JSON.parse(resp[i].followers);
-      resp[i].following=JSON.parse(resp[i].following);
+     var rankingCount=resp[i].ebooks.length+resp[i].products.length+resp[i].services.length+resp[i].media.length;
+     resp[i].rankingCount=rankingCount;
+
     }
     
     $rootScope.users=resp;
@@ -1420,7 +1895,7 @@ getUserAccountDetails($rootScope.loggedinUser.user_id)
 
   console.log($state.params.tx);
   for(i=0;i<$state.params.tx.length;i++){
-    //$state.params.tx[i].datetime=new Date($state.params.tx[i].datetime);
+    $state.params.tx[i].datetime_moment=moment($state.params.tx[i].datetime).fromNow();;
   }
   $scope.tx=$state.params.tx;
 
@@ -1439,7 +1914,7 @@ getUserAccountDetails($rootScope.loggedinUser.user_id)
 */
 console.log(JSON.stringify($rootScope.loggedinUser));
 //$scope.eBooks=$rootScope.loggedinUser.ebooks;
-console.log(JSON.stringify($scope.eBooks));
+//console.log(JSON.stringify($scope.eBooks));
 UserService.getEbooks($rootScope.loggedinUser.user_id).then (function (resp){
 
   console.log(JSON.stringify(resp));
@@ -1555,6 +2030,140 @@ document.addEventListener('deviceready', function () {
   })
   }
 
+UserService.getMusic($scope.loggedinUser.user_id).then(function (resp){
+  console.log(JSON.stringify(resp));
+  for (i=0;i<resp.length;i++){
+    for (t=0;t<resp[i].contents.length;t++){
+      resp[i].contents[t].file=resp[i].contents[t].url;
+      resp[i].contents[t].url="http://www.pompipi.co/apis/assets/fullsong/"+ resp[i].contents[t].file;
+    }
+    
+  }
+  $scope.music=resp;
+  
+  
+  
+})
+
+UserService.getMovies($scope.loggedinUser.user_id).then(function (resp){
+  $scope.movies=resp;
+   console.log(resp);
+})
+$scope.Playing=-1;
+
+
+var downloadTrack = function (trackFile,platform) {
+
+
+      var url = "http://www.pompipi.co/apis/assets/fullsong/"+trackFile;
+      if (platform=="IOS"){
+        var targetPath = cordova.file.documentsDirectory + "/music/"+trackFile;
+      } else if (platform=="Android"){
+        var targetPath = cordova.file.externalDataDirectory + "/music/"+trackFile;
+      }
+      
+      var trustHosts = true;
+      var options = {};
+    $cordovaFileTransfer.download(url,targetPath,trustHosts,options).then(function (success) {
+        $ionicLoading.hide();
+          $cordovaFileOpener2.open(targetPath,'audio/mpeg').then (function (success){
+            //open with media player
+          },function(error){
+            openerMsg = $ionicPopup.alert({
+              title:"Play Music",
+              template:"Download a Media Player to play MP3s on your device."
+            })
+          })
+
+
+        },function (error){
+          //download failed 
+          $ionicLoading.hide();
+          var downloaderMsg = $ionicPopup.alert({
+            title:"Track Download",
+            template:"Oops, download failed. Try again later, maybe?"
+          });
+          downloaderMsg.then(function(res){
+
+          })
+
+        })
+
+}
+$scope.downloadThisTrack = function (album_id,trackFile) {
+  $ionicLoading.show({
+    template:"<ion-spinner></ion-spinner><p>downloading...</p>"
+  });
+  var platform= $cordovaDevice.getPlatform();
+document.addEventListener('deviceready', function () {
+    
+  if (platform == "iOS") {
+
+    //check if music directory exist
+    $cordovaFile.checkDir(cordova.file.documentsDirectory,"music").then (function (success){
+      //check if file_exists
+      $cordovaFile.checkFile(cordova.file.documentsDirectory+"/music",trackFile).then(function(success){
+        $ionicLoading.hide();
+        var trackInfo=$ionicPopup.alert({
+          title:"Track info",
+          template:"Track already downloaded"
+        });
+        trackInfo.then(function (res){
+
+        })
+      }, function(error){
+        //if file does not exists - download
+        downloadTrack(trackFile,platform);
+      
+      })
+      //dir exists
+    },function (error){
+      //no dir
+      $cordovaFile.createDir(cordova.file.documentsDirectory,"music",false).then(function (success){
+        //download track
+        downloadTrack(trackFile,platform);
+      }, function(error){
+        $ionicLoading.hide();
+        console.log('dir MUSIC creation failed');
+
+      })
+
+    })
+     }
+
+
+     
+ else if (platform=="Android") {
+
+  $cordovaFile.checkDir(cordova.file.externalDataDirectory,"music").then (function (success){
+    $cordovaFile.checkFile(cordova.file.externalDataDirectory+'/music',trackFile).then(function(success){
+      $ionicLoading.hide();
+      var trackInfo=$ionicPopup.alert({
+          title:"Track info",
+          template:"Track already downloaded"
+        });
+        trackInfo.then(function (res){
+          
+        });
+    }, function(error){
+       downloadTrack(trackFile,platform);
+
+    })
+  
+  }, function (error) {
+    $cordovaFile.createDir(cordova.file.externalDataDirectory,"music",false).then(function(success){
+       downloadTrack(trackFile,platform);
+    },function(error){
+      $ionicLoading.hide();
+console.log('dir MUSIC creation failed');
+    })
+
+  })
+  
+  }
+
+})
+}
 
 
 $scope.doRefresh = function() {
@@ -1562,6 +2171,24 @@ $scope.doRefresh = function() {
 
   console.log(resp);
   $scope.eBooks = resp;
+
+  UserService.getMusic($scope.loggedinUser.user_id).then(function (resp){
+     for (i=0;i<resp.length;i++){
+    for (t=0;t<resp[i].contents.length;t++){
+      resp[i].contents[t].file=resp[i].contents[t].url;
+      resp[i].contents[t].url="http://www.pompipi.co/apis/assets/fullsong/"+ resp[i].contents[t].file;
+       
+    }
+    
+  }
+  $scope.music=resp;
+  console.log(resp);
+})
+
+UserService.getMovies($scope.loggedinUser.user_id).then(function (resp){
+  $scope.movies=resp;
+   console.log(resp);
+})
 })
      .finally(function() {
        // Stop the ion-refresher from spinning
@@ -1700,9 +2327,9 @@ var informStaff= $ionicPopup.alert({
   $rootScope.thisState="main.home";
 
 })
-.controller('profileSettingsCtrl', function ($scope,$rootScope,$state,Camera,$cordovaImagePicker,UserService,$ionicPopup){
+.controller('profileSettingsCtrl', function ($scope,$rootScope,$sce,$state,Camera,$cordovaImagePicker,$jrCrop,UserService,$ionicPopup,$ionicLoading){
 
-  $scope.user_info={};
+  $scope.myinfo={};
   $rootScope.thisState="main.home";
 
   $scope.selectedImage="";
@@ -1710,39 +2337,64 @@ var informStaff= $ionicPopup.alert({
 
   $scope.shippingAddress={};
   $scope.mailingAddress={};
-  $scope.paypalAddress="";
+  $scope.paypalAddress={};
   $scope.shipping_update=false;
   $scope.mailing_update=false;
   $scope.paypal_update=false;
 
+  UserService.getCountries().then(function (resp){
+      $scope.countries=resp;
+    });
+
   UserService.getUpdateInfo($rootScope.loggedinUser.user_id).then(function (res) {
-    $scope.myinfo.shippingAdress=res.shippingAddress;
-    $scope.myinfo.mailingAddress=res.mailingAddress;
-    $scope.myinfo.paypalAddress=res.paypalAddress;
+    console.log(JSON.stringify(res));
+    $scope.myinfo.shippingAddress=res.shipping_address;
+    $scope.myinfo.mailingAddress=res.mailing_address;
+    $scope.myinfo.paypalAddress=res.paypal_address;
+    $scope.myinfo.avatar=res.avatar;
+    $scope.myinfo.use_avatar=res.use_avatar;
+    $scope.myinfo.username=res.username;
+
+    
+
   })
 
   $scope.setAvatar = function () {
-     var options = {
-      quality: 90,
-      destinationType: 0,
-      sourceType: 0,
-      //allowEdit: true,
-      //encodingType: Camera.EncodingType.JPEG,
-      targetWidth: 500,
-      targetHeight: 500,
-      //popoverOptions: CameraPopoverOptions,
-      saveToPhotoAlbum: false,
-      correctOrientation:true
-    };
-    
-    Camera.getPicture(options).then(function(imageData) {
-      console.log(imageData);
-       $scope.selectedImage = "data:image/jpeg;base64,"+imageData;
-      
-  })
 
+    //imgaePicker method
+
+    var options = {
+      height:600,
+      width:600,
+      quality:80,
+      maximumImagesCount:1
+    }
+
+    $cordovaImagePicker.getPictures(options).then(function (results){
+      console.log("image URI : "+results[0]);
+      var selectedImage=results[0];
+      $jrCrop.crop({
+        url:selectedImage,
+        width:200,
+        height:200,
+        circle:true
+      }).then(function (canvas){
+        console.log(canvas);
+        var croppedImage=canvas.toDataURL("image/jpeg",1);
+        console.log(croppedImage);
+        //context.drawImage(canvas,0,0);
+        
+        $scope.croppedDataUrl=croppedImage;
+     
+      })
+     
+      })
+      
+
+
+    
 }
-$scope.useAvatar=false;
+$scope.useAvatar={"checked":false};
 $scope.updateAvatar = function () {
   $ionicLoading.show({
     template:"<ion-spinner></ion-spinner><p>just a moment...</p>"
@@ -1751,6 +2403,14 @@ $scope.updateAvatar = function () {
     $ionicLoading.hide();
     if (res.status=="updated"){
       $rootScope.loggedinUser.avatar=res.avatar;
+      var AvatarMsg= $ionicPopup.alert({
+        title:"Avatar Status",
+        template:"Avatar updated."
+      });
+
+      AvatarMsg.then(function (res){
+        //updated avatar on server
+      })
     }
   })
 }
@@ -1780,64 +2440,76 @@ $scope.updateUseAvatar= function () {
 }
 
   $scope.showShipping= function () {
+   
 $scope.shipping_update=!$scope.shipping_update;
 
   }
 
   $scope.showMailing= function () {
+    console.log('mailing toggled');
 $scope.mailing_update=!$scope.mailing_update;
 
   }
 
   $scope.showPaypal= function () {
+      
 $scope.paypal_update=!$scope.paypal_update;
 
   }
 
-  $scope.updateShipping = function () {
-$ionicLoading.show({
-
-  template:"<ion-spinner></ion-spinner><p>just a moment...</p>"
-});
-
-  UserService.updateShipping($rootScope.loggedinUser.user_id,$scope.shippingAddress),then(function (res){
-    $ionicLoading.hide();
-    if (res.status=="ok"){
-      $rootScope.loggedinUser.shippingAddress=$scope.shippingAddress;
-    }
+  $scope.update_Shipping = function () {
+     $ionicLoading.show({
+    template:"<ion-spinner></ion-spinner><p>just a moment...</p>"
   })
-  $scope.showShipping();
+    UserService.updateShipping($rootScope.loggedinUser.user_id,$scope.shippingAddress).then(function(res){
+      console.log(res);
+$ionicLoading.hide();
+      if(res.status=="updated"){
+        $rootScope.loggedinUser.shipping_address=$scope.shippingAddress;
+        $scope.myinfo.shippingAddress=$scope.shippingAddress;
+      }
+      $scope.showShipping();
+    })
+
+  
 }
 
-$scope.updateMailing = function () {
-$ionicLoading.show({
+$scope.update_Mailing = function () {
+   $ionicLoading.show({
+    template:"<ion-spinner></ion-spinner><p>just a moment...</p>"
+  });
+    UserService.updateMailing($rootScope.loggedinUser.user_id,$scope.mailingAddress).then(function(res){
+      console.log(res);
+$ionicLoading.hide();
+      if(res.status=="updated"){
+        $rootScope.loggedinUser.mailing_address=$scope.mailingAddress;
+        $scope.myinfo.mailingAddress=$scope.mailingAddress;
+      }
+      $scope.showMailing();
+  
+})
 
-  template:"<ion-spinner></ion-spinner><p>just a moment...</p>"
-});
-
-UserService.updateMailing($rootScope.loggedinUser.user_id,$scope.mailingAddress),then(function (res){
-    $ionicLoading.hide();
-    if (res.status=="ok"){
-      $rootScope.loggedinUser.mailingAddress=$scope.mailingAddress;
-    }
-  })
-
-
-  $scope.showMailing();
+ 
 }
 $scope.updatePaypal = function () {
+    console.log('updating paypal');
 $ionicLoading.show({
 
   template:"<ion-spinner></ion-spinner><p>just a moment...</p>"
 });
-UserService.updatePaypal($rootScope.loggedinUser.user_id,$scope.paypalAddress),then(function (res){
+UserService.updatePaypal($rootScope.loggedinUser.user_id,$scope.paypalAddress).then(function (res){
     $ionicLoading.hide();
-    if (res.status=="ok"){
-      $rootScope.loggedinUser.paypalAddress=$scope.paypalAddress;
+    //$scope.showPaypal();
+     console.log(JSON.stringify(res));
+    if (res.status=="updated"){
+       $scope.showPaypal();
+      $rootScope.loggedinUser.paypal_address=$scope.paypalAddress.address;
+
+      $scope.myinfo.paypalAddress=$scope.paypalAddress.address;
     }
   })
   
-  $scope.showPaypal();
+  
 }
 })
 .filter('monthName', [function() {
@@ -1846,5 +2518,11 @@ UserService.updatePaypal($rootScope.loggedinUser.user_id,$scope.paypalAddress),t
             'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec' ];
         return monthNames[monthNumber - 1];
     }
-}]);
+}])
+.filter('pompipiEmbedUrl', function ($sce) {
+    return function(songfile) {
+      return $sce.trustAsResourceUrl('http://www.pompipi.co/apis/assets/fullsong/' + songfile);
+    };
+  });
+;
 

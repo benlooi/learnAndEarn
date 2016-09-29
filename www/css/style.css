@@ -1,8 +1,14 @@
 /* Empty. Add your own CSS if you like */
-h3 {
+h3.home {
 	font-family: Helvetica,Roboto,sans-serif!important;
 	font-weight: 100;
+	color:#595D6F;
+	margin-left:10px;
 
+}
+.with_bg {
+	background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#5A827F), color-stop(100%,#94D7D3));
+    background: -webkit-linear-gradient(top, #5A827F 0%,#94D7D3 100%);
 }
 .login-container {
 	position:relative;
@@ -12,8 +18,7 @@ h3 {
 	padding-bottom:10vh;
 
 	height:auto;
-	background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#5A827F), color-stop(100%,#94D7D3));
-    background: -webkit-linear-gradient(top, #5A827F 0%,#94D7D3 100%);
+	
 
 }
 .login-container img {
@@ -111,9 +116,17 @@ h3 {
 }
 .banner_ad {
 	height:150px;
-	background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#5A827F), color-stop(100%,#94D7D3));
-    background: -webkit-linear-gradient(top, #5A827F 0%,#94D7D3 100%);
+	background-image: url('../img/banner.jpg');
+	background-repeat: no-repeat;
+	background-size: cover;
+	//background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#5A827F), color-stop(100%,#94D7D3));
+    //background: -webkit-linear-gradient(top, #5A827F 0%,#94D7D3 100%);
 	margin-bottom: 100px;
+}
+.user_image >p {
+	font-family: Helvetica;
+	font-weight: 300;
+	color:#42526C;
 }
 
 .vcenter {
@@ -139,7 +152,7 @@ h3 {
 	width:20vw;
 }
 .user h2 {
-	color:teal;
+	color:#124E6A;
 	text-align:center;
 }
 .user p {
@@ -173,14 +186,30 @@ h3 {
   border-top:1px solid lightgray;
    border-bottom:1px solid lightgray;
    overflow-x:hidden;
-   padding-bottom:-20px;
+   padding:5px;
+   background-color: #C7CCF4;
 
+}
+
+.mainhilight >span >.productname {
+	font-weight: 700;
+	color: #42526C
+}
+
+.mainhilight >span >.productcompany {
+	font-weight: 100;
+	color: #42526C
 }
 .cardz {
 
 	width:200px;
 	float:left;
 	padding:5px;
+	background-color: #fff;
+	margin-left:5px;
+	box-shadow: 1px 1px 3px #9396B4;
+	border-radius: 5px;
+	border:1px solid #9396B4;
 	
 }
 .cardz img {
@@ -189,11 +218,13 @@ h3 {
 }
 .users {
 float:left;
-height:30vw;
-width: 30vw;
-margin-bottom:20px;
+height:auto;
+width: 28vw;
+margin:8px;
 border-radius: 50%;
-text-align: center
+text-align: center;
+font-family: Helvetica;
+
 }
 .users.ng-enter {
 
@@ -216,22 +247,30 @@ text-align: center
 }
 .users .username {
 	text-align: center;
-	font-weight: 700;
-	color:#192A95;
+	font-weight: 300;
+	color:#124E6A;
 }
 .users .details {
 	text-align: center;
+}
+.users >span {
+	
 }
 
 .books {
 	display:inline-block;
 	top:30vh;
+	height:auto;
+	margin-top:40px;
+	margin-bottom:20px;
 
 }
 .books h3 {
 
 	font-family: Helvetica,sans-serif;
 	font-weight: 100;
+	color:#124E6A;
+	margin-left: 20px
 }
 .books .book{
 
@@ -247,7 +286,7 @@ text-align: center
 	width:100%;
 	height:100%;
 }
-.books .book .info {
+.books .book >.info {
 	
     background: gray; /* For browsers that do not support gradients */
     background: -webkit-linear-gradient(gray, black); /* For Safari 5.1 to 6.0 */
@@ -264,7 +303,7 @@ text-align: center
 
 	
 	
-	height:auto;
+	height:20%;
 }
 .books .book .info .title {
 
@@ -307,17 +346,24 @@ height:100px;
 border-radius:50%;
 background-color: #fff;
 opacity: 0.8;
-border:5px solid teal;
+border:5px solid #21AFDB;
 position:absolute;
 top:10vh;
 left:5vw;
 font-family:Roboto,sans-serif;
 font-size:1.5rem;
 text-align: center;
-line-height: 5.5rem;
+padding-top:30px;
 color:orange;
 box-shadow:2px 2px 3px black;
 text-shadow:2px 2px 2px black;
+}
+.selected-book >.price > .tapforinfo {
+color:#1E317F;
+text-shadow:none;
+font-size:0.8rem;
+line-height: 0.8rem;
+
 }
 .selected-book .info{
 	position:relative;
@@ -436,4 +482,49 @@ text-shadow:1px 1px 5px white;
 }
 .stats h3 {
 	color:#329B1E;
+}
+
+
+.commission {
+	position:absolute;
+	top:10vh;
+	left:35vw;
+	background-color: #21AFDB;
+	z-index: 3;
+	padding: 1.5rem;
+	width:auto;
+	border-radius:5px;
+	box-shadow: 2px 2px 5px gray;
+	
+
+}
+.commission >h4 {
+	text-align: center;
+}
+.commission.ng-hide-remove {
+	
+	
+	 -webkit-animation: fadeInLeft 0.5s;
+    animation: fadeInLeft 0.5s;
+
+}
+
+.commission >p {
+	line-height: 1rem;
+	color:white;
+	text-shadow:1px 1px 2px black;
+}
+.commission.ng-hide-add{
+	
+	 -webkit-animation: fadeOutLeft 0.5s;
+    animation: fadeOutLeft 0.5s;
+
+}
+.album_image.on-add {
+	-webkit-animation: fadeIn 0.5s;
+    animation: fadeIn 0.5s;
+}
+.album_image.on-remove {
+	-webkit-animation: fadeOut 0.5s;
+    animation: fadeOut 0.5s;
 }

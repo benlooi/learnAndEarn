@@ -6,7 +6,7 @@
 
 <div class="profile text-center">
  <img ng-src="http://www.learnandearn123.com/apis/assets/images/avatars/{{loggedinUser.avatar}}" ng-show="loggedinUser.facebookID.length<5">
-      <img ng-src="http://graph.facebook.com/{{loggedinUser.facebookID}}/picture?type=large" ng-show="loggedinUser.facebookID.length>5"/>
+      <img ng-src="https://graph.facebook.com/{{loggedinUser.facebookID}}/picture?type=large" ng-show="loggedinUser.facebookID.length>5"/>
       <p>{{loggedinUser.username}}</p>
 </div>
   <div class="list stylo_list">
@@ -53,7 +53,7 @@
   </ion-tab>
 
   <!-- Account Tab -->
-  <ion-tab title="My Store" icon-off="ion-bag" icon-on="ion-bag" href="#/main/shelf" > 
+  <ion-tab title="My stuff" icon-off="ion-bag" icon-on="ion-bag" href="#/main/shelf" > 
     <ion-nav-view name="main-shelf">
 		</ion-nav-view>
   </ion-tab>

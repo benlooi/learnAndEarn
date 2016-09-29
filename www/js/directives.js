@@ -1,4 +1,5 @@
-angular.module('directives', []).directive("compareTo", function () {
+angular.module('directives', [])
+.directive("compareTo", function () {
 
  return {
         require: "ngModel",
@@ -16,4 +17,5 @@ angular.module('directives', []).directive("compareTo", function () {
             });
         }
     };
-});
+})
+;

@@ -17,23 +17,41 @@
 		<div class="user">
 			
 			<img ng-src="http://www.learnandearn123.com/apis/assets/images/avatars/{{user.avatar}}" ng-show="user.facebookID.length<5">
-      <img ng-src="http://graph.facebook.com/{{user.facebookID}}/picture?type=large" ng-show="user.facebookID.length>5"/>
-			<h2>{{user.firstname}} {{user.lastname}}</h2>
+      <img ng-src="https://graph.facebook.com/{{user.facebookID}}/picture?type=large" ng-show="user.facebookID.length>5"/>
+			<h2>{{user.firstname}} {{user.lastname}} </h2>
 			<p>{{user.level}}</p>
-			<p class="details">{{user.followers.length}} followers</p>
+			<span><i class="icon fa fa-gift"></i>{{user.electronics.length+user.fashion.length}}</span>
+			<span><i class="icon fa fa-headphones"></i>{{user.music.length}}</span><br>
+			<span><i class="icon fa fa-book"></i>{{user.ebooks.length}}</span>
+			<span><i class="icon fa fa-qrcode"></i>{{user.services.length}}</span>
 			<!--div class="details text-center">
 			<button class="button button-calm" ng-click="follow(user.user_id)" ng-show="!following">Follow</button>
 			<button class="button button-positive" ng-click="unfollow(user.user_id)" ng-show="following">Unfollow</button>
 			</div -->
 		</div>
 		<div class="books" ng-show="user.ebooks.length>0">
-			<h2>eBooks</h2>
+			<h3>eBooks</h3>
 			<div class="book" ng-repeat="book in user.ebooks" ng-click="goToBook(book,'main.users')">
 
 				<img ng-src="http://www.learnandearn123.com/assets/images/{{book.image}}" class="thumbnail" >
 				<div class="info">
 				<div class="title">{{book.name}}</div>
 					<div class="author">{{book.author}}
+					
+					</div>
+				</div>
+			</div>
+
+		</div>
+
+		<div class="books" ng-show="user.music.length>0">
+			<h3>Music</h3>
+			<div class="book" ng-repeat="album in user.music" ng-click="showAlbum(album,'main.users')">
+
+				<img ng-src="http://www.learnandearn123.com/assets/images/{{album.image}}" class="thumbnail" >
+				<div class="info">
+				<div class="title">{{album.name}}</div>
+					<div class="author">{{album.company}}
 					
 					</div>
 				</div>

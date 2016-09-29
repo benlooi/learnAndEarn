@@ -26,23 +26,34 @@
 				<span class="item-note"> {{book.currency}} {{total}}</span>
 			</div>
 		</div>
-		<div class="card" ng-show="showShippingAddress==true">
+		<div class="list card" ng-show="showShippingAddress==true">
 			
 			<div class="header">Shipping Address</div>
+			<div class="item">
+				<p ng-show="!loggedinuser.shipping_address.address1">No shipping address on record.</p>
+				<div ng-show="loggedinuser.shipping_address.address1">
+				<p>{{loggedinuser.shipping_address.address1}}</p>
+				<p>{{loggedinuser.shipping_address.address2}}</p>
+				<p>{{loggedinuser.shipping_address.postcode}}</p>
+				<p>{{loggedinuser.shipping_address.state}}</p>
+				<p>{{loggedinuser.shipping_address.country}}</p>
+			</div>
+
+			</div>
 			<form name="orderForm">
-				<div class="label">
+				<div class="item item-input">
 					<input type="text" placeholder="Address Line 1"  name="address1" ng-model="shipping.address1" ng-pattern="/^[0-9A-Za-z\s\'\#\_\-@\.]{3,40}$/" required>
 				</div>
-				<p ng-show="orderForm.address1.$error.pattern && orderForm.address1.$touched">SSorry, your info contains invalid characters. Letters, numbers, space and any of these only: # - _ ' @ . </p>
-				<div class="label">
+				<p ng-show="orderForm.address1.$error.pattern && orderForm.address1.$touched">Sorry, your info contains invalid characters. Letters, numbers, space and any of these only: # - _ ' @ . </p>
+				<div class="item item-input">
 					<input type="text" placeholder="Address Line 2"  name="address2" ng-model="shipping.address2" ng-pattern="/^[0-9A-Za-z\s\'\#\_\-@\.]{3,40}$/" required>
 					<p ng-show="orderForm.address2.$error.pattern && orderForm.address2.$touched">Sorry, your info contains invalid characters. Letters, numbers, space, and any of these only: # - _ ' @ .</p>
 				</div>
-				<div class="label">
+				<div class="item item-input">
 					<input type="text" placeholder="Postal code" name="postcode" ng-model="shipping.postcode" ng-pattern="/^[A-Z0-9]{4,10}$/" required>
 				</div>
 				<p ng-show="orderForm.postcode.$error.pattern && orderForm.postcode.$touched">Sorry, your info is invalid.UPPERCASE and numbers only. </p>
-				<div class="label">
+				<div class="item item-input">
 					<input type="text" placeholder="State" name="state" ng-model="shipping.state" ng-pattern="/^[0-9A-Za-z\s\'\#\_\-@]{3,40}$/">
 					<p ng-show="orderForm.state.$error.pattern && orderForm.state.$touched">Sorry, your info contains invalid characters </p>
 				</div>

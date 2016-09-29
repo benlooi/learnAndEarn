@@ -5,7 +5,8 @@ ApiEndPoint = {
 	Users:"http://www.pompipi.co/apis/index.php/Appaccess/"
 	//eBooks:"v1/Appaccess/",
 	//Accounts:"v1/Accounts/",
-	//Users:"v1/Appaccess/"
+	//Users:"v1/Appaccess/",
+	//Coupons:"v1/Coupons/"
 }
 angular.module('services',[])
 
@@ -121,6 +122,28 @@ angular.module('services',[])
   		getEbooks: function (user){
   			var deferred=$q.defer();
 			$http.post(ApiEndPoint.Users+"getEbooks",{user:user})
+			.success(function (data){
+				deferred.resolve(data);
+			})
+			.error(function(error){
+				deferred.reject(error);
+			})
+			return deferred.promise;
+  		},
+  		getMusic: function (user){
+  			var deferred=$q.defer();
+			$http.post(ApiEndPoint.Users+"getMusic",{user:user})
+			.success(function (data){
+				deferred.resolve(data);
+			})
+			.error(function(error){
+				deferred.reject(error);
+			})
+			return deferred.promise;
+  		},
+  		getMovies: function (user){
+  			var deferred=$q.defer();
+			$http.post(ApiEndPoint.Users+"getMovies",{user:user})
 			.success(function (data){
 				deferred.resolve(data);
 			})
@@ -260,7 +283,7 @@ angular.module('services',[])
   		},
   		updateMailing: function (user,mailingAddress){
   			var deferred=$q.defer();
-			$http.post(ApiEndPoint.Users+"updateMailing",{user:user,shippingAddress:mailingAddress})
+			$http.post(ApiEndPoint.Users+"updateMailing",{user:user,mailingAddress:mailingAddress})
 			.success(function (data){
 				deferred.resolve(data);
 			})
@@ -440,6 +463,18 @@ angular.module('services',[])
 		getServices: function (){
 			var deferred=$q.defer();
 			$http.get(ApiEndPoint.eBooks+"getServices")
+			.success(function (data){
+				deferred.resolve(data);
+			})
+			.error(function(error){
+				deferred.reject(error);
+			})
+			return deferred.promise;
+
+		},
+		getLatestMusic: function (){
+			var deferred=$q.defer();
+			$http.get(ApiEndPoint.eBooks+"getLatestMusic")
 			.success(function (data){
 				deferred.resolve(data);
 			})

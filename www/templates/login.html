@@ -1,5 +1,5 @@
 <ion-view>
-	<ion-content >
+	<ion-content class="with_bg">
 	<div class="login-container">
 	<div ng-show="signup==false">
 		<div class="text-center">
@@ -33,11 +33,10 @@
 		<h3 style="font-family:Helvetica;color:white;font-weight:100;text-align:center">Sign Up</h3>
 		<form name="signUpForm" novalidate>
 					
-					<div class="cropArea">
-					<img-crop image="selectedImage"                 
-					result-image="croppedDataUrl" >
-					</img-crop>
-					</div>
+		
+			<div class="imageSpace"></div>
+
+					
 					<button class="button button-dark button-block"  ng-click="setAvatar()">
 					Select Picture</button>
 					<div class="text-center">
@@ -74,7 +73,7 @@
 			<p style="color:orange" ng-show="signUpForm.password1.$error.pattern">Only letters, numbers and underscores allowed. No spaces or other characters.</p>
 		</label>
 			<label class="item item-input"><i class="icon ion-locked"></i>
-			<input type="password" ng-model="user.password2" compare-to="user.password" placeholder="Confirm password" name="password2" ng-pattern="/^[a-zA-z0-9_!$@/S]*$/" required>
+			<input type="password" ng-model="user.password2" compare-to="user.new_password" placeholder="Confirm password" name="password2" ng-pattern="/^[a-zA-z0-9_!$@/S]*$/" required>
 			<p style="color:orange" ng-show="signUpForm.password2.$error.pattern">Only letters, numbers and underscores allowed. No spaces or other characters.</p>
 			<p ng-show="signUpForm.password2.$error.pattern">Only letters, numbers and underscores allowed. No spaces or other characters.</p>
 			<p style="color:orange" ng-show="signUpForm.password2.$dirty && signUpForm.password2.$error.compareTo">Passwords must match.</p>

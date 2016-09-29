@@ -4,12 +4,12 @@
 		<div class="item item-divider">
 			Transactions for the month
 		</div>
-		<div class="item item-thumbnail-left" ng-repeat="item in tx">
+		<div class="item item-thumbnail-left" ng-repeat="item in tx | orderBy : '-datetime'">
 			<img ng-src="http://www.learnandearn123.com/assets/images/{{item.image}}">
 			
 			<p>{{item.name}}<span style="float:right">{{item.amount}}</span></p>
 			<p ng-show="item.product_type=='ebook'">{{item.author}}</p><p ng-show="item.product_type=='electronics'|| item.product_type=='fashion'">{{item.company}}</p><span style="float:right">{{item.type}}  {{item.level}}</span></p>
-			<p>{{Date(item.datetime).toDateString()}}</p>
+			<p>{{item.datetime_moment}}</p>
 			
 		</div>
 	</div>

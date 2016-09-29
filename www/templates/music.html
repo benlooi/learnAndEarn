@@ -1,0 +1,88 @@
+   <ion-nav-bar class="bar bar-dark" ng-controller="mainCtrl">
+      <ion-nav-buttons side="left"  ng-click="goBack()">
+         <i style="color: white;" class="button button-icon icon ion-chevron-left" ng-click="backToMain()"></i> 
+      </ion-nav-buttons>
+  </ion-nav-buttons>
+     
+<ion-nav-buttons side="right">
+    <i style="color: white;" class="button button-icon icon ion-ios-cart" ng-click="openCart()"><span class="badge badge-assertive">{{cart.length}}</span></i> 
+   
+</ion-nav-buttons>
+    </ion-nav-bar> 
+<ion-view view-title="Browsing">
+	
+	<ion-content >
+	
+	<div class="selected-book">
+		<img ng-src="http://www.learnandearn123.com/assets/images/{{thisAlbum.image}}">
+		<div class="price" ng-click="toggleRewards()">${{thisAlbum.price}}
+			<p class="tapforinfo"><i class="icon ion-information-circled"></i>Tap for Rewards</p>
+			
+			
+			</div>
+
+
+		<div class="commission" ng-show="showRewards">
+				<h4 >rewards</h4>
+				<p>Enter spread factor</p>
+				<div class="button-bar">
+				<span class="button button-small " ng-click="decreaseFactor()"><i class="icon ion-minus"></i></span><span class="button button-small" >{{factor}}</span><span class="button button-small" ng-click="increaseFactor()"><i class="icon ion-plus"></i></span>
+			</div>
+				<p ng-repeat="amount in thisAlbum.commission track by $index" > Tier {{$index+1}} : {{(amount * thisAlbum.price).toFixed(2) }} | {{thisAlbum.projections[$index]}}</p>
+				
+			</div>
+		<div class="info">
+			<div class="title">{{thisAlbum.name}}</div>
+			<div class="author">{{thisAlbum.company}}</div>
+			<div class="addtocart" ng-click="buy(thisAlbum)"><i class="ion-android-cart"></i></div>
+			<div class="rate" ng-click="rate()"><i class="ion-ios-star"></i></div>
+			
+		</div>
+		<div class="recommends" ng-click="goToUser(thisAlbum.buyer)">
+			<img ng-src="https://graph.facebook.com/{{thisAlbum.buyer.facebookID}}/picture?type=large"  ng-show="thisAlbum.buyer.facebookID.length>5">
+
+		<img ng-src="http://www.learnandearn123.com/apis/assets/images/avatars/{{thisAlbum.buyer.avatar}}" ng-show="thisAlbum.buyer.facebookID.length<5" >
+		<div class="user">{{thisAlbum.buyer.username}} recommends this.</div> 
+		
+	</div>
+	<div >
+	<h3>Description</h3>
+	
+	<p>{{thisAlbum.description}}</p>
+	</div>
+
+	<ion-audio-track  ng-repeat="track in thisAlbum.contents" track="track">
+          <div class="list list-inset">
+              <div class="item item-thumbnail-left">
+                  <img src="http://www.learnandearn123.com/assets/images/{{track.image}}">
+                  <h2>{{track.title}}</h2>
+                  <p>{{track.artist}}</p>
+                  <ion-audio-controls>
+                        <a class="button button-icon icon" ion-audio-play></a>
+                        <ion-spinner icon="ios"></ion-spinner>
+                    </ion-audio-controls>
+              </div>
+              <div class="item">
+                <ion-audio-progress-bar track="track" display-time></ion-audio-progress-bar>
+              </div>
+          </div>
+      </ion-audio-track>
+	
+<div class="item item-avatar" ng-repeat="comment in thisAlbum.comments" ng-click="goToCommentUser(comment.comment_by)">
+		<img ng-src="https://graph.facebook.com/{{comment.facebookID}}/picture?type=large"ng-show="comment.facebookID">
+		<img ng-src="http://www.learnandearn123.com/apis/assets/images/avatars/{{comment.avatar}}" ng-hide="comment.facebookID">
+		<h2>{{comment.username}}</h2>
+		{{comment.comment}}
+		<span class="rating">{{comment.rating}}</i></span>
+	</div>
+
+
+	</div>
+
+	
+
+
+	
+
+	</ion-content>
+</ion-view>

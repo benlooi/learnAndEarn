@@ -3,11 +3,14 @@
 	<label class="item item-input">
 	<input type="text" placeholder="search user" ng-model="searchUser"/>
 </label>
-	<div class="users" ng-repeat="user in users|filter:searchUser|orderBy: '-bookCount'" ng-click="goToUser(user)">
-		<img image-lazy-src="http://www.learnandearn123.com/apis/assets/images/avatars/{{user.avatar}}" image-lazy-loader="lines" ng-show="user.facebookID.length<5">
-		 <img image-lazy-src="http://graph.facebook.com/{{user.facebookID}}/picture?type=large" ng-show="user.facebookID.length>5"/>
+	<div class="users" ng-repeat="user in users|filter:searchUser|orderBy: '-rankingCount'" ng-click="goToUser(user)">
+		<img image-lazy-src="http://www.pompipi.co/apis/assets/images/avatars/{{user.avatar}}"  ng-show="user.facebookID.length<5">
+		 <img image-lazy-src="https://graph.facebook.com/{{user.facebookID}}/picture?type=large" ng-show="user.facebookID.length>5"/>
 		<div class="username"> {{user.username}}</div>
-	
+		<span style="color:#60196A"><i class="fa fa-book" ></i> {{user.ebooks.length}}</span>
+		<span style="color:#6A3711"><i class="fa fa-gift" ></i> {{user.products.length}}</span><br>
+		<span style="color:#4F6A0C"><i class="fa fa-headphones" ></i> {{user.media.length}}</span>
+		<span style="color:#17626A"><i class="fa fa-qrcode" ></i> {{user.services.length}}</span>
 		
 	</div>
 

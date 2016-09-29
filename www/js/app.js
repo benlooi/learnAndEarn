@@ -3,7 +3,7 @@
 // angular.module is a global place for creating, registering and retrieving Angular modules
 // 'starter' is the name of this angular module example (also set in a <body> attribute in index.html)
 // the 2nd parameter is an array of 'requires'
-angular.module('starter', ['ionic','directives','controllers','services','ngCordova','ngImgCrop','starter.payPalService','ionicLazyLoad','ionic-ratings'])
+angular.module('starter', ['ionic','directives','controllers','services','ngCordova','jrCrop','ionic-audio','starter.payPalService','ionicLazyLoad','ionic-ratings'])
 
 .run(function($ionicPlatform,$http,$rootScope,UserService,$ionicPopup,$cordovaDevice) {
 
@@ -52,7 +52,7 @@ angular.module('starter', ['ionic','directives','controllers','services','ngCord
 */
 FCMPlugin.getToken(
   function(token){
-    //alert(token);
+   // alert(token);
     localStorage.setItem("gcmRegID",token);
     console.log(token);
   },
@@ -118,8 +118,8 @@ payPalSandboxPW:'1408486369',
 payPalSandboxUsername:'ben.looi-facilitator_api1.tellmyfriends.biz',
 payPalProductionId : 'AXukI-JvV6fFKtEF2AOW4Hd-450u2iVX8_PFeNZx8JB8pX7y1-cAZE-pRZX6yoFLVXCObO73nMv5ghp3',
 
-payPalEnv: 'PayPalEnvironmentSandbox', // for testing production for production
-
+//payPalEnv: 'PayPalEnvironmentSandbox', // for testing production for production
+payPalEnv: 'PayPalEnvironmentProduction', 
 payPalShopName : 'Creative Spectrum',
 
 payPalMerchantPrivacyPolicyURL : 'http://www.pompipi.co/main/privacypolicy',
@@ -199,34 +199,48 @@ payPalMerchantUserAgreementURL : 'http://www.pompipi.co/main/user_agreement'
  
 
   })
-  .state('product',{
-    cache: false,
-    url:'/product',
-     
-    templateUrl:'templates/product.html',
-    controller: 'productCtrl'
-   ,
- params: {
-  product:null,
-  fromState:null
- }
+.state('product',{
+cache: false,
+url:'/product',
  
+templateUrl:'templates/product.html',
+controller: 'productCtrl'
+,
+params: {
+product:null,
+fromState:null
+}
 
-  })
-   .state('service',{
-    cache: false,
-    url:'/service',
-     
-    templateUrl:'templates/service.html',
-    controller: 'serviceCtrl'
-   ,
- params: {
-  service:null,
-  fromState:null
- }
+
+})
+.state('service',{
+cache: false,
+url:'/service',
  
+templateUrl:'templates/service.html',
+controller: 'serviceCtrl'
+,
+params: {
+service:null,
+fromState:null
+}
 
-  })
+
+})
+.state('music',{
+cache: false,
+url:'/music',
+ 
+templateUrl:'templates/music.html',
+controller: 'albumCtrl'
+,
+params: {
+album:null,
+fromState:null
+}
+
+
+})
 
     .state('coupon_admin',{
       cache: false,

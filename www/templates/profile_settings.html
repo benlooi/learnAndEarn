@@ -12,26 +12,26 @@
     </ion-nav-bar> 
 	<ion-content>
 	<div class="list card">
+		
 		<div class="item item-divider">
 			Update Avatar
 		</div>
 		<div class="item item-body">
-			<div class="cropArea full-image">
-					<img-crop image="selectedImage"                 
-					result-image="croppedDataUrl" >
-					</img-crop>
-				</div>
+			
 					<button class="button button-dark button-block"  ng-click="setAvatar()">
 					Select Picture</button>
 					</div>
-		<div class="item item-avatar">
-  <img  ng-src="{{croppedDataUrl}}" />
+		<div class="item">
+			<div class="text-center">
+  <img style="border-radius:50%;background-color:gray;border:5px solid rgba(255,255,255,0.5)" ng-src="{{croppedDataUrl}}" />
 		<h2>{{loggedinUser.username}}</h2>
-		<button class="button button-small" ng-click="updateAvatar()">Update</button>
-		<button class="button button-small">Updated</button>
+	</div>
+		<button class="button button-small button-dark" ng-click="updateAvatar()" ng-show="!update_avatar" ng-disabled="!croppedDataUrl">Update</button>
+		<button class="button button-small button-dark" ng-show="update_avatar">Updated</button>
 		</div>
 		<div class="item">
-			<ion-checkbox ng-model="useAvatar" ng-change="updateUseAvatar()">Use Facebook Avatar</ion-checkbox>
+			<pre>{{myinfo.use_avatar}}</pre>
+			<ion-checkbox ng-model="myinfo.use_avatar" ng-change="updateUseAvatar()" >Use Facebook Avatar</ion-checkbox>
 		</div>
 	</div>
 
@@ -40,38 +40,52 @@
 				My shipping address
 				
 				<p>Current:</p>
-				<p ng-show="!myinfo.address1">Not specified.</p>
-				<div ng-show="myinfo.address1"> 
-				<p>{{myinfo.address1}} {{myinfo.address2}}</p>
-				<p>{{myinfo.postcode}} </p>
-				<p>{{myinfo.state}} , {{myinfo.country}} </p>
+				<p ng-show="!myinfo.shippingAddress.address1">Not specified.</p>
+				<div ng-show="myinfo.shippingAddress.address1"> 
+				<p>{{myinfo.shippingAddress.address1}} {{myinfo.shippingAddress.address2}}</p>
+				<p>{{myinfo.shippingAddress.postcode}} </p>
+				<p>{{myinfo.shippingAddress.state}} , {{myinfo.shippingAddress.country}} </p>
 				</div>
 				
 			</div>
+			<form name="shippingForm" novalidate>
 			<div ng-show="shipping_update">
-			<div class="item item-input">
-				<input type="text" placeholder="Address 1" ng-model="shippingAddress.address1">
+			<label class="item item-input">
+				<input type="text" placeholder="Address 1" name="address1" ng-model="shippingAddress.address1" ng-pattern="/^[0-9A-Za-z\s\'\#\_\-@\.]{3,40}$/" required>
+				<p ng-show="shippingForm.address1.$error.pattern && shippingForm.address1.$touched">Invalid characters. Only letters, numbers, space and #,@_-. allowed.</p>
+			</label>
+			
+			<label class="item item-input">  
+				<input type="text" placeholder="Address 2" name="address2" ng-model="shippingAddress.address2" ng-pattern="/^[0-9A-Za-z\s\'\#\_\-@\.]{3,40}$/" required>
+				<p ng-show="shippingForm.address2.$error.pattern && shippingForm.address2.$touched">Invalid characters. Only letters, numbers,space and #,@_-. allowed.</p>
+			</label>
+			<label class="item item-input">
+				<input type="text" placeholder="Postal Code" name="postcode" ng-model="shippingAddress.postcode" ng-pattern="/^[A-Z0-9]{4,10}$/" required>
+				<p ng-show="shippingForm.postcode.$error.pattern && shippingForm.postcode.$touched" >Invalid characters. Only UPPERCASE letters and numbers allowed</p>
+			</label>
+			<label class="item item-input">
+				<input type="text" placeholder="State" name="state" ng-model="shippingAddress.state" ng-pattern="/^[0-9A-Za-z\s\'\#\_\-@]{3,40}$/">
+				<p ng-show="shippingForm.state.$error.pattern && shippingForm.state.$touched">Invalid characters. Only letters, numbers,space and #@_-allowed.</p>
+			</label>
+			<label class="item item-input item-select">
+			    <div class="input-label">
+			     Country
+			    </div>
+			    <select ng-model="shippingAddress.country" name="country" ng-options="country.name as country.name for country in countries" required> 
+			    	 <p ng-show="shippingForm.country.$pristine">Select a country.</p>
+			    </select>
+			  </label>
 			</div>
-			<div class="item item-input">
-				<input type="text" placeholder="Address 2" ng-model="shippingAddress.address2">
-			</div>
-			<div class="item item-input">
-				<input type="text" placeholder="Postal Code" ng-model="shippingAddress.postcode">
-			</div>
-			<div class="item item-input">
-				<input type="text" placeholder="State" ng-model="shippingAddress.state">
-			</div>
-			<div class="item item-input">
-				<input type="text" placeholder="Country" ng-model="shippingAddress.country">
-			</div>
-			</div>
+			</form>
 			<div class="item ">
 				<button class="button button-block button-dark" ng-click="showShipping()" ng-show="!shipping_update">Add/Update</button>
-				<button class="button button-block button-balanced" ng-click="updateShipping()" ng-show="shipping_update">Cancel</button>
-				<button class="button button-block button-assertive" ng-click="updateShipping()" ng-show="shipping_update">Submit</button>
+				<button class="button button-block button-balanced" ng-click="showShipping()" ng-show="shipping_update">Cancel</button>
+
+				<div class="button button-block button-assertive"  ng-click="update_Shipping()" ng-show="shipping_update" ng-disabled="shippingForm.$invalid">Submit</div>
 			</div>
 		
 		</div>
+		
 		<div class="list card">
 			<div class="item item-header">
 				My mailing address
@@ -79,55 +93,70 @@
 
 				<div ng-show="myinfo"> 
 				<p>Current:</p>
-				<p ng-show="!myinfo.mail_address1">Not specified.</p>
-					<div ng-show="myinfo.mail_address1">
-						<p>{{myinfo.mail_address1}} {{myinfo.mail_address2}}</p>
-						<p>{{myinfo.mail_postcode}} </p>
-						<p>{{myinfo.mail_state}} , {{myinfo.mail_country}} </p>
+				<p ng-show="!myinfo.mailingAddress.address1">Not specified.</p>
+					<div ng-show="myinfo.mailingAddress.address1">
+						<p>{{myinfo.mailingAddress.address1}} {{myinfo.mailingAddress.address2}}</p>
+						<p>{{myinfo.mailingAddress.postcode}} </p>
+						<p>{{myinfo.mailingAddress.state}} , {{myinfo.mailingAddress.country}} </p>
 					</div>
 				</div>
 			</div>
-			<div ng-show="mailing_upate">
-			<div class="item item-input">
-				<input type="text" placeholder="Address 1" ng-model="mailingAddress.mail_address1">
+			<form name="mailingForm" novalidate>
+			<div ng-show="mailing_update">
+			<label class="item item-input">
+				<input type="text" placeholder="Address 1" ng-model="mailingAddress.address1" ng-pattern="/^[0-9A-Za-z\s\'\#\_\-@\.]{3,40}$/" required>
+				<p ng-show="mailingForm.address1.$error.pattern && mailingForm.address1.$touched">Invalid characters. Only letters, numbers, space and #,@_-. allowed.</p>
+			</label>
+			<label class="item item-input">
+				<input type="text" placeholder="Address 2" ng-model="mailingAddress.address2" ng-pattern="/^[0-9A-Za-z\s\'\#\_\-@\.]{3,40}$/" required>
+				<p ng-show="mailingForm.address2.$error.pattern && mailingForm.address2.$touched">Invalid characters. Only letters, numbers, space and #,@_-. allowed.</p>
+			</label>
+			<label class="item item-input">
+				<input type="text" placeholder="Postal Code" ng-model="mailingAddress.postcode" ng-pattern="/^[A-Z0-9]{4,10}$/" required>
+				<p ng-show="mailingForm.postcode.$error.pattern && mailingForm.postcode.$touched">Invalid characters. Only UPPERCASE letters and numbers allowed</p>
+			</label>
+			<label class="item item-input">
+				<input type="text" placeholder="State" ng-model="mailingAddress.state" ng-pattern="/^[0-9A-Za-z\s\'\#\_\-@]{3,40}$/">
+				<p ng-show="mailingForm.state.$error.pattern && mailingForm.state.$touched">Invalid characters. Only letters, numbers,space and #@_-allowed.</p>
+			</label>
+			<label class="item item-input item-select">
+			    <div class="input-label">
+			     Country
+			    </div>
+			    <select ng-model="mailingAddress.country" name="country" ng-options="country.name as country.name for country in countries" required> 
+			    </select>
+			    <p ng-show="mailingForm.country.$pristine">Select a country.</p>
+			  </label>
 			</div>
-			<div class="item item-input">
-				<input type="text" placeholder="Address 2" ng-model="mailingAddress.mail_address2">
-			</div>
-			<div class="item item-input">
-				<input type="text" placeholder="Postal Code" ng-model="mailingAddress.mail_postcode">
-			</div>
-			<div class="item item-input">
-				<input type="text" placeholder="State" ng-model="mailingAddress.mail_state">
-			</div>
-			<div class="item item-input">
-				<input type="text" placeholder="Country" ng-model="mailingAddress.mail_country">
-			</div>
-			</div>
+			</form>
 			<div class="item ">
 				<button class="button button-block button-dark" ng-click="showMailing()" ng-show="!mailing_update">Add/Update</button>
 				<button class="button button-block button-balanced" ng-click="showMailing()" ng-show="mailing_update">Cancel</button>
-				<button class="button button-block button-assertive" ng-click="updateMailing()" ng-show="mailing_update">Submit</button>
+				<div class="button button-block button-assertive" ng-click="update_Mailing()" ng-show="mailing_update" ng-disabled="mailingForm.$invalid">Submit</div>
 			</div>
-		
+			
 		</div>
 		<div class="list card">
 			<div class="item item-header">
 				My Paypal account name
 				<p>Receive payments via Paypal</p>
-				<p ng-show="!myinfo.paypal">None.</p>
-				<p ng-show="myinfo.paypal">{{myinfo.paypalAddress}}</p>
+				<p ng-show="!myinfo.paypalAddress">None.</p>
+				<p ng-show="myinfo.paypalAddress">{{myinfo.paypalAddress}}</p>
 			</div>
-			<div ng-show="showPaypal">
-				<div class="item item-input">
-					<input type="text" placeholder="Paypal account" ng-model="paypalAdress">
-				</div>
+			<div ng-show="paypal_update">
+				<form name="paypalForm" novalidate>
+				<label class="item item-input">
+					<input type="text" placeholder="Paypal account" name="paypalAddress" ng-model="paypalAddress.address" ng-pattern="/^[-a-z0-9~!$%^&*_=+}{\'?]+(\.[-a-z0-9~!$%^&*_=+}{\'?]+)*@([a-z0-9_][-a-z0-9_]*(\.[-a-z0-9_]+)*\.(aero|arpa|biz|com|coop|edu|gov|info|int|mil|museum|name|net|org|pro|travel|mobi|[a-z][a-z])|([0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}))(:[0-9]{1,5})?$/i">
+				</label>
+				<p ng-show="paypalForm.paypalAddress.$error.pattern">No spaces allowed or invalid characters detected. Only letters, numbers and @ _ - . allowed.</p>
 			</div>
+			</form>
 			<div class="item ">
 				<button class="button button-block button-dark" ng-click="showPaypal()" ng-show="!paypal_update">Add/Update</button>
 				<button class="button button-block button-balanced" ng-click="showPaypal()" ng-show="paypal_update">Cancel</button>
-				<button class="button button-block button-assertive" ng-click="updatePaypal()" ng-show="paypal_update">Submit</button>
+				<button class="button button-block button-assertive" ng-click="updatePaypal()" ng-show="paypal_update" ng-disabled="paypalForm.$invalid">Submit</button>
 			</div> 
+		
 			
 		</div>
 

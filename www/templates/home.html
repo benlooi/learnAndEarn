@@ -6,14 +6,15 @@
   </ion-refresher>
 	<div class="banner_ad">
 		<div class="user_image">
-			<img ng-src="http://www.learnandearn123.com/apis/assets/images/avatars/{{loggedinUser.avatar}}" ng-show="loggedinUser.facebookID.length<5">
+
+			<img ng-src="https://www.pompipi.co/apis/assets/images/avatars/{{loggedinUser.avatar}}" ng-show="loggedinUser.facebookID.length<5">
 			<img ng-src="https://graph.facebook.com/{{loggedinUser.facebookID}}/picture?type=large" ng-show="loggedinUser.facebookID.length>5"/>
 			<p>Hello, {{loggedinUser.username}}.</p>
 
 		</div>
-
 	</div>
 	<h3 class="home">Ebooks</h3>
+
 	
 
 		<ion-scroll direction="x" class="wide-as-needed" scrollbar-x="false" has-bouncing="true">
@@ -21,7 +22,7 @@
 			
 			<div class="mainhilight">
 					<span class="cardz" ng-click="goToBook(ebook,'main.home')" ng-repeat="ebook in latestEbooks" >
-			<img image-lazy-src="http://www.learnandearn123.com/assets/images/{{ebook.image}}" image-lazy-loader="lines" class="thumbnail" >
+			<img image-lazy-src="https://www.pompipi.co/assets/images/{{ebook.image}}" image-lazy-loader="lines" class="thumbnail" >
 					<p class="productname">{{ebook.title}}</p>
 					<p class="productcompany">{{ebook.author}}</p>
 				</span>
@@ -38,10 +39,11 @@
 
 		<ion-scroll direction="x" class="wide-as-needed" scrollbar-x="false" has-bouncing="true">
 		
+
 			
 			<div class="mainhilight">
 					<span class="cardz" ng-click="showAlbum(album,'main.home')" ng-repeat="album in Music" >
-			<img image-lazy-src="http://www.learnandearn123.com/assets/images/{{album.image}}" image-lazy-loader="lines" class="thumbnail" >
+			<img image-lazy-src="https://www.pompipi.co/assets/images/{{album.image}}" image-lazy-loader="lines" class="thumbnail" >
 					<p class="productname">{{album.name}}</p>
 					<p class="productcompany">{{album.company}}</p>
 				</span>
@@ -54,6 +56,7 @@
 	</div>
 		</ion-scroll>
 		
+
 	<h3 class="home">Electronics</h3>
 	
 	
@@ -62,7 +65,7 @@
 			
 			<div class="mainhilight">
 					<span class="cardz" ng-click="showProduct(elproduct,'main.home')" ng-repeat="elproduct in Electronics" >
-			<img image-lazy-src="http://www.learnandearn123.com/assets/images/{{elproduct.image}}" image-lazy-loader="lines" class="thumbnail" >
+			<img image-lazy-src="https://www.pompipi.co/assets/images/{{elproduct.image}}" image-lazy-loader="lines" class="thumbnail" >
 					<p class="productname">{{elproduct.name}}</p>
 					<p class="productcompany">{{elproduct.company}}</p>
 				</span>
@@ -82,7 +85,7 @@
 			
 			<div class="mainhilight">
 					<span class="cardz" ng-click="showProduct(fproduct,'main.home')" ng-repeat="fproduct in Fashion" >
-			<img image-lazy-src="http://www.learnandearn123.com/assets/images/{{fproduct.image}}" image-lazy-loader="lines" class="thumbnail" >
+			<img image-lazy-src="https://www.pompipi.co/assets/images/{{fproduct.image}}" image-lazy-loader="lines" class="thumbnail" >
 					<p class="productname">{{fproduct.name}}</p>
 					<p class="productcompany">{{fproduct.company}}</p>
 				</span>
@@ -104,9 +107,15 @@
 			
 			<div class="mainhilight">
 					<span class="cardz" ng-click="showServices(sproduct,'main.home')" ng-repeat="sproduct in Services" >
-			<img image-lazy-src="http://www.learnandearn123.com/assets/images/{{sproduct.image}}" image-lazy-loader="lines" class="thumbnail" >
+
+			<img image-lazy-src="https://www.pompipi.co/assets/images/{{sproduct.image}}" image-lazy-loader="lines" class="thumbnail" >
 					<p class="productname">{{sproduct.name}}</p>
 					<p class="productcompany">{{sproduct.company}}</p>
+
+			<img image-lazy-src="https://www.pompipi.co/assets/images/{{sproduct.image}}" image-lazy-loader="lines" class="thumbnail" />
+					<p>{{sproduct.name}}</p>
+					
+
 				</span>
 		
 	
@@ -124,7 +133,7 @@
 			
 			<div class="mainhilight">
 					<span class="cardz" ng-click="goToUser(user)" ng-repeat="user in newUsers" >
-			<img image-lazy-src="http://www.pompipi.co/apis/assets/images/avatars/{{user.avatar}}" class="thumbnail" ng-show="user.facebookID.length<5">
+			<img image-lazy-src="https://www.pompipi.co/apis/assets/images/avatars/{{user.avatar}}" class="thumbnail" ng-show="user.facebookID.length<5">
 			<img image-lazy-src="https://graph.facebook.com/{{user.facebookID}}/picture?type=large"  class="thumbnail" ng-show="user.facebookID.length>5"/>
 
 					<p class="productname">{{user.username}}</p>

@@ -1,12 +1,14 @@
 ApiEndPoint = {
-	eBooks:"http://www.pompipi.co/apis/index.php/Appaccess/",
-	Coupons:"http://www.pompipi.co/apis/index.php/Coupons/",
-	Accounts:"http://www.pompipi.co/apis/index.php/Accounts/",
-	Users:"http://www.pompipi.co/apis/index.php/Appaccess/"
+
+	eBooks:"https://www.pompipi.co/apis/index.php/Appaccess/",
+	Coupons:"https://www.pompipi.co/apis/index.php/Coupons/",
+	Accounts:"https://www.pompipi.co/apis/index.php/Accounts/",
+	Users:"https://www.pompipi.co/apis/index.php/Appaccess/"
 	//eBooks:"v1/Appaccess/",
 	//Accounts:"v1/Accounts/",
 	//Users:"v1/Appaccess/",
 	//Coupons:"v1/Coupons/"
+
 }
 angular.module('services',[])
 

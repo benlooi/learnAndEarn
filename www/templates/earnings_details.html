@@ -5,7 +5,7 @@
 			Transactions for the month
 		</div>
 		<div class="item item-thumbnail-left" ng-repeat="item in tx | orderBy : '-datetime'">
-			<img ng-src="http://www.learnandearn123.com/assets/images/{{item.image}}">
+			<img ng-src="https://www.pompipi.co/assets/images/{{item.image}}">
 			
 			<p>{{item.name}}<span style="float:right">{{item.amount}}</span></p>
 			<p ng-show="item.product_type=='ebook'">{{item.author}}</p><p ng-show="item.product_type=='electronics'|| item.product_type=='fashion'">{{item.company}}</p><span style="float:right">{{item.type}}  {{item.level}}</span></p>

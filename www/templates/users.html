@@ -15,8 +15,9 @@
 	<ion-content >
 	
 		<div class="user">
+
 			
-			<img ng-src="http://www.learnandearn123.com/apis/assets/images/avatars/{{user.avatar}}" ng-show="user.facebookID.length<5">
+			<img ng-src="https://www.pompipi.co/apis/assets/images/avatars/{{user.avatar}}" ng-show="user.facebookID.length<5">
       <img ng-src="https://graph.facebook.com/{{user.facebookID}}/picture?type=large" ng-show="user.facebookID.length>5"/>
 			<h2>{{user.firstname}} {{user.lastname}} </h2>
 			<p>{{user.level}}</p>
@@ -28,12 +29,13 @@
 			<button class="button button-calm" ng-click="follow(user.user_id)" ng-show="!following">Follow</button>
 			<button class="button button-positive" ng-click="unfollow(user.user_id)" ng-show="following">Unfollow</button>
 			</div -->
+
 		</div>
 		<div class="books" ng-show="user.ebooks.length>0">
 			<h3>eBooks</h3>
 			<div class="book" ng-repeat="book in user.ebooks" ng-click="goToBook(book,'main.users')">
 
-				<img ng-src="http://www.learnandearn123.com/assets/images/{{book.image}}" class="thumbnail" >
+				<img ng-src="https://www.pompipi.co/assets/images/{{book.image}}" class="thumbnail" >
 				<div class="info">
 				<div class="title">{{book.name}}</div>
 					<div class="author">{{book.author}}
@@ -48,7 +50,7 @@
 			<h3>Music</h3>
 			<div class="book" ng-repeat="album in user.music" ng-click="showAlbum(album,'main.users')">
 
-				<img ng-src="http://www.learnandearn123.com/assets/images/{{album.image}}" class="thumbnail" >
+				<img ng-src="https://www.pompipi.co/assets/images/{{album.image}}" class="thumbnail" >
 				<div class="info">
 				<div class="title">{{album.name}}</div>
 					<div class="author">{{album.company}}
@@ -62,7 +64,7 @@
 			<h3>Events and Deals</h3>
 			<div class="book" ng-repeat="item in user.services" ng-click="showServices(item,'main.users')">
 
-				<img ng-src="http://www.learnandearn123.com/assets/images/{{item.image}}" class="thumbnail" >
+				<img ng-src="https://www.pompipi.co/assets/images/{{item.image}}" class="thumbnail" >
 				<div class="info">
 				<div class="title">{{item.name}}</div>
 					<div class="author">{{item.company}}
@@ -75,7 +77,7 @@
 			<h3>Electronics</h3>
 			<div class="book" ng-repeat="item in user.electronics" ng-click="showProduct(item,'main.users')">
 
-				<img ng-src="http://www.learnandearn123.com/assets/images/{{item.image}}" class="thumbnail" >
+				<img ng-src="https://www.pompipi.co/assets/images/{{item.image}}" class="thumbnail" >
 				<div class="info">
 				<div class="title">{{item.name}}</div>
 					<div class="author">{{item.company}}
@@ -88,7 +90,7 @@
 			<h3>Fashion</h3>
 			<div class="book" ng-repeat="item in user.fashion" ng-click="showProduct(item,'main.users')">
 
-				<img ng-src="http://www.learnandearn123.com/assets/images/{{item.image}}" class="thumbnail" >
+				<img ng-src="https://www.pompipi.co/assets/images/{{item.image}}" class="thumbnail" >
 				<div class="info">
 				<div class="title">{{item.name}}</div>
 					<div class="author">{{item.company}}

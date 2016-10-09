@@ -35,21 +35,6 @@ angular.module('controllers',[])
       console.log("logged in to facebook");
       PompipiSync(response.authResponse);
     }
-/*
-    var authResponse = response.authResponse;
-
-    getFacebookProfileInfo(authResponse)
-    .then(function(profileInfo) {
-      // For the purpose of this example I will store user data on local storage
-      console.log(profileInfo);
-
-      UserService.setuser({
-        authResponse: authResponse,
-        userID: profileInfo.id,
-        name: profileInfo.name,
-        email: profileInfo.email,
-        picture : "http://graph.facebook.com/" + authResponse.userID + "/picture?type=large"
-      });*/
       $ionicLoading.hide();
       $state.go("main.home");
 
@@ -85,7 +70,7 @@ angular.module('controllers',[])
     template:"<ion-spinner></ion-spinner><p>just a moment...</p>"
    });
     facebookConnectPlugin.getLoginStatus(function(success){
-      console.log(JSON.stringify(success));
+      console.log(success.status);
       //console.log(success.authResponse.userID);
         if(success.status == 'connected'){
           $ionicLoading.hide();
@@ -122,7 +107,6 @@ angular.module('controllers',[])
 }
             
           
-
         $scope.facebookSignOut = function () {
           facebookConnectPlugin.logout(function (resp){
             console.log("logged out");
@@ -393,6 +377,7 @@ console.log(JSON.stringify(item_types));
 
   $scope.openCart = function () {
     physicalItemCheck();
+    console.log($rootScope.cart);
       $scope.cartmodal.show();
        $scope.total=0;
       for (i=0;i<$rootScope.cart.length;i++){
@@ -449,7 +434,7 @@ console.log(JSON.stringify(item_types));
 
             var SuccessfulBuy= $ionicPopup.alert({
               title: "Transaction successful",
-              template:" Your books are on your Bookshelf."
+              template:" Your items are on your Shelf and Page."
             })
 
             
@@ -790,9 +775,10 @@ $rootScope.user.music=resp.music;
 
 })
 
-.controller('bookCtrl', function ($scope,$rootScope, $stateParams,$state,$ionicPopup,$ionicModal,bookServices,UserService){
+.controller('bookCtrl', function ($scope,$rootScope,$stateParams,$state,$ionicPopup,$ionicModal,bookServices,UserService){
   
   var cart = localStorage.getItem("pomcart");
+
 
   if (cart==null) {
     $rootScope.cart=[];
@@ -804,6 +790,7 @@ $scope.factor=1;
   //console.log(cart);
   $scope.thisEbook=$state.params.book;
   
+
 $scope.project= function (factor) {
   var Projections=[];
   for (i=0;i<$scope.thisEbook.commission.length;i++){
@@ -880,6 +867,8 @@ $scope.comment.product_type="ebooks";
                   "author":book.author,
                   "quantity":1,
                   "currency":"SGD",
+                  "type":book.type,
+                  "cart_id":book.type+"-"+book.product_id,
                   "price":parseFloat(book.price),
                   "sku":book.product_id+"-"+"20161007",
                   "product_id":book.product_id,
@@ -890,10 +879,10 @@ $scope.comment.product_type="ebooks";
             console.log(thisbook);
 
           var books_index = $rootScope.cart.map(function (eb){
-            return eb.product_id;
+            return eb.type+"-"+eb.product_id;
           } )
 
-          var isInCart = books_index.indexOf(thisbook.product_id);
+          var isInCart = books_index.indexOf(thisbook.cart_id);
            if (isInCart== -1){
             $rootScope.cart.push(thisbook);
           } else {
@@ -967,7 +956,7 @@ $scope.comment.product_type="ebooks";
 
 
   $scope.payMoney=function () {
-    $cordovaInAppBrowser.open('http://www.paypal.com', '_blank', options)
+    $cordovaInAppBrowser.open('https://www.paypal.com', '_blank', options)
       .then(function(event) {
         // success
         console.log('success');
@@ -984,26 +973,7 @@ $scope.comment.product_type="ebooks";
     $cordovaInAppBrowser.close();
    } 
 
-$scope.paypalPay = function () {
 
-  PaypalService.initPaymentUI().then(function () {
-
-PaypalService.makePayment(90, 'Total Amount').then(function (response) {
-
-alert('success'+JSON.stringify(response));
-console.log(response);
-$state.go('main.home');
-
-}, function (error) {
-
-alert('Transaction Canceled');
-$state.go('main.home');
-
-});
-
-});
-
-}
 
 $scope.goToUser = function (user){
 
@@ -1023,7 +993,7 @@ $scope.goToCommentUser = function(user){
 }
 
 })
-.controller('albumCtrl', function ($scope,$rootScope, $stateParams,$state,$ionicPopup,MediaManager,$ionicModal,bookServices,UserService){
+.controller('albumCtrl', function ($scope,$rootScope, $stateParams,$state,$ionicPopup,MediaManager,$ionicModal,bookServices,productServices,UserService){
   
   var cart = localStorage.getItem("pomcart");
 
@@ -1036,14 +1006,11 @@ $scope.goToCommentUser = function(user){
 $scope.factor=1;
   //console.log(cart);
 
-  
 
-  for(i=0;i<$state.params.album.contents.length;i++){
-    $state.params.album.contents[i].url='http://www.pompipi.co/apis/assets/fullsong/'+$state.params.album.contents[i].url;
-    $state.params.album.contents[i].file=$state.params.album.contents[i].url;
-    
-  }
-  $scope.thisAlbum=$state.params.album;
+  $scope.thisAlbum= $state.params.album;
+  console.log($scope.thisAlbum);
+  
+  
 $scope.project= function (factor) {
   var Projections=[];
   for (i=0;i<$scope.thisAlbum.commission.length;i++){
@@ -1078,7 +1045,7 @@ $scope.comment.comment_by=$rootScope.loggedinUser.user_id;
 $scope.comment.username=$rootScope.loggedinUser.username;
 $scope.comment.facebookID=$rootScope.loggedinUser.facebookID;
 $scope.comment.product_id=$scope.thisAlbum.product_id;
-$scope.comment.product_type="ebooks";
+$scope.comment.product_type="music";
 
  $scope.showRewards=false;
 
@@ -1093,7 +1060,7 @@ $scope.comment.product_type="ebooks";
   }).then(function(modal) {
     $scope.modal = modal;
   });
-  $scope.buy=function (book) {
+  $scope.buy=function (album) {
     var confirmBuy= $ionicPopup.confirm({
       title:"Add to Cart",
       template:'Confirm add to cart?'
@@ -1101,13 +1068,13 @@ $scope.comment.product_type="ebooks";
       );
     confirmBuy.then(function (res){
       
-          bookServices.checkUserAlreadyHave($rootScope.loggedinUser.user_id,book.product_id).then(function (resp){
+          productServices.checkUserAlreadyHaveAlbum($rootScope.loggedinUser.user_id,album.product_id).then(function (resp){
             console.log(resp);
             if (resp=="already purchased"){
               var informUser = $ionicPopup.alert({
 
-                title:"You have this Book",
-                template:"You've already bought this book. Check your Shelf."
+                title:"You have this Album",
+                template:"You've already bought this album. Check your Shelf."
               });
 
               informUser.then(function (res){
@@ -1115,27 +1082,29 @@ $scope.comment.product_type="ebooks";
               });
             } else if (resp=="not found") {
 
-                  var thisbook={
-                  "name":book.name,
-                  "author":book.author,
+                  var thisalbum={
+                  "name":album.name,
+                  "author":album.author,
                   "quantity":1,
                   "currency":"SGD",
-                  "price":parseFloat(book.price),
-                  "sku":book.product_id+"-"+"20161007",
-                  "product_id":book.product_id,
-                  "referrer":book.referrer,
-                  "purch_ref":book.purch_ref,
+                  "type":album.type,
+                  "cart_id":album.type+"-"+album.product_id,
+                  "price":parseFloat(album.price),
+                  "sku":album.product_id+"-"+"20161007",
+                  "product_id":album.product_id,
+                  "referrer":album.referrer,
+                  "purch_ref":album.purch_ref,
                   "buyer":$rootScope.loggedinUser.user_id
                   }
-            console.log(thisbook);
+            console.log(thisalbum);
 
-          var books_index = $rootScope.cart.map(function (eb){
-            return eb.product_id;
+          var albums_index = $rootScope.cart.map(function (alb){
+            return alb.type+"-"+alb.product_id;
           } )
 
-          var isInCart = books_index.indexOf(thisbook.product_id);
+          var isInCart = albums_index.indexOf(thisalbum.cart_id);
            if (isInCart== -1){
-            $rootScope.cart.push(thisbook);
+            $rootScope.cart.push(thisalbum);
           } else {
             var InCartMsg = $ionicPopup.alert({
               title:"Cart Status",
@@ -1207,7 +1176,7 @@ $scope.comment.product_type="ebooks";
 
 
   $scope.payMoney=function () {
-    $cordovaInAppBrowser.open('http://www.paypal.com', '_blank', options)
+    $cordovaInAppBrowser.open('https://www.paypal.com', '_blank', options)
       .then(function(event) {
         // success
         console.log('success');
@@ -1224,26 +1193,7 @@ $scope.comment.product_type="ebooks";
     $cordovaInAppBrowser.close();
    } 
 
-$scope.paypalPay = function () {
 
-  PaypalService.initPaymentUI().then(function () {
-
-PaypalService.makePayment(90, 'Total Amount').then(function (response) {
-
-alert('success'+JSON.stringify(response));
-console.log(response);
-$state.go('main.home');
-
-}, function (error) {
-
-alert('Transaction Canceled');
-$state.go('main.home');
-
-});
-
-});
-
-}
 
 $scope.goToUser = function (user){
 
@@ -1447,6 +1397,7 @@ $scope.prevModel= function () {
                   "type":product.type,
                   "price":parseFloat(product.price),
                   "sku":product.sku,
+                  "cart_id":product.type+"-"+product.product_id,
                   "product_id":product.product_id,
                   "referrer":product.referrer,
                   "purch_ref":product.purch_ref,
@@ -1456,12 +1407,12 @@ $scope.prevModel= function () {
 
           var product_index = $rootScope.cart.map(function (pd){
             if (pd.type=="fashion"||pd.type=="electronics") {
-              return pd.product_id;
+              return pd.type+"-"+pd.product_id;
             }
             
           } )
 
-          var isInCart = product_index.indexOf(thisProduct.product_id);
+          var isInCart = product_index.indexOf(thisProduct.cart_id);
            if (isInCart== -1){
             $rootScope.cart.push(thisProduct);
           } else {
@@ -1638,6 +1589,7 @@ $scope.comment.product_type="services";
                   "currency":"SGD",
                   "price":parseFloat(svc.price),
                   "sku":svc.product_id+"-"+"20161007",
+                  "cart_id":svc.type+"-"+svc.product_id,
                   "product_id":svc.product_id,
                   "referrer":svc.referrer,
                   "purch_ref":svc.purch_ref,
@@ -1650,10 +1602,10 @@ $scope.comment.product_type="services";
             if (sv.type=="services"){
 
 
-              return sv.product_id;}
+              return sv.type+"-"+sv.product_id;}
           } )
 
-          var isInCart = service_index.indexOf(thisService.product_id);
+          var isInCart = service_index.indexOf(thisService.cart_id);
            if (isInCart== -1){
             $rootScope.cart.push(thisService);
           } else {
@@ -1730,7 +1682,7 @@ $scope.comment.product_type="services";
 
 
   $scope.payMoney=function () {
-    $cordovaInAppBrowser.open('http://www.paypal.com', '_blank', options)
+    $cordovaInAppBrowser.open('https://www.paypal.com', '_blank', options)
       .then(function(event) {
         // success
         console.log('success');
@@ -1760,26 +1712,7 @@ $scope.goToCommentUser = function(user){
     $state.go('user',{user:$rootScope.user,fromState:$rootScope.thisState});
   })
 }
-$scope.paypalPay = function () {
 
-  PaypalService.initPaymentUI().then(function () {
-
-PaypalService.makePayment(90, 'Total Amount').then(function (response) {
-
-alert('success'+JSON.stringify(response));
-console.log(response);
-$state.go('main.home');
-
-}, function (error) {
-
-alert('Transaction Canceled');
-$state.go('main.home');
-
-});
-
-});
-
-}
 })
 .controller('usersCtrl', function ($rootScope,$scope,bookServices,$state,$stateParams,$ionicLoading){
 $ionicLoading.show({
@@ -1813,7 +1746,7 @@ $ionicLoading.show({
 
   var platform= $cordovaDevice.getPlatform();
   console.log(platform);
-	var url = "http://learnandearn123.com/apis/assets/pdfs/DOGBOV.epub";
+	var url = "https://www.pompipi.co/apis/assets/pdfs/DOGBOV.epub";
   var filename = url.split("/").pop();
   localStorage.setItem("ebook",filename);
   //var filename="Learn_and_Earn_1-2-3.pdf";
@@ -1965,7 +1898,7 @@ var openEBook = function (ebook,filetype) {
     }
 
     var downloadEBook = function (ebook,filename,filetype) {
-      var url = "http://learnandearn123.com/apis/assets/pdfs/"+filename;
+      var url = "https://www.pompipi.co/apis/assets/pdfs/"+filename;
       var trustHosts = true;
       var options = {};
 
@@ -1979,8 +1912,8 @@ var openEBook = function (ebook,filetype) {
         $ionicLoading.hide();
         var dlPopup = $ionicPopup.alert({
 
-          title:'Download',
-          template:'Your eBook is downloaded.'
+          title:'Free Download',
+          template:'Your Book comes with a complimentary eBook version and is downloaded. Book is sent to you either in paper form or CD/SD card.'
         });
 
         dlPopup.then(function(res){
@@ -2035,7 +1968,7 @@ UserService.getMusic($scope.loggedinUser.user_id).then(function (resp){
   for (i=0;i<resp.length;i++){
     for (t=0;t<resp[i].contents.length;t++){
       resp[i].contents[t].file=resp[i].contents[t].url;
-      resp[i].contents[t].url="http://www.pompipi.co/apis/assets/fullsong/"+ resp[i].contents[t].file;
+     
     }
     
   }
@@ -2055,7 +1988,7 @@ $scope.Playing=-1;
 var downloadTrack = function (trackFile,platform) {
 
 
-      var url = "http://www.pompipi.co/apis/assets/fullsong/"+trackFile;
+      var url = trackFile;
       if (platform=="IOS"){
         var targetPath = cordova.file.documentsDirectory + "/music/"+trackFile;
       } else if (platform=="Android"){
@@ -2176,7 +2109,7 @@ $scope.doRefresh = function() {
      for (i=0;i<resp.length;i++){
     for (t=0;t<resp[i].contents.length;t++){
       resp[i].contents[t].file=resp[i].contents[t].url;
-      resp[i].contents[t].url="http://www.pompipi.co/apis/assets/fullsong/"+ resp[i].contents[t].file;
+     
        
     }
     
@@ -2521,7 +2454,7 @@ UserService.updatePaypal($rootScope.loggedinUser.user_id,$scope.paypalAddress).t
 }])
 .filter('pompipiEmbedUrl', function ($sce) {
     return function(songfile) {
-      return $sce.trustAsResourceUrl('http://www.pompipi.co/apis/assets/fullsong/' + songfile);
+      return $sce.trustAsResourceUrl('https://www.pompipi.co/apis/assets/fullsong/' + songfile);
     };
   });
 ;

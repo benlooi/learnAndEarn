@@ -18,11 +18,11 @@
 		</label>
 			<p style="color:orange" ng-show="LoginForm.password.$error.pattern">Only letters, numbers and underscores allowed. No spaces or other characters.</p></p> 
 			
-			<button class="button button-positive button-block" ng-click="normalLogin()" ng-disabled="LoginForm.$invalid">Login </button>
-			<button class="button button-positive button-block" ng-click="facebookSignIn()">Login with Facebook</button>
+			<button class="button button-positive button-block" on-tap="normalLogin()" ng-disabled="LoginForm.$invalid">Login </button>
+			<button class="button button-positive button-block" on-tap="facebookSignIn()">Login with Facebook</button>
 			</form>
 			<p>Don't have an account?</p>
-			 <button class="button button-calm button-block" ng-click="showSignUp()">Sign Up.</button>
+			 <button class="button button-calm button-block" on-tap="showSignUp()">Sign Up.</button>
 
 		
 	</div>
@@ -78,9 +78,9 @@
 			<p ng-show="signUpForm.password2.$error.pattern">Only letters, numbers and underscores allowed. No spaces or other characters.</p>
 			<p style="color:orange" ng-show="signUpForm.password2.$dirty && signUpForm.password2.$error.compareTo">Passwords must match.</p>
 			</label>
-			<button class="button button-calm button-block" ng-click="normalSignUp()" ng-disabled="signUpForm.$invalid"> Sign Up </button>
+			<button class="button button-calm button-block" on-tap="normalSignUp()" ng-disabled="signUpForm.$invalid"> Sign Up </button>
 			<p>Already have an account? </p>
-			<button class="button button-positive button-block" ng-click="showSignUp()">Log in.</button>
+			<button class="button button-positive button-block" on-tap="showSignUp()">Log in.</button>
 			</form>
 	</div>
 	

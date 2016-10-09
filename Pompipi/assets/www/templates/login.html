@@ -1,0 +1,61 @@
+<ion-view>
+	<ion-content >
+	<div class="login-container" ng-show="signup==false">
+		
+			<img src="img/pompipi.png" />
+			<form name="LoginForm" novalidate>
+			<div class="label">Username</div>
+			<input type="text" ng-model="user.username" name="username" ng-pattern="/^[a-zA-Z_\-^/S]*$/" placeholder="Your username" required>
+			<p style="color:orange" ng-show="LoginForm.username.$error.pattern">Only letters, numbers and underscores allowed. No spaces or other characters.</p>
+			<div class="label">Password</div>
+			<input type="password" ng-model="user.password" name="password" ng-pattern="/^[a-zA-z0-9_!$@/S]*$/" placeholder="Your password" required>
+			<p style="color:orange" ng-show="LoginForm.password.$error.pattern">Only letters, numbers and underscores allowed. No spaces or other characters.</p></p> 
+			</form>
+			<button class="button button-positive button-block" ng-click="normalLogin()" ng-disabled="LoginForm.$invalid">Login </button>
+			<button class="button button-positive button-block" ng-click="facebookSignIn()">Login with Facebook</button>
+			
+			<p>Don't have an account? <span ng-click="showSignUp()">Sign Up.</span></p>
+
+		
+	</div>
+	<div class="login-container" ng-show="signup==true" >
+		<h3>Sign Up</h3>
+		<form name="signUpForm" novalidate>
+				<img class="avatar" src="img/image_placeholder_400x400.png" ng-show="!user.avatar" ng-click="setAvatar()">
+				<img class="avatar" ng-src="{{user.avatar}}" ng-show="user.avatar">
+				<div class="label" ng-click="setAvatar()">Avatar</div>
+		<div class="label">Email</div>
+			<input type="text" ng-model="user.email" placeholder="Your email" name="email" ng-pattern="/^[a-z]+[a-z0-9._]+@[a-z]+\.[a-z.]{2,5}+[.a-z]{0,2}$/" ng-focus="resetEmailandUsername()" ng-blur="checkEmailExists()" required>
+			<p style="color:orange" ng-show="signUpForm.email.$error.pattern">Email is invalid</p>
+			<p style="color:orange" ng-show="emailExists==true">Email already exists. Try logging in or use another email.</p>
+		<div class="label">First name</div>
+			<input type="text" ng-model="user.firstname" placeholder="Your first name" name="firstname" ng-pattern="/^[a-zA-Z_\-^/S]*$/" required>
+
+			<p style="color:orange" ng-show="signUpForm.firstname.$error.pattern">Only letters, numbers and underscores allowed. No spaces or other characters.</p>
+			<div class="label">Last name</div>
+			<input type="text" ng-model="user.lastname" placeholder="Your last name" name="lastname" ng-pattern="/^[a-zA-Z_\-^/S]*$/" required>
+
+			<p style="color:orange" ng-show="signUpForm.lastname.$error.pattern">Only letters, numbers and underscores allowed. No spaces or other characters.</p>
+			<div class="label">Username</div>
+
+			
+			<input type="text" ng-model="user.username" placeholder="Your username" name="username" ng-pattern="/^[a-zA-Z0-9_\-^/S]*$/" ng-minlength="5" ng-maxlength="25" ng-blur="checkUsernameExists()" ng-focus="resetEmailandUsername()" required>
+
+			<p style="color:orange" ng-show="signUpForm.username.$error.pattern ">Only letters, numbers and underscores allowed. No spaces or other characters.</p>
+			<p style="color:orange" ng-show="usernameExists==true">username already exists. Try logging in or select another username.</p>
+			<div class="label">Password</div>
+			<input type="password" ng-model="user.password" placeholder="Your password" name="password1" ng-pattern="/^[a-zA-z0-9_!$@/S]*$/" required> 
+			<p style="color:orange" ng-show="signUpForm.password1.$error.pattern">Only letters, numbers and underscores allowed. No spaces or other characters.</p>
+			<div class="label">Confirm Password</div>
+			<input type="password" ng-model="user.password2" compare-to="user.password" placeholder="Confirm password" name="password2" ng-pattern="/^[a-zA-z0-9_!$@/S]*$/" required>
+			<p style="color:orange" ng-show="signUpForm.password2.$error.pattern">Only letters, numbers and underscores allowed. No spaces or other characters.</p>
+			<p ng-show="signUpForm.password2.$error.pattern">Only letters, numbers and underscores allowed. No spaces or other characters.</p>
+			<p style="color:orange" ng-show="signUpForm.password2.$dirty && signUpForm.password2.$error.compareTo">Passwords must match.</p>
+			
+			<button class="button button-block" ng-click="normalSignUp()" ng-disabled="signUpForm.$invalid">Sign Up </button>
+			<p>Already have an account? <span ng-click="showSignUp()">Log in.</span></p>
+			</form>
+	</div>
+	
+	</ion-content>
+</ion-view>

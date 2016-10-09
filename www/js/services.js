@@ -1,8 +1,8 @@
 ApiEndPoint = {
-	eBooks:"http://www.pompipi.co/apis/index.php/Appaccess/",
-	Coupons:"http://www.pompipi.co/apis/index.php/Coupons/",
-	Accounts:"http://www.pompipi.co/apis/index.php/Accounts/",
-	Users:"http://www.pompipi.co/apis/index.php/Appaccess/"
+	eBooks:"https://www.pompipi.co/apis/index.php/Appaccess/",
+	Coupons:"https://www.pompipi.co/apis/index.php/Coupons/",
+	Accounts:"https://www.pompipi.co/apis/index.php/Accounts/",
+	Users:"https://www.pompipi.co/apis/index.php/Appaccess/"
 	//eBooks:"v1/Appaccess/",
 	//Accounts:"v1/Accounts/",
 	//Users:"v1/Appaccess/",
@@ -475,6 +475,18 @@ angular.module('services',[])
 		getLatestMusic: function (){
 			var deferred=$q.defer();
 			$http.get(ApiEndPoint.eBooks+"getLatestMusic")
+			.success(function (data){
+				deferred.resolve(data);
+			})
+			.error(function(error){
+				deferred.reject(error);
+			})
+			return deferred.promise;
+
+		},
+		checkUserAlreadyHaveAlbum: function (user,album){
+			var deferred=$q.defer();
+			$http.post(ApiEndPoint.eBooks+"checkUserAlreadyHaveAlbum",{user:user,album:album})
 			.success(function (data){
 				deferred.resolve(data);
 			})

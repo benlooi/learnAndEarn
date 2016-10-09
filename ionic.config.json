@@ -4,7 +4,7 @@
   "proxies":[
   	{
   		"path":"/v1",
-  		"proxyUrl":"http://www.pompipi.co/apis/index.php/"
+  		"proxyUrl":"https://www.pompipi.co/apis/index.php/"
   	}
   ]
 }

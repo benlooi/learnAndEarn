@@ -1,0 +1,63 @@
+
+	<ion-side-menus enable-menu-with-back-views="true">
+  <ion-side-menu side="left">
+<ion-header-bar class="bar-positive">
+  <h1 class="title">Pompipi</h1>
+</ion-header-bar>
+<ion-content>
+  <div class="list">
+    <a class="item" ui-sref="main.home">Home</a>
+    <a class="item" ui-sref="profile_settings">Profile settings</a>
+    <a class="item" ui-sref="main.earnings">My Account</a>
+    <a class="item" ui-sref="main.shelf">Bookshelf</a>
+    <a class="item" ui-sref="login">Logout</a>
+  </div>
+</ion-content>
+</ion-side-menu>
+  <ion-side-menu-content edge-drag-threshold="10">
+ 
+	<ion-nav-bar class="bar bar-positive">
+      <ion-nav-back-button side="left" back-button-icon="ion-ios-arrow-back">
+        
+      </ion-nav-back-button>
+     <ion-nav-buttons side="left">
+    
+    <div style="color: white;" class="button button-icon icon ion-navicon" ng-click="toggleMenu()" ></div> 
+</ion-nav-buttons>
+<ion-nav-buttons side="right">
+    <i style="color: white;" class="button button-icon icon ion-ios-cart" ng-click="openCart()"><span class="badge badge-assertive">{{cart.length}}</span></i> 
+   
+</ion-nav-buttons>
+    </ion-nav-bar> 
+
+<ion-tabs class="tabs-icon-top tabs-positive slide-left-right">
+		
+	
+		<ion-tab title="Home" icon-off="ion-ios-home" icon-on="ion-ios-home" href="#/main/home" >
+    <ion-nav-view name="main-home" >
+    </ion-nav-view>
+
+  </ion-tab>
+
+  <!-- Chats Tab -->
+  <ion-tab title="People" icon-off="ion-ios-people-outline" icon-on="ion-ios-people" href="#/main/users" >
+    <ion-nav-view name="main-users" >
+		</ion-nav-view>
+  </ion-tab>
+
+  <!-- Account Tab -->
+  <ion-tab title="My books" icon-off="ion-ios-book" icon-on="ion-ios-book" href="#/main/shelf" > 
+    <ion-nav-view name="main-shelf">
+		</ion-nav-view>
+  </ion-tab>
+  <ion-tab title="Earnings" icon-off="ion-cash" icon-on="ion-cash" href="#/main/earnings" >
+    <ion-nav-view name="main-earnings">
+    </ion-nav-view>
+  </ion-tab>
+
+
+</ion-tabs>
+</ion-view>
+</ion-side-menu-content>
+
+</ion-side-menus>

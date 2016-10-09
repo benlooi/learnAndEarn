@@ -32,24 +32,7 @@ angular.module('starter', ['ionic','directives','controllers','services','ngCord
     if(window.StatusBar) {
       StatusBar.styleDefault();
     }
-/*if(window.cordova && $cordovaPushV5) {
-    // initialize
-  $cordovaPushV5.initialize(options).then(function() {
-    // start listening for new notifications
-    $cordovaPushV5.onNotification();
-    // start listening for errors
-    $cordovaPushV5.onError();
-    
-    // register to get registrationId
-    $cordovaPushV5.register().then(function(registrationId) {
-      // save `registrationId` somewhere;
-      localStorage.setItem("gcmRegID",registrationId);
 
-      console.log(registrationId);
-    })
-  })
-}
-*/
 FCMPlugin.getToken(
   function(token){
    // alert(token);
@@ -122,9 +105,9 @@ payPalProductionId : 'AXukI-JvV6fFKtEF2AOW4Hd-450u2iVX8_PFeNZx8JB8pX7y1-cAZE-pRZ
 payPalEnv: 'PayPalEnvironmentProduction', 
 payPalShopName : 'Creative Spectrum',
 
-payPalMerchantPrivacyPolicyURL : 'http://www.pompipi.co/main/privacypolicy',
+payPalMerchantPrivacyPolicyURL : 'https://www.pompipi.co/main/privacypolicy',
 
-payPalMerchantUserAgreementURL : 'http://www.pompipi.co/main/user_agreement'
+payPalMerchantUserAgreementURL : 'https://www.pompipi.co/main/user_agreement'
 
 })
 

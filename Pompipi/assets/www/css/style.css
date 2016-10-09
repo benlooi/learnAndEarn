@@ -1,0 +1,343 @@
+/* Empty. Add your own CSS if you like */
+.login-container {
+	position:relative;
+	padding-left:10vw;
+	padding-right: 10vw;
+
+	height:100vh;
+	background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#5A827F), color-stop(100%,#94D7D3));
+    background: -webkit-linear-gradient(top, #5A827F 0%,#94D7D3 100%);
+
+}
+.login-container img {
+	margin:0 auto;
+	width:40vw;
+	height:40vw;
+
+}
+.login-container img.avatar {
+	border-radius: 50%;
+
+}
+.login-container input {
+	border-bottom: 1px solid white;
+	background-color: transparent;
+	width:80vw;
+}
+.banner_ad {
+	height:150px;
+	background-color: teal;
+	margin-bottom: 100px;
+}
+
+.vcenter {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+.wide-as-needed {
+
+  overflow: scroll;
+  white-space: nowrap;
+}
+.user {
+	padding-top:2vh;
+	padding-bottom:2vh;
+	display:block;
+}
+.user img {
+	margin-top:10vw;
+	margin-left:40vw;
+	border-radius: 50%;
+	height:20vw;
+	width:20vw;
+}
+.user h2 {
+	color:teal;
+	text-align:center;
+}
+.user p {
+	color:#aaaaaa;
+	font-size:1.2rem;
+	text-align:center;
+}
+.user_image {
+	width:100px;
+
+	margin:0 auto;
+	text-align: center;
+}
+.user_image img {
+	margin-top:100px;
+	width:100%;
+	border-radius: 50%;
+}
+.user .details {
+	
+}
+
+.mainhilight {
+	width: -webkit-max-content;
+  width: max-content;
+  border-top:1px solid lightgray;
+   border-bottom:1px solid lightgray;
+   overflow-x:hidden;
+   padding-bottom:-20px;
+
+}
+.cardz {
+
+	width:200px;
+	float:left;
+	padding:5px;
+	
+}
+.cardz img {
+	width:90%;
+	height:auto;
+}
+.users {
+float:left;
+height:30vw;
+width: 30vw;
+margin-bottom:20px;
+border-radius: 50%;
+text-align: center
+}
+.users.ng-enter {
+
+	 -webkit-animation: fadeInLeft 0.5s;
+    animation: fadeInLeft 0.5s;
+}
+.users.ng-enter-stagger {
+	-webkit-animation-delay:200ms;
+  animation-delay:200ms;
+
+  /* override to make sure it's not inherited from other styles */
+  -webkit-animation-duration:0;
+  animation-duration:0;
+}
+.users img {
+	
+	border-radius: 50%;
+	height:20vw;
+	width:20vw;
+}
+.users .username {
+	text-align: center;
+	font-weight: 700;
+	color:#192A95;
+}
+.users .details {
+	text-align: center;
+}
+
+.books {
+	display:inline-block;
+	top:30vh;
+
+}
+.books .book{
+
+	width:50vw;
+	height:50vw;
+	float:left;
+	 -webkit-animation: fadeInLeft 1s;
+    animation: fadeInLeft 1s;
+
+}
+
+.books .book img {
+	width:100%;
+	height:100%;
+}
+.books .book .info {
+	
+    background: gray; /* For browsers that do not support gradients */
+    background: -webkit-linear-gradient(gray, black); /* For Safari 5.1 to 6.0 */
+    background: -o-linear-gradient(gray, black); /* For Opera 11.1 to 12.0 */
+    background: -moz-linear-gradient(gray, black); /* For Firefox 3.6 to 15 */
+    background: linear-gradient(to bottom,rgba(100,100,100,0.2),rgba(50,50,50,1),rgba(0,0,0,1)); /* Standard syntax */
+
+	opacity: 0.8;
+	z-index:3;
+	position:relative;
+	top:-40px;
+	padding-left:5px;
+	padding-right:5px;
+
+	
+	
+	height:auto;
+}
+.books .book .info .title {
+
+
+font-size: 1.2rem;
+text-shadow:1px 1px 1px black;
+color:white;
+position:relative;
+
+z-index: 3;
+}
+.books .book .author {
+	font-size: 0.8rem;
+color:white;
+position:relative;
+
+
+z-index: 3;
+	
+}
+.books .book .rating {
+	font-size: 0.8rem;
+color:white;
+position:relative;
+
+z-index: 3;
+
+	
+}
+.selected-book {
+
+height:50vh;
+}
+.selected-book img {
+	width:100%;
+}
+.selected-book .price {
+width:100px;
+height:100px;
+border-radius:50%;
+background-color: #fff;
+opacity: 0.8;
+border:5px solid teal;
+position:absolute;
+top:10vh;
+left:5vw;
+font-family:Roboto,sans-serif;
+font-size:1.5rem;
+text-align: center;
+line-height: 5.5rem;
+color:orange;
+box-shadow:2px 2px 3px black;
+text-shadow:2px 2px 2px black;
+}
+.selected-book .info{
+	position:relative;
+	bottom:15vh;
+	height:15vh;
+	padding-left:3vh;
+	padding-top:4vh;
+	background: gray; /* For browsers that do not support gradients */
+    background: -webkit-linear-gradient(gray, black); /* For Safari 5.1 to 6.0 */
+    background: -o-linear-gradient(gray, black); /* For Opera 11.1 to 12.0 */
+    background: -moz-linear-gradient(gray, black); /* For Firefox 3.6 to 15 */
+    background: linear-gradient(to bottom,rgba(100,100,100,0.2),rgba(50,50,50,1),rgba(0,0,0,1)); /* Standard syntax */
+
+	opacity: 0.8;
+
+}
+.selected-book .recommends {
+	margin-top:-100px;
+	display: block;
+	margin-bottom: 10px;
+
+
+}
+.selected-book .recommends img{
+width:60px;
+border-radius: 50%;
+float: left;
+margin-right: 20px;
+}
+.selected-book .recommends .user {
+	
+	vertical-align: middle;
+}
+.selected-book .title {
+	color:white;
+	font-size:1.8rem;
+	text-shadow:2px 2px 2px black;
+}
+.selected-book .author {
+	color:white;
+	font-size:1rem;
+	text-shadow:2px 2px 2px black;
+}
+.selected-book h3 {
+
+	position:relative;
+	
+	color:orange;
+}
+.selected-book p {
+	color:gray;
+	font-size:1rem;
+	position:relative;
+	
+	
+	width:100%;
+
+	
+}
+.addtocart {
+	padding:0.5rem;
+	color:white;
+	width:3rem;
+	height:3rem;
+	font-size: 2rem;
+	position: absolute;
+	bottom:10px;
+	opacity: 0.8;
+	border:2px solid white;
+	border-radius: 50%;
+	right:2rem;
+}
+.addtocart:active{
+color:orange;
+border:3px solid orange;
+box-shadow: 1px 1px 5px white;
+text-shadow:1px 1px 5px white;
+}
+.rate {
+	padding:0.5rem;
+	color:white;
+	width:3rem;
+	height:3rem;
+	font-size: 2rem;
+	position: absolute;
+	bottom:10px;
+
+	opacity: 0.8;
+	border:2px solid white;
+	border-radius: 50%;
+	right:5.5rem;
+	
+}
+.rate:active{
+color:orange;
+border:3px solid orange;
+box-shadow: 1px 1px 5px white;
+text-shadow:1px 1px 5px white;
+}
+.rating {
+	float:right;
+	font-size: 1.5rem;
+	color:orange;
+	text-shadow:1px 1px 3px gray;
+}
+.ionic_ratings .icon {
+    font-size: 50px;
+  }
+.stats {
+	width:50vw;padding: 1.5rem;
+	float:left;
+	text-align:center;
+}
+.stats h1 {
+	color:#48537F;
+}
+.stats h3 {
+	color:#329B1E;
+}

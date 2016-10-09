@@ -1,0 +1,60 @@
+<ion-view view-title="Home">
+	<ion-content>
+	<ion-refresher
+    pulling-text="Pull to refresh..."
+    on-refresh="doRefresh()">
+  </ion-refresher>
+	<div class="banner_ad">
+		<div class="user_image">
+			<img ng-src="http://www.learnandearn123.com/apis/assets/images/avatars/{{loggedinUser.avatar}}" ng-show="loggedinUser.facebookID.length<5">
+			<img ng-src="http://graph.facebook.com/{{loggedinUser.facebookID}}/picture?type=large" ng-show="loggedinUser.facebookID.length>5"/>
+			<p>{{loggedinUser.name}}</p>
+		</div>
+
+	</div>
+	<h3>Latest</h3>
+	
+
+		<ion-scroll direction="x" class="wide-as-needed" scrollbar-x="false" has-bouncing="true">
+		
+			
+			<div class="mainhilight">
+					<span class="cardz" ng-click="showBook()" ng-repeat="ebook in latestEbooks" >
+			<img ng-src="http://www.learnandearn123.com/assets/images/{{ebook.image}}" class="thumbnail" ng-click="goToBook(ebook,'main.home')">
+					<p>{{ebook.title}}</p>
+					<p>{{ebook.author}}</p>
+				</span>
+		
+
+			
+
+	
+		
+	</div>
+		</ion-scroll>
+		
+	
+
+	<h3>Who's reading</h3>
+	
+	
+		<ion-scroll direction="x" class="wide-as-needed" scrollbar-x="false" has-bouncing="true">
+		
+			
+			<div class="mainhilight">
+					<span class="cardz" ng-click="goToUser(user)" ng-repeat="user in whosReading" >
+			<img ng-src="http://www.learnandearn123.com/apis/assets/images/avatars/{{user.avatar}}" class="thumbnail" >
+					<p>{{user.username}}</p>
+					<p>{{user.ebooks.length}} books</p>
+				</span>
+		
+	
+			
+	
+		
+	</div>
+		</ion-scroll>
+
+
+	</ion-content>
+</ion-view>

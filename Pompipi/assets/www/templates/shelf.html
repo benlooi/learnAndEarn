@@ -1,0 +1,30 @@
+<ion-view view-title="My Books">
+	<ion-content>
+   <ion-refresher
+    pulling-text="Pull to refresh..."
+    on-refresh="doRefresh()">
+  </ion-refresher>
+
+		<div class="list card" ng-repeat="book in eBooks">
+
+  <div class="item">
+    
+    <h2>{{book.name}}</h2>
+    <p>{{book.author}}</p>
+  </div>
+
+  <div class="item item-image">
+    <img ng-src="http://www.learnandearn123.com/assets/images/{{book.image}}">
+  </div>
+
+  <a class="item item-icon-left assertive" ng-click="readEbook(book.file,book.filetype)" >
+    <i class="icon ion-ios-book"></i>
+   Read eBook
+  </a>
+
+</div>
+
+
+
+	</ion-content>
+</ion-view>

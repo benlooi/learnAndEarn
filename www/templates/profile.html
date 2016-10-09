@@ -4,7 +4,7 @@
 	<input type="text" placeholder="search user" ng-model="searchUser"/>
 </label>
 	<div class="users" ng-repeat="user in users|filter:searchUser|orderBy: '-rankingCount'" ng-click="goToUser(user)">
-		<img image-lazy-src="http://www.pompipi.co/apis/assets/images/avatars/{{user.avatar}}"  ng-show="user.facebookID.length<5">
+		<img image-lazy-src="https://www.pompipi.co/apis/assets/images/avatars/{{user.avatar}}"  ng-show="user.facebookID.length<5">
 		 <img image-lazy-src="https://graph.facebook.com/{{user.facebookID}}/picture?type=large" ng-show="user.facebookID.length>5"/>
 		<div class="username"> {{user.username}}</div>
 		<span style="color:#60196A"><i class="fa fa-book" ></i> {{user.ebooks.length}}</span>

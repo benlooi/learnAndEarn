@@ -15,6 +15,7 @@
 	<ion-content >
 	
 		<div class="user">
+
 			
 			<img ng-src="https://www.pompipi.co/apis/assets/images/avatars/{{user.avatar}}" ng-show="user.facebookID.length<5">
       <img ng-src="https://graph.facebook.com/{{user.facebookID}}/picture?type=large" ng-show="user.facebookID.length>5"/>
@@ -28,6 +29,7 @@
 			<button class="button button-calm" ng-click="follow(user.user_id)" ng-show="!following">Follow</button>
 			<button class="button button-positive" ng-click="unfollow(user.user_id)" ng-show="following">Unfollow</button>
 			</div -->
+
 		</div>
 		<div class="books" ng-show="user.ebooks.length>0">
 			<h3>eBooks</h3>

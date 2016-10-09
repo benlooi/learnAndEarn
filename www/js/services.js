@@ -1,4 +1,8 @@
 ApiEndPoint = {
+<<<<<<< HEAD
+=======
+
+>>>>>>> origin/master
 	eBooks:"https://www.pompipi.co/apis/index.php/Appaccess/",
 	Coupons:"https://www.pompipi.co/apis/index.php/Coupons/",
 	Accounts:"https://www.pompipi.co/apis/index.php/Accounts/",
@@ -7,6 +11,7 @@ ApiEndPoint = {
 	//Accounts:"v1/Accounts/",
 	//Users:"v1/Appaccess/",
 	//Coupons:"v1/Coupons/"
+
 }
 angular.module('services',[])
 

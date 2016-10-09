@@ -14,7 +14,11 @@
 	<ion-content >
 	
 	<div class="selected-book">
+<<<<<<< HEAD
 		<img ng-src="https://www.pompipi.co/assets/images/{{thisEbook.image}}">
+=======
+		<img ng-src="http://www.pompipi.co/assets/images/{{thisEbook.image}}">
+>>>>>>> origin/master
 		<div class="price" ng-click="toggleRewards()">${{thisEbook.price}}
 			<p class="tapforinfo"><i class="icon ion-information-circled"></i>Tap for Rewards</p>
 			
@@ -41,7 +45,11 @@
 		<div class="recommends" ng-click="goToUser(thisEbook.buyer)">
 			<img ng-src="https://graph.facebook.com/{{thisEbook.buyer.facebookID}}/picture?type=large"  ng-show="thisEbook.buyer.facebookID.length>5">
 
+<<<<<<< HEAD
 		<img ng-src="https://www.pompipi.co/apis/assets/images/avatars/{{thisEbook.buyer.avatar}}" ng-show="thisEbook.buyer.facebookID.length<5" >
+=======
+		<img ng-src="http://www.pompipi.co/apis/assets/images/avatars/{{thisEbook.buyer.avatar}}" ng-show="thisEbook.buyer.facebookID.length<5" >
+>>>>>>> origin/master
 		<div class="user">{{thisEbook.buyer.username}} recommends this.</div> 
 		
 	</div>
@@ -52,7 +60,11 @@
 	</div>
 <div class="item item-avatar" ng-repeat="comment in thisEbook.comments" ng-click="goToCommentUser(comment.comment_by)">
 		<img ng-src="https://graph.facebook.com/{{comment.facebookID}}/picture?type=large"ng-show="comment.facebookID">
+<<<<<<< HEAD
 		<img ng-src="https://www.pompipi.co/apis/assets/images/avatars/{{comment.avatar}}" ng-hide="comment.facebookID">
+=======
+		<img ng-src="http://www.pompipi.co/apis/assets/images/avatars/{{comment.avatar}}" ng-hide="comment.facebookID">
+>>>>>>> origin/master
 		<h2>{{comment.username}}</h2>
 		{{comment.comment}}
 		<span class="rating">{{comment.rating}}</i></span>
